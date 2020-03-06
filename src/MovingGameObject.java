@@ -28,6 +28,15 @@ public class MovingGameObject extends GameObject {
         this.acceleration = new Vector();
         this.maxSpeed = 0;
         this.mass = 0;
+        setSpriteFilepath("moving_game_object.png");
+    }
+
+    public MovingGameObject(String name) {
+        super(name);
+        this.velocity = new Vector();
+        this.acceleration = new Vector();
+        this.maxSpeed = 0;
+        this.mass = 0;
     }
 
     public MovingGameObject(String name, double maxSpeed, double mass) {

@@ -31,8 +31,25 @@ public class Enemy extends MovingGameObject{
         this.regenHealthPerSecond = 0;
     }
 
+    public Enemy(String name) {
+        super(name);
+        this.maxHealth = 0;
+        this.health = 0;
+        this.desiredDirection = new Vector();
+        this.regenHealthPerSecond = 0;
+    }
+
     public Enemy(Vector position, double maxHealth, double maxSpeed, double mass){
         super(position, "Enemy", maxSpeed, mass);
+        this.maxHealth = maxHealth;
+        this.health = maxHealth;
+        this.desiredDirection = new Vector();
+        this.regenHealthPerSecond = 0;
+        setSpriteFilepath("enemy.png");
+    }
+
+    public Enemy(Vector position, String name, double maxHealth, double maxSpeed, double mass){
+        super(position, name, maxSpeed, mass);
         this.maxHealth = maxHealth;
         this.health = maxHealth;
         this.desiredDirection = new Vector();
@@ -41,6 +58,15 @@ public class Enemy extends MovingGameObject{
 
     public Enemy(Vector position, double maxHealth, double regenHealthPerSecond, double maxSpeed, double mass){
         super(position, "Enemy", maxSpeed, mass);
+        this.maxHealth = maxHealth;
+        this.health = maxHealth;
+        this.desiredDirection = new Vector();
+        this.regenHealthPerSecond = regenHealthPerSecond;
+        setSpriteFilepath("enemy.png");
+    }
+
+    public Enemy(Vector position, String name, double maxHealth, double regenHealthPerSecond, double maxSpeed, double mass){
+        super(position, name, maxSpeed, mass);
         this.maxHealth = maxHealth;
         this.health = maxHealth;
         this.desiredDirection = new Vector();

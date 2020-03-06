@@ -8,34 +8,46 @@ public class GameObject {
     /**
      * the filename of the picture that will be used to draw the Object
      */
-    private String spriteFileName;
+    private String spriteFilepath;
 
     /**
      * a from of identification for the Object
      */
     private String name;
 
+    /**
+     * the width of the Object in screen coordinates
+     */
+    private double width;
+
+    /**
+     * the height of the Object in screen coordinates
+     */
+    private double height;
+
     //==================================================================================================================
 
     public GameObject(){
         this.position = new Vector();
-        this.spriteFileName = "";
+        this.spriteFilepath = "";
         this.name = "Game_Object";
     }
 
+    //the children of the GameObject class need to set their own spriteFileName
     public GameObject(String name){
         this.position = new Vector();
-        this.spriteFileName = "";
-        this.name = "Game_Object";
+        this.name = name;
     }
 
     public GameObject(Vector position, String name){
         this.position = position;
-        this.spriteFileName = "";
-        this.name = "Game_Object";
+        this.name = name;
     }
 
     //==================================================================================================================
+
+    //region Gets and Sets
+
 
     public double getPositionX(){
         return position.getX();
@@ -53,9 +65,20 @@ public class GameObject {
         this.position = position;
     }
 
+    public String getSpriteFilepath(){
+        return spriteFilepath;
+    }
+
+    public void setSpriteFilepath(String spriteFilepath){
+        this.spriteFilepath = spriteFilepath;
+    }
+
     public String getName() {
         return name;
     }
+
+
+    //endregion
 
     //==================================================================================================================
 
