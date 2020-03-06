@@ -1,2 +1,2 @@
-public class StationaryGameObject {
+public class StationaryGameObject extends GameObject {
 }
