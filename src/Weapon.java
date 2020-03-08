@@ -37,6 +37,16 @@ public class Weapon extends StationaryGameObject {
     private double knockBackForce;
 
     /**
+     * the percent chance that a hit is a critical attack
+     */
+    private double criticalDamageChance;
+
+    /**
+     * the percentage of added damage that happens on a critical hit
+     */
+    private double criticalDamageAddedDamage;
+
+    /**
      * determines if the Weapon will fire automatically
      * always false for primary Weapons
      */
@@ -72,6 +82,11 @@ public class Weapon extends StationaryGameObject {
      */
     private int knockBackUpgradePoints;
 
+    /**
+     * the number of times that the critical damage section of the Weapon has been upgraded
+     */
+    private int criticalDamageUpgradePoints;
+
     //==================================================================================================================
 
     public Weapon(String name) {
@@ -82,6 +97,8 @@ public class Weapon extends StationaryGameObject {
         this.degreesOfInaccuracy = 0;
         this.recoilForce = 0;
         this.knockBackForce = 0;
+        this.criticalDamageChance = 0;
+        this.criticalDamageAddedDamage = 0;
         this.autoFire = false;
         this.price = 0;
         this.damageUpgradePoints = 0;
@@ -89,10 +106,11 @@ public class Weapon extends StationaryGameObject {
         this.fireRateUpgradePoints = 0;
         this.recoilUpgradePoints = 0;
         this.knockBackUpgradePoints = 0;
+        this.criticalDamageUpgradePoints = 0;
         setSpriteFilepath("weapon.png");
     }
 
-    public Weapon(String name, boolean isPrimaryWeapon, double range, double degreesOfInaccuracy, double recoilForce, double knockBackForce, boolean autoFire, int price){
+    public Weapon(String name, boolean isPrimaryWeapon, double range, double degreesOfInaccuracy, double recoilForce, double knockBackForce, double criticalDamageChance, double criticalDamageAddedDamage, boolean autoFire, int price){
         super(name);
         this.isPrimaryWeapon = isPrimaryWeapon;
         this.range = range;
@@ -100,6 +118,8 @@ public class Weapon extends StationaryGameObject {
         this.degreesOfInaccuracy = degreesOfInaccuracy;
         this.recoilForce = recoilForce;
         this.knockBackForce = knockBackForce;
+        this.criticalDamageChance = criticalDamageChance;
+        this.criticalDamageAddedDamage = criticalDamageAddedDamage;
         this.autoFire = autoFire;
         this.price = price;
         this.damageUpgradePoints = 0;
@@ -107,6 +127,7 @@ public class Weapon extends StationaryGameObject {
         this.fireRateUpgradePoints = 0;
         this.recoilUpgradePoints = 0;
         this.knockBackUpgradePoints = 0;
+        this.criticalDamageUpgradePoints = 0;
         setSpriteFilepath("weapon.png");
     }
 
@@ -141,6 +162,14 @@ public class Weapon extends StationaryGameObject {
 
     public double getKnockBackForce() {
         return knockBackForce;
+    }
+
+    public double getCriticalDamageChance() {
+        return criticalDamageChance;
+    }
+
+    public double getCriticalDamageAddedDamage() {
+        return criticalDamageAddedDamage;
     }
 
     public boolean isAutoFire() {
