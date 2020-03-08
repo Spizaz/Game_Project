@@ -27,24 +27,14 @@ public class Enemy extends MovingGameObject{
 
     //==================================================================================================================
 
-
     public Enemy() {
-        super("Enemy", 0, 0);
+        super("Enemy");
         this.maxHealth = 0;
         this.health = 0;
         this.desiredDirection = new Vector();
         this.regenHealthPerSecond = 0;
         this.weapon = null;
         setSpriteFilepath("Images/enemy.png");
-    }
-
-    public Enemy(String name) {
-        super(name);
-        this.maxHealth = 0;
-        this.health = 0;
-        this.desiredDirection = new Vector();
-        this.regenHealthPerSecond = 0;
-        this.weapon = null;
     }
 
     public Enemy(Vector position, double maxHealth, double maxSpeed, double mass){
