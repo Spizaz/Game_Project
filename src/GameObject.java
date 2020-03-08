@@ -30,7 +30,7 @@ public class GameObject {
     public GameObject(){
         this.position = new Vector();
         this.spriteFilepath = "";
-        this.name = "Images/unknown_tile.png";
+        this.name = "Game_Object";
     }
 
     //the children of the GameObject class need to set their own spriteFileName

@@ -107,7 +107,7 @@ public class Weapon extends StationaryGameObject {
         this.recoilUpgradePoints = 0;
         this.knockBackUpgradePoints = 0;
         this.criticalDamageUpgradePoints = 0;
-        setSpriteFilepath("weapon.png");
+        setSpriteFilepath("Images/unknown_tile.png");
     }
 
     public Weapon(String name, boolean isPrimaryWeapon, double range, double degreesOfInaccuracy, double recoilForce, double knockBackForce, double criticalDamageChance, double criticalDamageAddedDamage, boolean autoFire, int price){
@@ -128,7 +128,7 @@ public class Weapon extends StationaryGameObject {
         this.recoilUpgradePoints = 0;
         this.knockBackUpgradePoints = 0;
         this.criticalDamageUpgradePoints = 0;
-        setSpriteFilepath("weapon.png");
+        setSpriteFilepath("Images/unknown_tile.png");
     }
 
     //==================================================================================================================
