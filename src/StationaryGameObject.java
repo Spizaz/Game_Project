@@ -7,12 +7,6 @@ public class StationaryGameObject extends GameObject {
 
     //==================================================================================================================
 
-    public StationaryGameObject(){
-        super("Stationary_Game_Object");
-        this.direction = new Vector(1, 0);
-        setSpriteFilepath("Images/unknown_tile.png");
-    }
-
     public StationaryGameObject(String name){
         super(name);
         this.direction = new Vector(1, 0);

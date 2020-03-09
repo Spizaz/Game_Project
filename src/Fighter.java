@@ -105,6 +105,22 @@ public class Fighter extends MovingGameObject {
 
     //==================================================================================================================
 
+    //SKILLS
+
+    /*
+    private final static Skill bulletsPassThroughEnemies = new Skill();
+
+    private final static Skill enemiesExplodeOnDeath = new Skill();
+
+    private final static Skill fireSpreads = new Skill();
+
+    private final static Skill enemiesStayFrozen = new Skill();
+
+    private final static Skill killsGainHealth = new Skill();
+     */
+
+    //==================================================================================================================
+
     public Fighter(Vector position) {
         // TODO: 3/8/2020 may need to edit the stats one line below
         super(position, "Fighter", 1, 100);
@@ -186,8 +202,8 @@ public class Fighter extends MovingGameObject {
         return weapons;
     }
 
-    public void getWeapon(int weaponIndex) {
-        this.weapons = weapons;
+    public Weapon getWeapon(int weaponIndex) {
+        return weapons[weaponIndex];
     }
 
     public void setWeapon(Weapon weapon, int index){
