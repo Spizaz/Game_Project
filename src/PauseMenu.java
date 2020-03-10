@@ -1,4 +1,6 @@
-public class PauseMenu {
+import java.awt.*;
+
+public class PauseMenu extends GameMode {
 
     /*
     private final Button unpauseButton = new Button();
@@ -10,4 +12,13 @@ public class PauseMenu {
     private final Button settingsButton = new Button();
 
      */
+
+    public PauseMenu(Color background){
+        super("Pause_Menu", background);
+    }
+
+    @Override
+    public void draw() {
+
+    }
 }
