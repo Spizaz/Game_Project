@@ -3,7 +3,7 @@ public class GameObject {
     /**
      * the physical location of the GameObject (x , y)
      */
-    private Vector position;
+    public volatile Vector position;
 
     /**
      * the filename of the picture that will be used to draw the Object
@@ -39,9 +39,11 @@ public class GameObject {
         this.name = name;
     }
 
-    public GameObject(Vector position, String name){
+    public GameObject(Vector position, String name, double width, double height){
         this.position = position;
         this.name = name;
+        this.width = width;
+        this.height = height;
     }
 
     //==================================================================================================================
@@ -98,7 +100,7 @@ public class GameObject {
      * draws the object onto the screen
      */
 
-    public void draw(){
-
+    public void draw(double degrees){
+        StdDraw.picture(getPositionX(), getPositionY(), getSpriteFilepath(), width, height, degrees);
     }
 }

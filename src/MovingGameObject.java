@@ -39,8 +39,8 @@ public class MovingGameObject extends GameObject {
         this.mass = 0;
     }
 
-    public MovingGameObject(Vector position, String name, double maxSpeed, double mass) {
-        super(position, name);
+    public MovingGameObject(Vector position, String name, double maxSpeed, double mass, double width, double height) {
+        super(position, name, width, height);
         this.velocity = new Vector();
         this.acceleration = new Vector();
         this.maxSpeed = maxSpeed;
@@ -102,6 +102,16 @@ public class MovingGameObject extends GameObject {
      */
 
     public void move(){
+        velocity.update(acceleration);
 
+        if(velocity.magnitude() > maxSpeed){
+            velocity = velocity.unitVector().scaledVector(maxSpeed);
+        }
+
+        if(acceleration.magnitude() == 0){
+            velocity = velocity.scaledVector(.9999995);
+        }
+
+        position.update(velocity);
     }
 }

@@ -110,8 +110,8 @@ public class Weapon extends StationaryGameObject {
         setSpriteFilepath("Images/unknown_tile.png");
     }
 
-    public Weapon(String name, boolean isPrimaryWeapon, double range, double degreesOfInaccuracy, double recoilForce, double knockBackForce, double criticalDamageChance, double criticalDamageAddedDamage, boolean autoFire, int price){
-        super(name);
+    public Weapon(String name, boolean isPrimaryWeapon, double range, double degreesOfInaccuracy, double recoilForce, double knockBackForce, double criticalDamageChance, double criticalDamageAddedDamage, boolean autoFire, int price, double width, double height){
+        super(new Vector(), name, width, height);
         this.isPrimaryWeapon = isPrimaryWeapon;
         this.range = range;
         this.headPosition = new Vector();

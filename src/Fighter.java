@@ -1,12 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Fighter extends MovingGameObject {
-
-    /**
-     * the direction the Fighter is looking - the direction pointed towards the mouse
-     */
-    private Vector direction;
+public class Fighter extends MovingGameObject implements Runnable{
 
     /**
      * the total experience the Fighter has accrued
@@ -121,10 +116,9 @@ public class Fighter extends MovingGameObject {
 
     //==================================================================================================================
 
-    public Fighter(Vector position) {
+    public Fighter(Vector position) throws InterruptedException {
         // TODO: 3/8/2020 may need to edit the stats one line below
-        super(position, "Fighter", 1, 100);
-        this.direction = new Vector();
+        super(position, "Fighter", 1e-8, 100, .05, .05);
         this.totalExperience = 0;
         this.levelExperience = 0;
         this.experienceToLevelUp = 25;
@@ -144,6 +138,7 @@ public class Fighter extends MovingGameObject {
         this.healthGlobeEffectivenessUpgradePoints = 0;
         this.experienceGlobeEffectivenessUpgradePoints = 0;
         this.coinValueUpgradePoints = 0;
+        setSpriteFilepath("Images/fighter.png");
     }
 
     //==================================================================================================================
@@ -151,9 +146,11 @@ public class Fighter extends MovingGameObject {
 
     //region Gets, Sets, and Adds
 
-
+    /**
+     * @return the Vector that points towards the Mouse from the Fighter
+     */
     public Vector getDirection() {
-        return direction;
+        return getPosition().differenceVector(new Vector(StdDraw.mouseX(), StdDraw.mouseY()));
     }
 
     public int getTotalExperience() {
@@ -304,4 +301,40 @@ public class Fighter extends MovingGameObject {
     //endregion
 
     //==================================================================================================================
+
+
+
+    //==================================================================================================================
+
+    public void draw() {
+        super.draw(Math.toDegrees(getDirection().getRadian()));
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            Vector acceleration = new Vector();
+
+            //W
+            if (StdDraw.isKeyPressed(87)) {
+                acceleration.addY(5e-15);
+            }
+            //S
+            if (StdDraw.isKeyPressed(83)) {
+                acceleration.addY(-5e-15);
+            }
+            //D
+            if (StdDraw.isKeyPressed(68)) {
+                acceleration.addX(5e-15);
+            }
+            //A
+            if (StdDraw.isKeyPressed(65)) {
+                acceleration.addX(-5e-15);
+            }
+
+            setAcceleration(acceleration);
+
+            move();
+        }
+    }
 }

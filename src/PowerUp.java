@@ -10,14 +10,14 @@ public class PowerUp extends Item{
      */
     private long activationTime;
 
-    public PowerUp(Vector position){
-        super(position, "Power_Up");
+    public PowerUp(Vector position, double width, double height){
+        super(position, "Power_Up", width, height);
         this.activeTime = 0;
         this.activationTime = -1;
     }
 
-    public PowerUp(Vector position, long activeTime){
-        super(position, "Power_Up");
+    public PowerUp(Vector position, long activeTime, double width, double height){
+        super(position, "Power_Up", width, height);
         this.activeTime = activeTime;
         this.activationTime = -1;
     }
