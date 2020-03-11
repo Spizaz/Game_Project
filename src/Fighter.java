@@ -34,6 +34,11 @@ public class Fighter extends MovingGameObject implements Runnable{
     private double health;
 
     /**
+     * the maximum amount of health the Fighter can have
+     */
+    private double maxHealth;
+
+    /**
      * the amount of health the Fighter gains per second
      */
     private double regenHealthPerSecond;
@@ -98,6 +103,16 @@ public class Fighter extends MovingGameObject implements Runnable{
      */
     private int coinValueUpgradePoints;
 
+    /**
+     * the number of upgrade points that the Fighter has yet to spend
+     */
+    private int unusedUpgradePoints;
+
+    /**
+     * the number of skill points the Fighter has yet to spend
+     */
+    private int unusedSkillPoints;
+
     //==================================================================================================================
 
     //SKILLS
@@ -125,6 +140,7 @@ public class Fighter extends MovingGameObject implements Runnable{
         this.level = 0;
         this.money = 0; // TODO: 3/8/2020 give Fighter enough money to buy a basic gun
         this.health = 100;
+        this.maxHealth = 100;
         this.regenHealthPerSecond = 0;
         this.weapons = new Weapon[4];
         this.activePowerUps = new ArrayList<>();
@@ -138,6 +154,8 @@ public class Fighter extends MovingGameObject implements Runnable{
         this.healthGlobeEffectivenessUpgradePoints = 0;
         this.experienceGlobeEffectivenessUpgradePoints = 0;
         this.coinValueUpgradePoints = 0;
+        this.unusedUpgradePoints = 0;
+        this.unusedSkillPoints = 0;
         setSpriteFilepath("Images/fighter.png");
     }
 
@@ -297,6 +315,21 @@ public class Fighter extends MovingGameObject implements Runnable{
         this.coinValueUpgradePoints += coinValueUpgradePoints;
     }
 
+    public int getUnusedUpgradePoints() {
+        return unusedUpgradePoints;
+    }
+
+    public void addUnusedUpgradePoints(int unusedUpgradePointsToBeAdded) {
+        this.unusedUpgradePoints += unusedUpgradePointsToBeAdded;
+    }
+
+    public int getUnusedSkillPoints() {
+        return unusedSkillPoints;
+    }
+
+    public void addUnusedSkillPoints(int unusedSkillPointsToBeAdded) {
+        this.unusedSkillPoints += unusedSkillPointsToBeAdded;
+    }
 
     //endregion
 

@@ -10,20 +10,19 @@ public class PowerUp extends Item{
      */
     private long activationTime;
 
-    public PowerUp(Vector position, double width, double height){
-        super(position, "Power_Up", width, height);
+    public PowerUp(Vector position, double spawnRate, double width, double height){
+        super(position, "Power_Up", spawnRate, width, height);
         this.activeTime = 0;
         this.activationTime = -1;
     }
 
-    public PowerUp(Vector position, long activeTime, double width, double height){
-        super(position, "Power_Up", width, height);
+    public PowerUp(Vector position, String name, double spawnRate, long activeTime, double width, double height){
+        super(position, name, spawnRate, width, height);
         this.activeTime = activeTime;
         this.activationTime = -1;
     }
 
     //==================================================================================================================
-
 
     public double getActiveTime() {
         return activeTime;

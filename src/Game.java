@@ -15,6 +15,9 @@ public class Game {
      */
     private GameMode gameMode;
 
+    /**
+     * the playable game mode
+     */
     private PlayableGame playableGame = new PlayableGame(StdDraw.WHITE);
 
     public Game() throws InterruptedException {
