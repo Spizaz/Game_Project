@@ -24,9 +24,6 @@ public class PlayableGame extends GameMode{
         this.enemies = new ArrayList<>();
         this.items = new ArrayList<>();
         this.ammo = new ArrayList<>();
-
-        Thread fighterMovement = new Thread(fighter, "fighter_movement");
-        fighterMovement.start();
     }
 
     //==================================================================================================================
@@ -55,5 +52,33 @@ public class PlayableGame extends GameMode{
         //StdDraw.picture(.5, .5, "Images/unknown_tile.png", 1, 1, 0 );
 
         StdDraw.show();
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            Vector acceleration = new Vector();
+
+            //W
+            if (StdDraw.isKeyPressed(87)) {
+                acceleration.addY(fighter.getMaxAcceleration());
+            }
+            //S
+            if (StdDraw.isKeyPressed(83)) {
+                acceleration.addY(-fighter.getMaxAcceleration());
+            }
+            //D
+            if (StdDraw.isKeyPressed(68)) {
+                acceleration.addX(fighter.getMaxAcceleration());
+            }
+            //A
+            if (StdDraw.isKeyPressed(65)) {
+                acceleration.addX(-fighter.getMaxAcceleration());
+            }
+
+            fighter.setAcceleration(acceleration);
+
+            fighter.move();
+        }
     }
 }

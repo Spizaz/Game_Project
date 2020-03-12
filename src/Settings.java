@@ -25,4 +25,9 @@ public class Settings extends GameMode {
     public void draw() {
 
     }
+
+    @Override
+    public void run() {
+
+    }
 }

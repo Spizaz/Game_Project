@@ -104,13 +104,11 @@ public class MovingGameObject extends GameObject {
     public void move(){
         velocity.update(acceleration);
 
-        if(velocity.magnitude() > maxSpeed){
-            velocity = velocity.unitVector().scaledVector(maxSpeed);
+        if(velocity.magnitude() > getMaxSpeed()){
+            velocity = velocity.unitVector().scaledVector(getMaxSpeed());
         }
 
-        if(acceleration.magnitude() == 0){
-            velocity = velocity.scaledVector(.9999995);
-        }
+        velocity = velocity.scaledVector(.999999675);
 
         position.update(velocity);
     }

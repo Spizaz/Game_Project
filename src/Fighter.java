@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Fighter extends MovingGameObject implements Runnable{
+public class Fighter extends MovingGameObject{
 
     /**
      * the total experience the Fighter has accrued
@@ -57,11 +57,6 @@ public class Fighter extends MovingGameObject implements Runnable{
      * the number of upgrade points the user has spent on increasing the max speed of the Fighter
      */
     private int maxSpeedUpgradePoints;
-
-    /**
-     * the number of upgrade points the user has spent on increasing the acceleration of the Fighter
-     */
-    private int accelerationUpgradePoints;
 
     /**
      * the number of upgrade points the user has spent on increasing the max health of the Fighter
@@ -144,8 +139,7 @@ public class Fighter extends MovingGameObject implements Runnable{
         this.regenHealthPerSecond = 0;
         this.weapons = new Weapon[4];
         this.activePowerUps = new ArrayList<>();
-        this.maxSpeedUpgradePoints = 0;
-        this.accelerationUpgradePoints = 0;
+        this.maxSpeedUpgradePoints = 10;
         this.maxHealthUpgradePoints = 0;
         this.healthRegenUpgradePoints = 0;
         this.moneyPerKillUpgradePoints = 0;
@@ -169,6 +163,14 @@ public class Fighter extends MovingGameObject implements Runnable{
      */
     public Vector getDirection() {
         return getPosition().differenceVector(new Vector(StdDraw.mouseX(), StdDraw.mouseY()));
+    }
+
+    public double getMaxSpeed(){
+        return super.getMaxSpeed() * (1 + getMaxSpeedUpgradePoints() / 10.);
+    }
+
+    public double getMaxAcceleration(){
+        return getMaxSpeed() * 5e-7;
     }
 
     public int getTotalExperience() {
@@ -241,14 +243,6 @@ public class Fighter extends MovingGameObject implements Runnable{
 
     public void addMaxSpeedUpgradePoints(int maxSpeedUpgradePoints) {
         this.maxSpeedUpgradePoints += maxSpeedUpgradePoints;
-    }
-
-    public int getAccelerationUpgradePoints() {
-        return accelerationUpgradePoints;
-    }
-
-    public void addAccelerationUpgradePoints(int accelerationUpgradePoints) {
-        this.accelerationUpgradePoints += accelerationUpgradePoints;
     }
 
     public int getMaxHealthUpgradePoints() {
@@ -341,33 +335,5 @@ public class Fighter extends MovingGameObject implements Runnable{
 
     public void draw() {
         super.draw(Math.toDegrees(getDirection().getRadian()));
-    }
-
-    @Override
-    public void run() {
-        while (true) {
-            Vector acceleration = new Vector();
-
-            //W
-            if (StdDraw.isKeyPressed(87)) {
-                acceleration.addY(5e-15);
-            }
-            //S
-            if (StdDraw.isKeyPressed(83)) {
-                acceleration.addY(-5e-15);
-            }
-            //D
-            if (StdDraw.isKeyPressed(68)) {
-                acceleration.addX(5e-15);
-            }
-            //A
-            if (StdDraw.isKeyPressed(65)) {
-                acceleration.addX(-5e-15);
-            }
-
-            setAcceleration(acceleration);
-
-            move();
-        }
     }
 }

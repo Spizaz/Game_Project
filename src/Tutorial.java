@@ -24,4 +24,9 @@ public class Tutorial extends GameMode {
     public void draw() {
 
     }
+
+    @Override
+    public void run() {
+
+    }
 }

@@ -23,4 +23,9 @@ public class GameMenu extends GameMode {
     public void draw() {
         StdDraw.clear(getBackground());
     }
+
+    @Override
+    public void run() {
+
+    }
 }

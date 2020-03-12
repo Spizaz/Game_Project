@@ -21,4 +21,9 @@ public class PauseMenu extends GameMode {
     public void draw() {
 
     }
+
+    @Override
+    public void run() {
+
+    }
 }
