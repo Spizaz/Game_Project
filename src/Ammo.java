@@ -34,5 +34,61 @@ public class Ammo extends MovingGameObject {
 
     //==================================================================================================================
 
+    public Ammo(String name, double maxSpeed, double mass, double range, double damage, double knockBackForce){
+        super(name, maxSpeed, mass);
+        this.range = range;
+        this.damage = damage;
+        this.knockBackForce = knockBackForce;
+    }
 
+    //==================================================================================================================
+
+    //region Gets, Sets, and Adds
+
+
+    public Vector getDesiredDirection() {
+        return desiredDirection;
+    }
+
+    public void setDesiredDirection() {
+
+    }
+
+    public Enemy getTargetedEnemy() {
+        return targetedEnemy;
+    }
+
+    public double getDistanceTraveled() {
+        return distanceTraveled;
+    }
+
+    public void addDistanceTraveled(double distanceTraveledToBeAdded) {
+        this.distanceTraveled += distanceTraveledToBeAdded;
+    }
+
+    public double getDamage() {
+        return damage;
+    }
+
+    public void addDamage(double damageToBeAdded){
+        this.damage += damageToBeAdded;
+    }
+
+    public double getKnockBackForce() {
+        return knockBackForce;
+    }
+
+
+    //endregion
+
+    //==================================================================================================================
+
+    public Ammo clone(Vector position){
+        Ammo ammo = new Ammo(getName(), getMaxSpeed(), getMass(), range, getDamage(), getKnockBackForce());
+        ammo.setPosition(position);
+        ammo.distanceTraveled = 0;
+        ammo.setSpriteFilepath(getSpriteFilepath());
+
+        return ammo;
+    }
 }

@@ -12,8 +12,8 @@ public class StationaryGameObject extends GameObject {
         this.direction = new Vector(1, 0);
     }
 
-    public StationaryGameObject(Vector position, String name, double width, double height){
-        super(position, name, width, height);
+    public StationaryGameObject(Vector position, String name){
+        super(position, name);
         this.direction = new Vector(1, 0);
     }
 
@@ -28,6 +28,11 @@ public class StationaryGameObject extends GameObject {
 
     public void setDirection(Vector direction) {
         this.direction = direction;
+    }
+
+    public void setDirection(double x, double y) {
+        this.direction.setX(x);
+        this.direction.setY(y);
     }
 
     public double getDirectionRadian(){

@@ -10,14 +10,14 @@ public class PowerUp extends Item{
      */
     private long activationTime;
 
-    public PowerUp(Vector position, double spawnRate, double width, double height){
-        super(position, "Power_Up", spawnRate, width, height);
+    public PowerUp(Vector position, double spawnRate){
+        super(position, "Power_Up", spawnRate);
         this.activeTime = 0;
         this.activationTime = -1;
     }
 
-    public PowerUp(Vector position, String name, double spawnRate, long activeTime, double width, double height){
-        super(position, name, spawnRate, width, height);
+    public PowerUp(Vector position, String name, double spawnRate, long activeTime){
+        super(position, name, spawnRate);
         this.activeTime = activeTime;
         this.activationTime = -1;
     }
@@ -25,7 +25,7 @@ public class PowerUp extends Item{
     //==================================================================================================================
 
     public double getActiveTime() {
-        return activeTime;
+        return activeTime * PlayableGame.LAG_CORRECTION_COEFFICIENT;
     }
 
     public double getActivationTime() {
@@ -47,6 +47,6 @@ public class PowerUp extends Item{
      * @return true if active - false otherwise
      */
     public boolean isActive(){
-        return (activationTime != -1) && (Game.framesPassed - activationTime <= activeTime);
+        return (activationTime != -1) && (Game.currentFrame - getActivationTime() <= getActiveTime());
     }
 }

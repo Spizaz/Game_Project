@@ -1,4 +1,11 @@
+import java.util.jar.JarOutputStream;
+
 public class GameObject {
+
+    /**
+     * the size in screen coordinates of a single pixel
+     */
+    public static final double PIXEL_SIZE = .05;
 
     /**
      * the physical location of the GameObject (x , y)
@@ -15,16 +22,6 @@ public class GameObject {
      */
     private String name;
 
-    /**
-     * the width of the Object in screen coordinates
-     */
-    private double width;
-
-    /**
-     * the height of the Object in screen coordinates
-     */
-    private double height;
-
     //==================================================================================================================
 
     public GameObject(){
@@ -39,11 +36,9 @@ public class GameObject {
         this.name = name;
     }
 
-    public GameObject(Vector position, String name, double width, double height){
+    public GameObject(Vector position, String name){
         this.position = position;
         this.name = name;
-        this.width = width;
-        this.height = height;
     }
 
     //==================================================================================================================
@@ -65,6 +60,11 @@ public class GameObject {
 
     public void setPosition(Vector position) {
         this.position = position;
+    }
+
+    public void setPosition(double x, double y) {
+        this.position.setX(x);
+        this.position.setY(y);
     }
 
     public String getSpriteFilepath(){
@@ -101,6 +101,6 @@ public class GameObject {
      */
 
     public void draw(double degrees){
-        StdDraw.picture(getPositionX(), getPositionY(), getSpriteFilepath(), width, height, degrees);
+        StdDraw.picture(getPositionX(), getPositionY(), getSpriteFilepath(), GameObject.PIXEL_SIZE, GameObject.PIXEL_SIZE,  degrees);
     }
 }

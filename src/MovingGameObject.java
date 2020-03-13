@@ -22,15 +22,6 @@ public class MovingGameObject extends GameObject {
 
     //==================================================================================================================
 
-    public MovingGameObject(){
-        super("Moving_Game_Object");
-        this.velocity = new Vector();
-        this.acceleration = new Vector();
-        this.maxSpeed = 0;
-        this.mass = 0;
-        setSpriteFilepath("Images/unknown_tile.png");
-    }
-
     public MovingGameObject(String name) {
         super(name);
         this.velocity = new Vector();
@@ -39,8 +30,16 @@ public class MovingGameObject extends GameObject {
         this.mass = 0;
     }
 
-    public MovingGameObject(Vector position, String name, double maxSpeed, double mass, double width, double height) {
-        super(position, name, width, height);
+    public MovingGameObject(String name, double maxSpeed, double mass) {
+        super(name);
+        this.velocity = new Vector();
+        this.acceleration = new Vector();
+        this.maxSpeed = maxSpeed;
+        this.mass = mass;
+    }
+
+    public MovingGameObject(Vector position, String name, double maxSpeed, double mass) {
+        super(position, name);
         this.velocity = new Vector();
         this.acceleration = new Vector();
         this.maxSpeed = maxSpeed;
@@ -68,6 +67,11 @@ public class MovingGameObject extends GameObject {
         this.velocity = velocity;
     }
 
+    public void setVelocity(double x, double y) {
+        this.velocity.setX(x);
+        this.velocity.setY(y);
+    }
+
     public double getAccelerationX(){
         return acceleration.getX();
     }
@@ -82,6 +86,11 @@ public class MovingGameObject extends GameObject {
 
     public void setAcceleration(Vector acceleration) {
         this.acceleration = acceleration;
+    }
+
+    public void setAcceleration(double x, double y) {
+        this.acceleration.setX(x);
+        this.acceleration.setY(y);
     }
 
     public double getMaxSpeed() {
@@ -101,15 +110,16 @@ public class MovingGameObject extends GameObject {
      * moves the Object by first updating velocity and the position
      */
 
-    public void move(){
-        velocity.update(acceleration);
+    public void move(boolean friction){
+        velocity.update(acceleration.scaledVector(PlayableGame.LAG_CORRECTION_COEFFICIENT));
 
-        if(velocity.magnitude() > getMaxSpeed()){
-            velocity = velocity.unitVector().scaledVector(getMaxSpeed());
+        if(velocity.magnitude() > getMaxSpeed() * PlayableGame.LAG_CORRECTION_COEFFICIENT){
+            velocity = velocity.unitVector().scaledVector(getMaxSpeed() * PlayableGame.LAG_CORRECTION_COEFFICIENT);
         }
 
-        velocity = velocity.scaledVector(.999999675);
+        if(friction)
+            velocity = velocity.scaledVector(1 - .000000325 * PlayableGame.LAG_CORRECTION_COEFFICIENT);
 
-        position.update(velocity);
+        position.update(velocity.scaledVector(PlayableGame.LAG_CORRECTION_COEFFICIENT));
     }
 }

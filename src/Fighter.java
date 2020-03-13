@@ -128,7 +128,7 @@ public class Fighter extends MovingGameObject{
 
     public Fighter(Vector position) throws InterruptedException {
         // TODO: 3/8/2020 may need to edit the stats one line below
-        super(position, "Fighter", 1e-8, 100, .05, .05);
+        super(position, "Fighter", 1e-8, 100);
         this.totalExperience = 0;
         this.levelExperience = 0;
         this.experienceToLevelUp = 25;
@@ -151,6 +151,8 @@ public class Fighter extends MovingGameObject{
         this.unusedUpgradePoints = 0;
         this.unusedSkillPoints = 0;
         setSpriteFilepath("Images/fighter.png");
+
+        weapons[0] = new Gun(.5, 0, 0, 0, 0, 0, 0, 0, 50d);
     }
 
     //==================================================================================================================
@@ -213,10 +215,6 @@ public class Fighter extends MovingGameObject{
 
     public double getRegenHealthPerSecond() {
         return regenHealthPerSecond;
-    }
-
-    public Weapon[] getWeapons() {
-        return weapons;
     }
 
     public Weapon getWeapon(int weaponIndex) {
@@ -325,6 +323,31 @@ public class Fighter extends MovingGameObject{
         this.unusedSkillPoints += unusedSkillPointsToBeAdded;
     }
 
+    public void setWeaponPositions(){
+        double direction = getDirection().getRadian();
+
+        for (int weaponIndex = 0 ; weaponIndex < weapons.length ; weaponIndex++) {
+
+            Weapon weapon = weapons[weaponIndex];
+
+            if(weapon != null) {
+                //sets the position of the Weapon - rotated some from the center of the Fighter
+                weapon.setPosition(
+                                getPositionX() + Math.cos(direction + weaponIndex * ( 2 * Math.PI / weapons.length )) * GameObject.PIXEL_SIZE / 2,
+                                getPositionY() + Math.sin(direction + weaponIndex * ( 2 * Math.PI / weapons.length )) * GameObject.PIXEL_SIZE / 2
+                        );
+
+                //sets the direction of the Weapon
+                // TODO: 3/12/2020 fixme
+                weapon.setDirection(
+                                Math.cos(direction + weaponIndex * (2 * Math.PI / weapons.length)),
+                                Math.sin(direction + weaponIndex * (2 * Math.PI / weapons.length))
+
+                        );
+            }
+        }
+    }
+
     //endregion
 
     //==================================================================================================================
@@ -335,5 +358,14 @@ public class Fighter extends MovingGameObject{
 
     public void draw() {
         super.draw(Math.toDegrees(getDirection().getRadian()));
+
+        //for every weapon so long as it exists - draw it facing the right way
+        for (int weaponIndex = 0 ; weaponIndex < weapons.length ; weaponIndex++) {
+            Weapon weapon = weapons[weaponIndex];
+
+            if(weapon != null) {
+                weapon.draw(Math.toDegrees(weapon.getDirection().getRadian()));
+            }
+        }
     }
 }

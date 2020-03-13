@@ -3,7 +3,7 @@ public class Game {
     /**
      * the number of frames that have passed since the start of the game
      */
-    public static volatile long framesPassed;
+    public static volatile long currentFrame;
 
     /**
      * the gamemode that the game is currently in
@@ -50,6 +50,8 @@ public class Game {
             }
 
             gameMode.draw();
+
+            currentFrame++;
         }
     }
 }

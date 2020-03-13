@@ -4,6 +4,8 @@ import java.util.List;
 
 public class PlayableGame extends GameMode{
 
+    public static final double LAG_CORRECTION_COEFFICIENT = 5;
+
     private Fighter fighter;
 
     private List<Enemy> enemies;
@@ -38,7 +40,8 @@ public class PlayableGame extends GameMode{
     public void draw() {
         StdDraw.clear(getBackground());
 
-        for (Ammo ammo : ammo){
+        List<Ammo> ammoThisFrame = new ArrayList<>(ammo);
+        for (Ammo ammo : ammoThisFrame){
             ammo.draw(0);
         }
 
@@ -49,36 +52,54 @@ public class PlayableGame extends GameMode{
         //draw the fighter looking in the right direction
         fighter.draw();
 
-        //StdDraw.picture(.5, .5, "Images/unknown_tile.png", 1, 1, 0 );
-
         StdDraw.show();
     }
 
     @Override
     public void run() {
         while (true) {
-            Vector acceleration = new Vector();
+
+            //if the mouse is clicked - fire
+            if(StdDraw.isMousePressed()) {
+
+                //if the Weapon is ready to be fired - set the last shot fired
+                if(fighter.getWeapon(0).isReadyToFire()) {
+                    fighter.getWeapon(0).setLastShotFiredFrameStamp(Game.currentFrame);
+                    ammo.add(fighter.getWeapon(0).fire());
+                }
+
+            }
+
+            for(Ammo ammo : ammo){
+                ammo.position.update(ammo.getVelocity());
+            }
+
+            //setting movement for Fighter
+            double accelerationX = 0;
+            double accelerationY = 0;
 
             //W
             if (StdDraw.isKeyPressed(87)) {
-                acceleration.addY(fighter.getMaxAcceleration());
+                accelerationY+= fighter.getMaxAcceleration();
             }
             //S
             if (StdDraw.isKeyPressed(83)) {
-                acceleration.addY(-fighter.getMaxAcceleration());
+                accelerationY -= fighter.getMaxAcceleration();
             }
             //D
             if (StdDraw.isKeyPressed(68)) {
-                acceleration.addX(fighter.getMaxAcceleration());
+                accelerationX += fighter.getMaxAcceleration();
             }
             //A
             if (StdDraw.isKeyPressed(65)) {
-                acceleration.addX(-fighter.getMaxAcceleration());
+                accelerationX -= fighter.getMaxAcceleration();
             }
 
-            fighter.setAcceleration(acceleration);
+            fighter.setAcceleration(accelerationX, accelerationY);
 
-            fighter.move();
+            fighter.move(true);
+
+            fighter.setWeaponPositions();
         }
     }
 }

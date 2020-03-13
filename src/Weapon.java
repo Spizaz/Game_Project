@@ -1,4 +1,4 @@
-public class Weapon extends StationaryGameObject {
+public abstract class Weapon extends StationaryGameObject {
 
     /**
      * determines which weapon goes on the head of the Fighter
@@ -14,12 +14,6 @@ public class Weapon extends StationaryGameObject {
      *    missileLauncher - the distance that the missile can travel
      */
     private double range;
-
-    /**
-     * the position of the head of the Weapon (x, y)
-     * where the Ammo will leave the Weapon from
-     */
-    private Vector headPosition;
 
     /**
      * determines how far to the left and right the Ammo will miss the intended target
@@ -63,6 +57,11 @@ public class Weapon extends StationaryGameObject {
     private int damageUpgradePoints;
 
     /**
+     * the number of times that the range section of the Weapon has been upgraded
+     */
+    private int rangeUpgradePoints;
+
+    /**
      * the number of times that the accuracy section of the Weapon has been upgraded
      */
     private int accuracyUpgradePoints;
@@ -87,47 +86,38 @@ public class Weapon extends StationaryGameObject {
      */
     private int criticalDamageUpgradePoints;
 
+    /**
+     * the number of frames that the Weapon needs to wait until firing again
+     */
+    private double framesShotDelay;
+
+    /**
+     * the frame where the Ammo was last fired
+     */
+    private long lastShotFiredFrameStamp;
+
     //==================================================================================================================
 
-    public Weapon(String name) {
-        super(name);
-        this.isPrimaryWeapon = false;
-        this.range = 0;
-        this.headPosition = new Vector();
-        this.degreesOfInaccuracy = 0;
-        this.recoilForce = 0;
-        this.knockBackForce = 0;
-        this.criticalDamageChance = 0;
-        this.criticalDamageAddedDamage = 0;
-        this.autoFire = false;
-        this.price = 0;
-        this.damageUpgradePoints = 0;
-        this.accuracyUpgradePoints = 0;
-        this.fireRateUpgradePoints = 0;
-        this.recoilUpgradePoints = 0;
-        this.knockBackUpgradePoints = 0;
-        this.criticalDamageUpgradePoints = 0;
-        setSpriteFilepath("Images/unknown_tile.png");
-    }
-
-    public Weapon(String name, double range, double degreesOfInaccuracy, double recoilForce, double knockBackForce, double criticalDamageChance, double criticalDamageAddedDamage, boolean autoFire, int price, double width, double height){
-        super(new Vector(), name, width, height);
+    public Weapon(String name, double range, double degreesOfInaccuracy, double recoilForce, double knockBackForce, double criticalDamageChance, double criticalDamageAddedDamage, int price, double framesShotDelay){
+        super(new Vector(), name);
         this.isPrimaryWeapon = false;
         this.range = range;
-        this.headPosition = new Vector();
         this.degreesOfInaccuracy = degreesOfInaccuracy;
         this.recoilForce = recoilForce;
         this.knockBackForce = knockBackForce;
         this.criticalDamageChance = criticalDamageChance;
         this.criticalDamageAddedDamage = criticalDamageAddedDamage;
-        this.autoFire = autoFire;
+        this.autoFire = false;
         this.price = price;
         this.damageUpgradePoints = 0;
+        this.rangeUpgradePoints = 0;
         this.accuracyUpgradePoints = 0;
         this.fireRateUpgradePoints = 0;
         this.recoilUpgradePoints = 0;
         this.knockBackUpgradePoints = 0;
         this.criticalDamageUpgradePoints = 0;
+        this.framesShotDelay = framesShotDelay;
+        this.lastShotFiredFrameStamp = 0;
         setSpriteFilepath("Images/unknown_tile.png");
     }
 
@@ -146,14 +136,6 @@ public class Weapon extends StationaryGameObject {
 
     public double getRange() {
         return range;
-    }
-
-    public Vector getHeadPosition() {
-        return headPosition;
-    }
-
-    public void setHeadPosition(Vector headPosition) {
-        this.headPosition = headPosition;
     }
 
     public double getRecoilForce() {
@@ -224,12 +206,38 @@ public class Weapon extends StationaryGameObject {
         this.knockBackUpgradePoints += knockBackUpgradePointsAdded;
     }
 
+    public int getCriticalDamageUpgradePoints() {
+        return criticalDamageUpgradePoints;
+    }
+
+    public void addCriticalDamageUpgradePoints(int criticalDamageUpgradePointsToBeAdded) {
+        this.criticalDamageUpgradePoints += criticalDamageUpgradePointsToBeAdded;
+    }
+
+    public double getFramesShotDelay() {
+        return framesShotDelay * PlayableGame.LAG_CORRECTION_COEFFICIENT;
+    }
+
+    public void setFramesShotDelay(double framesShotDelay) {
+        this.framesShotDelay = framesShotDelay;
+    }
+
+    public long getLastShotFiredFrameStamp() {
+        return lastShotFiredFrameStamp;
+    }
+
+    public void setLastShotFiredFrameStamp(long lastShotFiredFrameStamp) {
+        this.lastShotFiredFrameStamp = lastShotFiredFrameStamp;
+    }
+
+    public abstract Vector getHeadPosition();
+
+    public abstract boolean isReadyToFire();
+
 
     //endregion
 
     //==================================================================================================================
 
-    public void fire(){
-
-    }
+    public abstract Ammo fire();
 }
