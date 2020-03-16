@@ -1,18 +1,18 @@
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class PlayableGame extends GameMode{
 
-    public static final double LAG_CORRECTION_COEFFICIENT = 5;
-
     private Fighter fighter;
 
-    private List<Enemy> enemies;
+    private List<Enemy> enemiesList;
 
-    private List<Item> items;
+    private List<Item> itemsList;
 
-    private List<Ammo> ammo;
+    private List<Ammo> ammoList;
 
     /*
     private final Button pauseButton = new Button();
@@ -23,9 +23,9 @@ public class PlayableGame extends GameMode{
     public PlayableGame(Color backgroundColor) throws InterruptedException {
         super("Playable_Game", backgroundColor);
         this.fighter = new Fighter(new Vector(.5, .5));
-        this.enemies = new ArrayList<>();
-        this.items = new ArrayList<>();
-        this.ammo = new ArrayList<>();
+        this.enemiesList = new ArrayList<>();
+        this.itemsList = new ArrayList<>();
+        this.ammoList = new ArrayList<>();
     }
 
     //==================================================================================================================
@@ -40,12 +40,12 @@ public class PlayableGame extends GameMode{
     public void draw() {
         StdDraw.clear(getBackground());
 
-        List<Ammo> ammoThisFrame = new ArrayList<>(ammo);
+        List<Ammo> ammoThisFrame = new ArrayList<>(ammoList);
         for (Ammo ammo : ammoThisFrame){
             ammo.draw(0);
         }
 
-        for (Enemy enemy : enemies){
+        for (Enemy enemy : enemiesList){
             enemy.draw(0);
         }
 
@@ -57,49 +57,66 @@ public class PlayableGame extends GameMode{
 
     @Override
     public void run() {
-        while (true) {
+        Timer timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
 
-            //if the mouse is clicked - fire
-            if(StdDraw.isMousePressed()) {
+            @Override
+            public void run() {
+                //if the mouse is clicked - fire
+                if(StdDraw.isMousePressed()) {
 
-                //if the Weapon is ready to be fired - set the last shot fired
-                if(fighter.getWeapon(0).isReadyToFire()) {
-                    fighter.getWeapon(0).setLastShotFiredFrameStamp(Game.currentFrame);
-                    ammo.add(fighter.getWeapon(0).fire());
+                    //if the Weapon is ready to be fired - set the last shot fired
+                    if(fighter.getWeapon(0).isReadyToFire()) {
+                        fighter.getWeapon(0).setLastShotFiredFrameStamp(Game.currentFrame);
+                        ammoList.add(fighter.getWeapon(0).fire());
+                    }
+
                 }
 
-            }
+                for (int i = 0 ; i < ammoList.size() ; i++) {
+                    Ammo ammo = ammoList.get(i);
 
-            for(Ammo ammo : ammo){
-                ammo.position.update(ammo.getVelocity());
-            }
+                    //if the distance from the ammo is really far - delete it
+                    if (ammo.isActive()) {
+                        ammoList.remove(ammo);
+                        i--;
+                        continue;
+                    }
 
-            //setting movement for Fighter
-            double accelerationX = 0;
-            double accelerationY = 0;
+                    ammo.position.update(ammo.getVelocity());
+                    ammo.addDistanceTraveled(ammo.getVelocity().magnitude());
+                }
 
-            //W
-            if (StdDraw.isKeyPressed(87)) {
-                accelerationY+= fighter.getMaxAcceleration();
-            }
-            //S
-            if (StdDraw.isKeyPressed(83)) {
-                accelerationY -= fighter.getMaxAcceleration();
-            }
-            //D
-            if (StdDraw.isKeyPressed(68)) {
-                accelerationX += fighter.getMaxAcceleration();
-            }
-            //A
-            if (StdDraw.isKeyPressed(65)) {
-                accelerationX -= fighter.getMaxAcceleration();
-            }
+                //setting movement for Fighter
+                double accelerationX = 0;
+                double accelerationY = 0;
 
-            fighter.setAcceleration(accelerationX, accelerationY);
+                //W
+                if (StdDraw.isKeyPressed(87)) {
+                    accelerationY+= fighter.getMaxAcceleration();
+                }
+                //S
+                if (StdDraw.isKeyPressed(83)) {
+                    accelerationY -= fighter.getMaxAcceleration();
+                }
+                //D
+                if (StdDraw.isKeyPressed(68)) {
+                    accelerationX += fighter.getMaxAcceleration();
+                }
+                //A
+                if (StdDraw.isKeyPressed(65)) {
+                    accelerationX -= fighter.getMaxAcceleration();
+                }
 
-            fighter.move(true);
+                fighter.setAcceleration(accelerationX, accelerationY);
 
-            fighter.setWeaponPositions();
-        }
+                fighter.move(true);
+
+                fighter.setWeaponPositions();
+            }
+        };
+
+        timer.scheduleAtFixedRate(timerTask, 0, 1000/60);
+
     }
 }

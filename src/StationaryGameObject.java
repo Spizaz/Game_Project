@@ -23,7 +23,7 @@ public class StationaryGameObject extends GameObject {
 
 
     public Vector getDirection() {
-        return direction;
+        return direction.unitVector();
     }
 
     public void setDirection(Vector direction) {

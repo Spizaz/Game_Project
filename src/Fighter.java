@@ -128,7 +128,7 @@ public class Fighter extends MovingGameObject{
 
     public Fighter(Vector position) throws InterruptedException {
         // TODO: 3/8/2020 may need to edit the stats one line below
-        super(position, "Fighter", 1e-8, 100);
+        super(position, "Fighter", 2e-3, 100);
         this.totalExperience = 0;
         this.levelExperience = 0;
         this.experienceToLevelUp = 25;
@@ -139,7 +139,7 @@ public class Fighter extends MovingGameObject{
         this.regenHealthPerSecond = 0;
         this.weapons = new Weapon[4];
         this.activePowerUps = new ArrayList<>();
-        this.maxSpeedUpgradePoints = 10;
+        this.maxSpeedUpgradePoints = 0;
         this.maxHealthUpgradePoints = 0;
         this.healthRegenUpgradePoints = 0;
         this.moneyPerKillUpgradePoints = 0;
@@ -152,7 +152,7 @@ public class Fighter extends MovingGameObject{
         this.unusedSkillPoints = 0;
         setSpriteFilepath("Images/fighter.png");
 
-        weapons[0] = new Gun(.5, 0, 0, 0, 0, 0, 0, 0, 50d);
+        weapons[0] = new MachineGun(.5, .5, 0, 0, 0, 0, 0, 0, 25);
     }
 
     //==================================================================================================================
@@ -168,11 +168,11 @@ public class Fighter extends MovingGameObject{
     }
 
     public double getMaxSpeed(){
-        return super.getMaxSpeed() * (1 + getMaxSpeedUpgradePoints() / 10.);
+        return super.getMaxSpeed() * (1 + getMaxSpeedUpgradePoints() / 5.);
     }
 
     public double getMaxAcceleration(){
-        return getMaxSpeed() * 5e-7;
+        return getMaxSpeed() * .1;
     }
 
     public int getTotalExperience() {

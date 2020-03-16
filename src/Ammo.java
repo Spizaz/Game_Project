@@ -50,10 +50,6 @@ public class Ammo extends MovingGameObject {
         return desiredDirection;
     }
 
-    public void setDesiredDirection() {
-
-    }
-
     public Enemy getTargetedEnemy() {
         return targetedEnemy;
     }
@@ -76,6 +72,10 @@ public class Ammo extends MovingGameObject {
 
     public double getKnockBackForce() {
         return knockBackForce;
+    }
+
+    public boolean isActive(){
+        return getDistanceTraveled() >= range;
     }
 
 

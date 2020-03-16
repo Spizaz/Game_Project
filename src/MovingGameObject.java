@@ -111,15 +111,15 @@ public class MovingGameObject extends GameObject {
      */
 
     public void move(boolean friction){
-        velocity.update(acceleration.scaledVector(PlayableGame.LAG_CORRECTION_COEFFICIENT));
+        velocity.update(acceleration);
 
-        if(velocity.magnitude() > getMaxSpeed() * PlayableGame.LAG_CORRECTION_COEFFICIENT){
-            velocity = velocity.unitVector().scaledVector(getMaxSpeed() * PlayableGame.LAG_CORRECTION_COEFFICIENT);
+        if(velocity.magnitude() > getMaxSpeed()){
+            velocity = velocity.unitVector().scaledVector(getMaxSpeed());
         }
 
         if(friction)
-            velocity = velocity.scaledVector(1 - .000000325 * PlayableGame.LAG_CORRECTION_COEFFICIENT);
+            velocity = velocity.scaledVector(1 - .1);
 
-        position.update(velocity.scaledVector(PlayableGame.LAG_CORRECTION_COEFFICIENT));
+        position.update(velocity);
     }
 }

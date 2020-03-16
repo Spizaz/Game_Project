@@ -36,7 +36,7 @@ public class ProjectileLauncher extends Weapon {
     }
 
     public double getAmmoMaxSpeed(){
-        return 5e-7 * (1 + getAmmoSpeedUpgradePoints() / 10.);
+        return 3e-3 * (1 + getAmmoSpeedUpgradePoints() / 10.);
     }
 
     public int getAmmoSpeedUpgradePoints() {
@@ -64,7 +64,11 @@ public class ProjectileLauncher extends Weapon {
     @Override
     public Ammo fire() {
         Ammo ammo = getAmmoTemplate().clone(getHeadPosition());
-        ammo.setVelocity(getDirection().unitVector().scaledVector(getAmmoMaxSpeed()));
+
+        double velocityDirection = getDirection().getRadian();
+        velocityDirection += (Math.random() * 2 - 1) * getDegreesOfInaccuracy();
+        ammo.setVelocity(Vector.radianToVector(velocityDirection).scaledVector(ammo.getMaxSpeed()));
+
         setSpriteFilepath(getSpriteFilepath());
 
         return ammo;

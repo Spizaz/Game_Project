@@ -25,7 +25,7 @@ public class PowerUp extends Item{
     //==================================================================================================================
 
     public double getActiveTime() {
-        return activeTime * PlayableGame.LAG_CORRECTION_COEFFICIENT;
+        return activeTime;
     }
 
     public double getActivationTime() {

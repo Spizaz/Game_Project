@@ -137,6 +137,10 @@ public class Vector {
         return vector;
     }
 
+    public static Vector radianToVector(double radian){
+        return new Vector(Math.cos(radian) , Math.sin(radian));
+    }
+
     //================================================================================================================
 
     public String toString(){

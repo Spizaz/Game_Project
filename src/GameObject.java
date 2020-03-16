@@ -95,6 +95,12 @@ public class GameObject {
         return false;
     }
 
+    public double getDistance(GameObject other){
+        return getPosition().difference(other.getPosition());
+    }
+
+    //==================================================================================================================
+
 
     /**
      * draws the object onto the screen

@@ -1,3 +1,6 @@
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class Game {
 
     /**
@@ -34,24 +37,31 @@ public class Game {
         previousGameModeID = "";
         gameModeID = playableGame.getName();
         gameMode = null;
+        Timer timer = new Timer();
 
-        while (true){
-            boolean gameModeChange = false;
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                boolean gameModeChange = false;
 
-            if(gameModeID.equals(playableGame.getName()) && !previousGameModeID.equals(playableGame.getName())){
-                gameMode = playableGame;
-                previousGameModeID = playableGame.getName();
-                gameModeChange = true;
+                if(gameModeID.equals(playableGame.getName()) && !previousGameModeID.equals(playableGame.getName())){
+                    gameMode = playableGame;
+                    previousGameModeID = playableGame.getName();
+                    gameModeChange = true;
+                }
+
+                if(gameModeChange){
+                    gameModeThread = new Thread(gameMode,playableGame.getName() + "_Thread");
+                    gameModeThread.start();
+                }
+
+                gameMode.draw();
+
+                currentFrame++;
             }
+        };
 
-            if(gameModeChange){
-                gameModeThread = new Thread(gameMode,playableGame.getName() + "_Thread");
-                gameModeThread.start();
-            }
+        timer.scheduleAtFixedRate(timerTask, 0, 1000/60);
 
-            gameMode.draw();
-
-            currentFrame++;
-        }
     }
 }

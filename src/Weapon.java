@@ -138,6 +138,10 @@ public abstract class Weapon extends StationaryGameObject {
         return range;
     }
 
+    public double getDegreesOfInaccuracy(){
+        return degreesOfInaccuracy;
+    }
+
     public double getRecoilForce() {
         return recoilForce;
     }
@@ -215,7 +219,7 @@ public abstract class Weapon extends StationaryGameObject {
     }
 
     public double getFramesShotDelay() {
-        return framesShotDelay * PlayableGame.LAG_CORRECTION_COEFFICIENT;
+        return framesShotDelay;
     }
 
     public void setFramesShotDelay(double framesShotDelay) {
