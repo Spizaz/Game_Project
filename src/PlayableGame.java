@@ -14,6 +14,8 @@ public class PlayableGame extends GameMode{
 
     private List<Ammo> ammoList;
 
+    private List<Wall> wallList;
+
     /*
     private final Button pauseButton = new Button();
      */
@@ -26,6 +28,7 @@ public class PlayableGame extends GameMode{
         this.enemiesList = new ArrayList<>();
         this.itemsList = new ArrayList<>();
         this.ammoList = new ArrayList<>();
+        this.wallList = new ArrayList<>();
     }
 
     //==================================================================================================================
@@ -39,6 +42,10 @@ public class PlayableGame extends GameMode{
     @Override
     public void draw() {
         StdDraw.clear(getBackground());
+
+        for (Wall wall : wallList){
+            wall.draw();
+        }
 
         List<Ammo> ammoThisFrame = new ArrayList<>(ammoList);
         for (Ammo ammo : ammoThisFrame){
@@ -73,10 +80,11 @@ public class PlayableGame extends GameMode{
 
                 }
 
+                //movement for ammo
                 for (int i = 0 ; i < ammoList.size() ; i++) {
                     Ammo ammo = ammoList.get(i);
 
-                    //if the distance from the ammo is really far - delete it
+                    //remove the ammo if it is out of range
                     if (ammo.isActive()) {
                         ammoList.remove(ammo);
                         i--;
