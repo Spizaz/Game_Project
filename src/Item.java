@@ -13,7 +13,7 @@ public class Item extends StationaryGameObject {
     }
 
     public Item(Vector position, String name, double spawnRate){
-        super(position, name);
+        super(position, name, 1);
         this.spawnRate = spawnRate;
     }
 

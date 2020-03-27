@@ -27,18 +27,8 @@ public class Enemy extends MovingGameObject{
 
     //==================================================================================================================
 
-    public Enemy() {
-        super("Enemy");
-        this.maxHealth = 0;
-        this.health = 0;
-        this.desiredDirection = new Vector();
-        this.regenHealthPerSecond = 0;
-        this.weapon = null;
-        setSpriteFilepath("Images/enemy.png");
-    }
-
     public Enemy(Vector position, double maxHealth, double maxSpeed, double mass){
-        super(position, "Enemy", maxSpeed, mass);
+        super(position, "Enemy", 32, maxSpeed, mass);
         this.maxHealth = maxHealth;
         this.health = maxHealth;
         this.desiredDirection = new Vector();
@@ -48,7 +38,7 @@ public class Enemy extends MovingGameObject{
     }
 
     public Enemy(Vector position, double maxHealth, double maxSpeed, double mass, Weapon weapon){
-        super(position, "Enemy", maxSpeed, mass);
+        super(position, "Enemy", 32, maxSpeed, mass);
         this.maxHealth = maxHealth;
         this.health = maxHealth;
         this.desiredDirection = new Vector();
@@ -58,7 +48,7 @@ public class Enemy extends MovingGameObject{
     }
 
     public Enemy(Vector position, String name, double maxHealth, double maxSpeed, double mass){
-        super(position, name, maxSpeed, mass);
+        super(position, name, 32, maxSpeed, mass);
         this.maxHealth = maxHealth;
         this.health = maxHealth;
         this.desiredDirection = new Vector();
@@ -66,7 +56,7 @@ public class Enemy extends MovingGameObject{
         this.weapon = null;
     }
     public Enemy(Vector position, String name, double maxHealth, double maxSpeed, double mass, Weapon weapon){
-        super(position, name, maxSpeed, mass);
+        super(position, name, 32, maxSpeed, mass);
         this.maxHealth = maxHealth;
         this.health = maxHealth;
         this.desiredDirection = new Vector();
@@ -75,7 +65,7 @@ public class Enemy extends MovingGameObject{
     }
 
     public Enemy(Vector position, double maxHealth, double regenHealthPerSecond, double maxSpeed, double mass){
-        super(position, "Enemy", maxSpeed, mass);
+        super(position, "Enemy", 32, maxSpeed, mass);
         this.maxHealth = maxHealth;
         this.health = maxHealth;
         this.desiredDirection = new Vector();
@@ -85,7 +75,7 @@ public class Enemy extends MovingGameObject{
     }
 
     public Enemy(Vector position, double maxHealth, double regenHealthPerSecond, double maxSpeed, double mass, Weapon weapon){
-        super(position, "Enemy", maxSpeed, mass);
+        super(position, "Enemy", 32, maxSpeed, mass);
         this.maxHealth = maxHealth;
         this.health = maxHealth;
         this.desiredDirection = new Vector();
@@ -95,7 +85,7 @@ public class Enemy extends MovingGameObject{
     }
 
     public Enemy(Vector position, String name, double maxHealth, double regenHealthPerSecond, double maxSpeed, double mass){
-        super(position, name, maxSpeed, mass);
+        super(position, name, 32, maxSpeed, mass);
         this.maxHealth = maxHealth;
         this.health = maxHealth;
         this.desiredDirection = new Vector();
@@ -104,7 +94,7 @@ public class Enemy extends MovingGameObject{
     }
 
     public Enemy(Vector position, String name, double maxHealth, double regenHealthPerSecond, double maxSpeed, double mass, Weapon weapon){
-        super(position, name, maxSpeed, mass);
+        super(position, name, 32, maxSpeed, mass);
         this.maxHealth = maxHealth;
         this.health = maxHealth;
         this.desiredDirection = new Vector();
@@ -145,6 +135,10 @@ public class Enemy extends MovingGameObject{
         return weapon;
     }
 
+    public double getMaxAcceleration(){
+        return getMaxSpeed() * ( .0025 + 0 );
+    }
+
     /**
      * an equation that determines the Enemy's added difficulty to the game
      * @return a double representing how much this enemy's presence makes the game more difficult
@@ -154,15 +148,39 @@ public class Enemy extends MovingGameObject{
                 (maxHealth / 100.) +
                 (getMaxSpeed() / getMass() * 100) +
                         //if the weapon doesn't exist - don't add to difficulty
-                        ((weapon != null) ?
+                        ((hasWeapon()) ?
                                 weapon.getDamagePerSecond()
                                 : 0);
+    }
+
+    /**
+     * @return true if the Enemy has a Weapon
+     */
+    public boolean hasWeapon(){
+        return weapon != null;
     }
 
 
     //endregion
 
     //==================================================================================================================
+
+    public void move(Vector fighterPosition){
+
+        //if the Enemy has a Weapon
+        if(hasWeapon()){
+
+        }
+
+        //the Enemy does not have a Weapon
+        else{
+            desiredDirection = this.position.differenceVector(fighterPosition).unitVector();
+        }
+
+        setAcceleration(desiredDirection.scaledVector(getMaxAcceleration()));
+
+        super.move(true);
+    }
 
 
 

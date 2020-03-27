@@ -1,11 +1,9 @@
-import java.util.jar.JarOutputStream;
-
 public class GameObject {
 
     /**
      * the size in screen coordinates of a single pixel
      */
-    public static final double PIXEL_SIZE = .05;
+    public static final double PIXEL_SIZE = .0025;
 
     /**
      * the physical location of the GameObject (x , y)
@@ -22,23 +20,30 @@ public class GameObject {
      */
     private String name;
 
-    //==================================================================================================================
+    /**
+     * the number of GamePixels the image is at its widest
+     */
+    private int size;
 
-    public GameObject(){
-        this.position = new Vector();
-        this.spriteFilepath = "";
-        this.name = "Game_Object";
-    }
+    //==================================================================================================================
 
     //the children of the GameObject class need to set their own spriteFileName
     public GameObject(String name){
         this.position = new Vector();
         this.name = name;
+        this.size = 0;
     }
 
-    public GameObject(Vector position, String name){
+    public GameObject(String name, int size){
+        this.position = new Vector();
+        this.name = name;
+        this.size = size;
+    }
+
+    public GameObject(Vector position, String name, int size){
         this.position = position;
         this.name = name;
+        this.size = size;
     }
 
     //==================================================================================================================
@@ -79,6 +84,13 @@ public class GameObject {
         return name;
     }
 
+    public int getSize() {
+        return size;
+    }
+
+    public double getPhysicalSize(){
+        return getSize() * GameObject.PIXEL_SIZE;
+    }
 
     //endregion
 
@@ -89,10 +101,8 @@ public class GameObject {
      * @param other - the object in question
      * @return - true if touching - false if not
      */
-
     public boolean isTouching(GameObject other){
-
-        return false;
+        return (getDistance(other) <= (this.getPhysicalSize() + other.getPhysicalSize()) / 2);
     }
 
     public double getDistance(GameObject other){
@@ -107,6 +117,6 @@ public class GameObject {
      */
 
     public void draw(double radian){
-        StdDraw.picture(getPositionX(), getPositionY(), getSpriteFilepath(), GameObject.PIXEL_SIZE, GameObject.PIXEL_SIZE,  Math.toDegrees(radian));
+        StdDraw.picture(getPositionX(), getPositionY(), getSpriteFilepath(), GameObject.PIXEL_SIZE * 32, GameObject.PIXEL_SIZE * 32,  Math.toDegrees(radian));
     }
 }

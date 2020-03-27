@@ -7,7 +7,7 @@ public class Game {
      * the maximum number of frames that passes in one second
      * also controls the overall game speed (smaller = faster)
      */
-    public static final int FRAME_DELAY = 1000 / 60;
+    public static final int FRAME_DELAY = 1000 / 100;
 
     /**
      * the number of frames that have passed since the start of the game
@@ -50,8 +50,6 @@ public class Game {
 
                 gameMode.run();
                 gameMode.draw();
-
-                if(Game.currentFrame % 60 == 0) System.out.println(Game.currentFrame/60);
 
                 Game.currentFrame++;
             }

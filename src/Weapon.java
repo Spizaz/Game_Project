@@ -93,7 +93,7 @@ public abstract class Weapon extends StationaryGameObject {
     //==================================================================================================================
 
     public Weapon(String name, double range, double degreesOfInaccuracy, double recoilForce, double knockBackForce, double criticalDamageChance, double criticalDamageAddedDamage, int price, double shotDelay){
-        super(new Vector(), name);
+        super(new Vector(), name, 1);
         this.range = range;
         this.degreesOfInaccuracy = degreesOfInaccuracy;
         this.recoilForce = recoilForce;

@@ -34,8 +34,8 @@ public class Ammo extends MovingGameObject {
 
     //==================================================================================================================
 
-    public Ammo(String name, double maxSpeed, double mass, double range, double damage, double knockBackForce){
-        super(name, maxSpeed, mass);
+    public Ammo(String name, int size, double maxSpeed, double mass, double range, double damage, double knockBackForce){
+        super(name, size, maxSpeed, mass);
         this.range = range;
         this.damage = damage;
         this.knockBackForce = knockBackForce;
@@ -90,7 +90,7 @@ public class Ammo extends MovingGameObject {
     }
 
     public Ammo clone(Vector position){
-        Ammo ammo = new Ammo(getName(), getMaxSpeed(), getMass(), range, getDamage(), getKnockBackForce());
+        Ammo ammo = new Ammo(getName(), getSize(), getMaxSpeed(), getMass(), range, getDamage(), getKnockBackForce());
         ammo.setPosition(position);
         ammo.distanceTraveled = 0;
         ammo.setSpriteFilepath(getSpriteFilepath());

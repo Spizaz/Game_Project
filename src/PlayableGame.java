@@ -1,8 +1,6 @@
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class PlayableGame extends GameMode{
 
@@ -51,6 +49,8 @@ public class PlayableGame extends GameMode{
         this.ammoList = new ArrayList<>();
         this.wallList = new ArrayList<>();
         this.gameDifficulty = 1;
+
+        enemyList.add(new Enemy(new Vector(.5, .5), 100, 8e-5, 100));
     }
 
     //==================================================================================================================
@@ -74,8 +74,6 @@ public class PlayableGame extends GameMode{
 
     @Override
     public void run() {
-
-        enemyList.add(new Enemy(new Vector(.75, .75), 100, 1, 100));
 
         //if the mouse is clicked - fire
         if(StdDraw.isMousePressed()) {
@@ -128,6 +126,37 @@ public class PlayableGame extends GameMode{
 
         fighter.move(true);
 
+        //enemy movement
+        for (int enemyIndex = 0 ; enemyIndex < enemyList.size() ; enemyIndex++) {
+            enemyList.get(enemyIndex).move(fighter.getPosition());
+        }
+
+        //are any of the Enemies touching any Ammo
+        for (int enemyIndex = 0 ; enemyIndex < enemyList.size() ; enemyIndex++) {
+            Enemy enemy = enemyList.get(enemyIndex);
+            Vector enemyAcceleration = new Vector();
+
+            for (int ammoIndex = 0 ; ammoIndex < ammoList.size() ; ammoIndex++) {
+                Ammo ammo = ammoList.get(ammoIndex);
+
+                //if the Ammo is touching the Enemy
+                if(enemy.isTouching(ammo)){
+                    ammoList.remove(ammo);
+
+                    //the direction the force is pointed with the magnitude of the force being exerted
+                    Vector forceMagnitude = ammo.position.differenceVector(enemy.position).unitVector().scaledVector(ammo.getKnockBackForce());
+
+                    enemyAcceleration.update(forceMagnitude.scaledVector(1 / enemy.getMass()));
+                }
+            }
+
+            //changing the velocity by the net force exerted by the Ammo
+            Vector enemyVelocity = enemy.getVelocity();
+            enemyVelocity.update(enemyAcceleration.scaledVector(1 / enemy.getMass()));
+
+            enemy.setVelocity(enemyVelocity);
+        }
+
     }
 
     @Override
@@ -138,14 +167,13 @@ public class PlayableGame extends GameMode{
             wall.draw();
         }
 
-        List<Ammo> ammoThisFrame = new ArrayList<>(ammoList);
-        for (Ammo ammo : ammoThisFrame){
-            //draws the ammo facing towards where it is going
-            ammo.draw(ammo.getVelocity().getRadian());
-        }
-
         for (Enemy enemy : enemyList){
             enemy.draw(0);
+        }
+
+        for (Ammo ammo : ammoList){
+            //draws the ammo facing towards where it is going
+            ammo.draw(ammo.getVelocity().getRadian());
         }
 
         //draw the fighter looking in the right direction

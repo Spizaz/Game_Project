@@ -12,8 +12,8 @@ public class StationaryGameObject extends GameObject {
         this.direction = new Vector(1, 0);
     }
 
-    public StationaryGameObject(Vector position, String name){
-        super(position, name);
+    public StationaryGameObject(Vector position, String name, int size){
+        super(position, name, size);
         this.direction = new Vector(1, 0);
     }
 

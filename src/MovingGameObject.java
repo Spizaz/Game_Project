@@ -24,24 +24,16 @@ public class MovingGameObject extends GameObject {
 
     //==================================================================================================================
 
-    public MovingGameObject(String name) {
-        super(name);
-        this.velocity = new Vector();
-        this.acceleration = new Vector();
-        this.maxSpeed = 0;
-        this.mass = 0;
-    }
-
-    public MovingGameObject(String name, double maxSpeed, double mass) {
-        super(name);
+    public MovingGameObject(String name, int size,  double maxSpeed, double mass) {
+        super(name, size);
         this.velocity = new Vector();
         this.acceleration = new Vector();
         this.maxSpeed = maxSpeed;
         this.mass = mass;
     }
 
-    public MovingGameObject(Vector position, String name, double maxSpeed, double mass) {
-        super(position, name);
+    public MovingGameObject(Vector position, String name, int size, double maxSpeed, double mass) {
+        super(position, name, size);
         this.velocity = new Vector();
         this.acceleration = new Vector();
         this.maxSpeed = maxSpeed;

@@ -128,7 +128,7 @@ public class Fighter extends MovingGameObject{
 
     public Fighter(Vector position) throws InterruptedException {
         // TODO: 3/8/2020 may need to edit the stats one line below
-        super(position, "Fighter", 12e-5, 100);
+        super(position, "Fighter", 1, 12e-5, 100);
         this.totalExperience = 0;
         this.levelExperience = 0;
         this.experienceToLevelUp = 25;
@@ -152,7 +152,7 @@ public class Fighter extends MovingGameObject{
         this.unusedSkillPoints = 0;
         setSpriteFilepath("Images/fighter.png");
 
-        weapons[0] = new MachineGun(.5, .5, 0, 0, 0, 0, 0, 0, 2000);
+        weapons[0] = new MachineGun(.5, .5, 0, 100, 0, 0, 0, 0, 500);
     }
 
     //==================================================================================================================
@@ -337,8 +337,8 @@ public class Fighter extends MovingGameObject{
             if(weapon != null) {
                 //sets the position of the Weapon - rotated some from the center of the Fighter
                 weapon.setPosition(
-                                getPositionX() + Math.cos(direction + weaponIndex * ( 2 * Math.PI / weapons.length )) * GameObject.PIXEL_SIZE / 2,
-                                getPositionY() + Math.sin(direction + weaponIndex * ( 2 * Math.PI / weapons.length )) * GameObject.PIXEL_SIZE / 2
+                                getPositionX() + Math.cos(direction + weaponIndex * ( 2 * Math.PI / weapons.length )) * GameObject.PIXEL_SIZE / 2 * 32,
+                                getPositionY() + Math.sin(direction + weaponIndex * ( 2 * Math.PI / weapons.length )) * GameObject.PIXEL_SIZE / 2 * 32
                         );
 
                 //sets the direction of the Weapon
