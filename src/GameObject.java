@@ -106,7 +106,7 @@ public class GameObject {
      * draws the object onto the screen
      */
 
-    public void draw(double degrees){
-        StdDraw.picture(getPositionX(), getPositionY(), getSpriteFilepath(), GameObject.PIXEL_SIZE, GameObject.PIXEL_SIZE,  degrees);
+    public void draw(double radian){
+        StdDraw.picture(getPositionX(), getPositionY(), getSpriteFilepath(), GameObject.PIXEL_SIZE, GameObject.PIXEL_SIZE,  Math.toDegrees(radian));
     }
 }

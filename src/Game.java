@@ -4,6 +4,12 @@ import java.util.TimerTask;
 public class Game {
 
     /**
+     * the maximum number of frames that passes in one second
+     * also controls the overall game speed (smaller = faster)
+     */
+    public static final int FRAME_DELAY = 1000 / 60;
+
+    /**
      * the number of frames that have passed since the start of the game
      */
     public static volatile long currentFrame;
@@ -12,11 +18,6 @@ public class Game {
      * the gamemode that the game is currently in
      */
     private String gameModeID;
-
-    /**
-     * the name of the gamemode that was just running
-     */
-    private String previousGameModeID;
 
     /**
      * the gamemode that the game is currently in
@@ -34,34 +35,30 @@ public class Game {
     private Thread gameModeThread;
 
     public Game() throws InterruptedException {
-        previousGameModeID = "";
         gameModeID = playableGame.getName();
         gameMode = null;
-        Timer timer = new Timer();
+        Timer timer = new Timer("Game_Timer");
 
         TimerTask timerTask = new TimerTask() {
+
             @Override
             public void run() {
-                boolean gameModeChange = false;
 
-                if(gameModeID.equals(playableGame.getName()) && !previousGameModeID.equals(playableGame.getName())){
+                if(gameModeID.equals(playableGame.getName())){
                     gameMode = playableGame;
-                    previousGameModeID = playableGame.getName();
-                    gameModeChange = true;
                 }
 
-                if(gameModeChange){
-                    gameModeThread = new Thread(gameMode,playableGame.getName() + "_Thread");
-                    gameModeThread.start();
-                }
-
+                gameMode.run();
                 gameMode.draw();
 
-                currentFrame++;
+                if(Game.currentFrame % 60 == 0) System.out.println(Game.currentFrame/60);
+
+                Game.currentFrame++;
             }
+
         };
 
-        timer.scheduleAtFixedRate(timerTask, 0, 1000/60);
+        timer.scheduleAtFixedRate(timerTask, 0, Game.FRAME_DELAY);
 
     }
 }

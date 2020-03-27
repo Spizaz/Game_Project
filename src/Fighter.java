@@ -128,7 +128,7 @@ public class Fighter extends MovingGameObject{
 
     public Fighter(Vector position) throws InterruptedException {
         // TODO: 3/8/2020 may need to edit the stats one line below
-        super(position, "Fighter", 2e-3, 100);
+        super(position, "Fighter", 12e-5, 100);
         this.totalExperience = 0;
         this.levelExperience = 0;
         this.experienceToLevelUp = 25;
@@ -152,7 +152,7 @@ public class Fighter extends MovingGameObject{
         this.unusedSkillPoints = 0;
         setSpriteFilepath("Images/fighter.png");
 
-        weapons[0] = new MachineGun(.5, .5, 0, 0, 0, 0, 0, 0, 25);
+        weapons[0] = new MachineGun(.5, .5, 0, 0, 0, 0, 0, 0, 2000);
     }
 
     //==================================================================================================================
@@ -164,7 +164,12 @@ public class Fighter extends MovingGameObject{
      * @return the Vector that points towards the Mouse from the Fighter
      */
     public Vector getDirection() {
-        return getPosition().differenceVector(new Vector(StdDraw.mouseX(), StdDraw.mouseY()));
+        Vector direction = getPosition().differenceVector(new Vector(StdDraw.mouseX(), StdDraw.mouseY()));
+
+        //if the game can't find the mouse for some reason
+        if(direction.magnitude() == 0) return new Vector(1,0);
+
+        return direction;
     }
 
     public double getMaxSpeed(){
@@ -172,7 +177,7 @@ public class Fighter extends MovingGameObject{
     }
 
     public double getMaxAcceleration(){
-        return getMaxSpeed() * .1;
+        return getMaxSpeed() * .0025;
     }
 
     public int getTotalExperience() {
@@ -323,8 +328,7 @@ public class Fighter extends MovingGameObject{
         this.unusedSkillPoints += unusedSkillPointsToBeAdded;
     }
 
-    public void setWeaponPositions(){
-        double direction = getDirection().getRadian();
+    public void setWeaponPositions(double direction){
 
         for (int weaponIndex = 0 ; weaponIndex < weapons.length ; weaponIndex++) {
 
@@ -357,14 +361,19 @@ public class Fighter extends MovingGameObject{
     //==================================================================================================================
 
     public void draw() {
-        super.draw(Math.toDegrees(getDirection().getRadian()));
+
+        double direction = getDirection().getRadian();
+
+        super.draw(direction);
+
+        setWeaponPositions(direction);
 
         //for every weapon so long as it exists - draw it facing the right way
         for (int weaponIndex = 0 ; weaponIndex < weapons.length ; weaponIndex++) {
             Weapon weapon = weapons[weaponIndex];
 
             if(weapon != null) {
-                weapon.draw(Math.toDegrees(weapon.getDirection().getRadian()));
+                weapon.draw(direction + (Math.PI * 2 / weapons.length * weaponIndex));
             }
         }
     }

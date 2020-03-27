@@ -83,6 +83,12 @@ public class Ammo extends MovingGameObject {
 
     //==================================================================================================================
 
+    public double move(){
+        super.move(false);
+
+        return 0;
+    }
+
     public Ammo clone(Vector position){
         Ammo ammo = new Ammo(getName(), getMaxSpeed(), getMass(), range, getDamage(), getKnockBackForce());
         ammo.setPosition(position);

@@ -1,12 +1,6 @@
 public abstract class Weapon extends StationaryGameObject {
 
     /**
-     * determines which weapon goes on the head of the Fighter
-     * has an increased size
-     */
-    private boolean isPrimaryWeapon;
-
-    /**
      * the euclidean distance that this weapon can fire
      *
      * NOTES : for ___ weapon:
@@ -89,7 +83,7 @@ public abstract class Weapon extends StationaryGameObject {
     /**
      * the number of frames that the Weapon needs to wait until firing again
      */
-    private double framesShotDelay;
+    private double shotDelay;
 
     /**
      * the frame where the Ammo was last fired
@@ -98,9 +92,8 @@ public abstract class Weapon extends StationaryGameObject {
 
     //==================================================================================================================
 
-    public Weapon(String name, double range, double degreesOfInaccuracy, double recoilForce, double knockBackForce, double criticalDamageChance, double criticalDamageAddedDamage, int price, double framesShotDelay){
+    public Weapon(String name, double range, double degreesOfInaccuracy, double recoilForce, double knockBackForce, double criticalDamageChance, double criticalDamageAddedDamage, int price, double shotDelay){
         super(new Vector(), name);
-        this.isPrimaryWeapon = false;
         this.range = range;
         this.degreesOfInaccuracy = degreesOfInaccuracy;
         this.recoilForce = recoilForce;
@@ -116,7 +109,7 @@ public abstract class Weapon extends StationaryGameObject {
         this.recoilUpgradePoints = 0;
         this.knockBackUpgradePoints = 0;
         this.criticalDamageUpgradePoints = 0;
-        this.framesShotDelay = framesShotDelay;
+        this.shotDelay = shotDelay;
         this.lastShotFiredFrameStamp = 0;
         setSpriteFilepath("Images/unknown_tile.png");
     }
@@ -125,14 +118,6 @@ public abstract class Weapon extends StationaryGameObject {
 
     //region Gets, Sets, and Adds
 
-
-    public boolean isPrimaryWeapon() {
-        return isPrimaryWeapon;
-    }
-
-    public void setPrimaryWeapon(boolean primaryWeapon) {
-        isPrimaryWeapon = primaryWeapon;
-    }
 
     public double getRange() {
         return range;
@@ -218,12 +203,8 @@ public abstract class Weapon extends StationaryGameObject {
         this.criticalDamageUpgradePoints += criticalDamageUpgradePointsToBeAdded;
     }
 
-    public double getFramesShotDelay() {
-        return framesShotDelay;
-    }
-
-    public void setFramesShotDelay(double framesShotDelay) {
-        this.framesShotDelay = framesShotDelay;
+    public double getShotDelay() {
+        return shotDelay;
     }
 
     public long getLastShotFiredFrameStamp() {
@@ -234,9 +215,20 @@ public abstract class Weapon extends StationaryGameObject {
         this.lastShotFiredFrameStamp = lastShotFiredFrameStamp;
     }
 
+    /**
+     * @return a Vector containing the position of the Head of the Weapon
+     */
     public abstract Vector getHeadPosition();
 
+    /**
+     * @return a boolean representing if the weapon is ready to be fired
+     */
     public abstract boolean isReadyToFire();
+
+    /**
+     * @return a double representing the amount of max damage that is done per frame on average
+     */
+    public abstract double getDamagePerSecond();
 
 
     //endregion

@@ -1,6 +1,6 @@
 import java.awt.*;
 
-public abstract class GameMode implements Runnable{
+public abstract class GameMode{
 
     /**
      * what the GameMode is being referred to by
@@ -31,6 +31,8 @@ public abstract class GameMode implements Runnable{
     }
 
     //==================================================================================================================
+
+    public abstract void run();
 
     public abstract void draw();
 

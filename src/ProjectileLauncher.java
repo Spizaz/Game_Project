@@ -11,8 +11,8 @@ public class ProjectileLauncher extends Weapon {
 
     //==================================================================================================================
 
-    public ProjectileLauncher(String name, double range, double degreesOfInaccuracy, double recoilForce, double knockBackForce, double criticalDamageChance, double criticalDamageAddedDamage, int price, double damagePerShot, double framesShotDelay) {
-        super(name, range, degreesOfInaccuracy, recoilForce, knockBackForce, criticalDamageChance, criticalDamageAddedDamage, price, framesShotDelay);
+    public ProjectileLauncher(String name, double range, double degreesOfInaccuracy, double recoilForce, double knockBackForce, double criticalDamageChance, double criticalDamageAddedDamage, int price, double damagePerShot, double shotDelay) {
+        super(name, range, degreesOfInaccuracy, recoilForce, knockBackForce, criticalDamageChance, criticalDamageAddedDamage, price, shotDelay);
         this.damagePerShot = damagePerShot;
         this.ammoSpeedUpgradePoints = 0;
     }
@@ -35,8 +35,9 @@ public class ProjectileLauncher extends Weapon {
         this.ammoTemplate = ammoTemplate;
     }
 
+    //something is wrong here
     public double getAmmoMaxSpeed(){
-        return 3e-3 * (1 + getAmmoSpeedUpgradePoints() / 10.);
+        return ammoTemplate.getMaxSpeed() * (1 + getAmmoSpeedUpgradePoints() / 5.);
     }
 
     public int getAmmoSpeedUpgradePoints() {
@@ -52,10 +53,15 @@ public class ProjectileLauncher extends Weapon {
         return new Vector(getPositionX(), getPositionY());
     }
 
+    @Override
     public boolean isReadyToFire(){
-        return Game.currentFrame - getLastShotFiredFrameStamp() >= getFramesShotDelay();
+        return (Game.currentFrame - getLastShotFiredFrameStamp()) * Game.FRAME_DELAY >= getShotDelay();
     }
 
+    @Override
+    public double getDamagePerSecond() {
+        return getDamagePerShot() / getShotDelay();
+    }
 
     //endregion
 
@@ -67,7 +73,7 @@ public class ProjectileLauncher extends Weapon {
 
         double velocityDirection = getDirection().getRadian();
         velocityDirection += (Math.random() * 2 - 1) * getDegreesOfInaccuracy();
-        ammo.setVelocity(Vector.radianToVector(velocityDirection).scaledVector(ammo.getMaxSpeed()));
+        ammo.setVelocity( Vector.radianToVector(velocityDirection).scaledVector(getAmmoMaxSpeed()) );
 
         setSpriteFilepath(getSpriteFilepath());
 

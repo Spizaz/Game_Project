@@ -1,3 +1,5 @@
+import java.awt.*;
+
 public class MovingGameObject extends GameObject {
 
     /**
@@ -94,7 +96,7 @@ public class MovingGameObject extends GameObject {
     }
 
     public double getMaxSpeed() {
-        return maxSpeed;
+        return maxSpeed * Game.FRAME_DELAY;
     }
 
     public double getMass() {
@@ -111,14 +113,13 @@ public class MovingGameObject extends GameObject {
      */
 
     public void move(boolean friction){
-        velocity.update(acceleration);
+        velocity.update(acceleration.scaledVector(Game.FRAME_DELAY));
 
         if(velocity.magnitude() > getMaxSpeed()){
             velocity = velocity.unitVector().scaledVector(getMaxSpeed());
         }
 
-        if(friction)
-            velocity = velocity.scaledVector(1 - .1);
+        if(friction && acceleration.magnitude() == 0) velocity = velocity.scaledVector(Math.pow(.994, Game.FRAME_DELAY));
 
         position.update(velocity);
     }

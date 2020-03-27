@@ -145,6 +145,20 @@ public class Enemy extends MovingGameObject{
         return weapon;
     }
 
+    /**
+     * an equation that determines the Enemy's added difficulty to the game
+     * @return a double representing how much this enemy's presence makes the game more difficult
+     */
+    public double getDifficulty(){
+        return
+                (maxHealth / 100.) +
+                (getMaxSpeed() / getMass() * 100) +
+                        //if the weapon doesn't exist - don't add to difficulty
+                        ((weapon != null) ?
+                                weapon.getDamagePerSecond()
+                                : 0);
+    }
+
 
     //endregion
 
