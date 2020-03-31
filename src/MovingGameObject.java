@@ -24,7 +24,7 @@ public class MovingGameObject extends GameObject {
 
     //==================================================================================================================
 
-    public MovingGameObject(String name, int size,  double maxSpeed, double mass) {
+    public MovingGameObject(String name, int size, double maxSpeed, double mass) {
         super(name, size);
         this.velocity = new Vector();
         this.acceleration = new Vector();
@@ -45,11 +45,11 @@ public class MovingGameObject extends GameObject {
     //region Gets and Sets
 
 
-    public double getVelocityX(){
+    public double getVelocityX() {
         return velocity.getX();
     }
 
-    public double getVelocityY(){
+    public double getVelocityY() {
         return velocity.getY();
     }
 
@@ -66,11 +66,11 @@ public class MovingGameObject extends GameObject {
         this.velocity.setY(y);
     }
 
-    public double getAccelerationX(){
+    public double getAccelerationX() {
         return acceleration.getX();
     }
 
-    public double getAccelerationY(){
+    public double getAccelerationY() {
         return acceleration.getY();
     }
 
@@ -104,14 +104,15 @@ public class MovingGameObject extends GameObject {
      * moves the Object by first updating velocity and the position
      */
 
-    public void move(boolean friction){
+    public void move(boolean friction) {
         velocity.update(acceleration.scaledVector(Game.FRAME_DELAY));
 
-        if(velocity.magnitude() > getMaxSpeed()){
+        if (velocity.magnitude() > getMaxSpeed()) {
             velocity = velocity.unitVector().scaledVector(getMaxSpeed());
         }
 
-        if(friction && acceleration.magnitude() == 0) velocity = velocity.scaledVector(Math.pow(.994, Game.FRAME_DELAY));
+        if (friction && acceleration.magnitude() == 0)
+            velocity = velocity.scaledVector(Math.pow(.994, Game.FRAME_DELAY));
 
         position.update(velocity);
     }

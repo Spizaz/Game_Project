@@ -1,4 +1,4 @@
-public class PowerUp extends Item{
+public class PowerUp extends Item {
 
     /**
      * determines how long the PowerUp will be active for in frames
@@ -10,13 +10,13 @@ public class PowerUp extends Item{
      */
     private long activationTime;
 
-    public PowerUp(Vector position, double spawnRate){
+    public PowerUp(Vector position, double spawnRate) {
         super(position, "Power_Up", spawnRate);
         this.activeTime = 0;
         this.activationTime = -1;
     }
 
-    public PowerUp(Vector position, String name, double spawnRate, long activeTime){
+    public PowerUp(Vector position, String name, double spawnRate, long activeTime) {
         super(position, name, spawnRate);
         this.activeTime = activeTime;
         this.activationTime = -1;
@@ -46,7 +46,7 @@ public class PowerUp extends Item{
      *
      * @return true if active - false otherwise
      */
-    public boolean isActive(){
-        return (activationTime != -1) && (Game.currentFrame - getActivationTime() <= getActiveTime());
+    public boolean isActive() {
+        return ( activationTime != -1 ) && ( Game.currentFrame - getActivationTime() <= getActiveTime() );
     }
 }

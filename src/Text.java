@@ -28,7 +28,7 @@ public class Text {
 
     //==================================================================================================================
 
-    public void draw(double xPos, double yPos){
+    public void draw(double xPos, double yPos) {
 
     }
 }

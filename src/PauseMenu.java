@@ -13,7 +13,7 @@ public class PauseMenu extends GameMode {
 
      */
 
-    public PauseMenu(Color background){
+    public PauseMenu(Color background) {
         super("Pause_Menu", background);
     }
 

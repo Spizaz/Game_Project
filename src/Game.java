@@ -44,7 +44,7 @@ public class Game {
             @Override
             public void run() {
 
-                if(gameModeID.equals(playableGame.getName())){
+                if (gameModeID.equals(playableGame.getName())) {
                     gameMode = playableGame;
                 }
 

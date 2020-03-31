@@ -28,19 +28,19 @@ public class GameObject {
     //==================================================================================================================
 
     //the children of the GameObject class need to set their own spriteFileName
-    public GameObject(String name){
+    public GameObject(String name) {
         this.position = new Vector();
         this.name = name;
         this.size = 0;
     }
 
-    public GameObject(String name, int size){
+    public GameObject(String name, int size) {
         this.position = new Vector();
         this.name = name;
         this.size = size;
     }
 
-    public GameObject(Vector position, String name, int size){
+    public GameObject(Vector position, String name, int size) {
         this.position = position;
         this.name = name;
         this.size = size;
@@ -51,11 +51,11 @@ public class GameObject {
     //region Gets and Sets
 
 
-    public double getPositionX(){
+    public double getPositionX() {
         return position.getX();
     }
 
-    public double getPositionY(){
+    public double getPositionY() {
         return position.getY();
     }
 
@@ -72,11 +72,11 @@ public class GameObject {
         this.position.setY(y);
     }
 
-    public String getSpriteFilepath(){
+    public String getSpriteFilepath() {
         return spriteFilepath;
     }
 
-    public void setSpriteFilepath(String spriteFilepath){
+    public void setSpriteFilepath(String spriteFilepath) {
         this.spriteFilepath = spriteFilepath;
     }
 
@@ -88,7 +88,7 @@ public class GameObject {
         return size;
     }
 
-    public double getPhysicalSize(){
+    public double getPhysicalSize() {
         return getSize() * GameObject.PIXEL_SIZE;
     }
 
@@ -98,14 +98,15 @@ public class GameObject {
 
     /**
      * determines if an object is touching another object
+     *
      * @param other - the object in question
      * @return - true if touching - false if not
      */
-    public boolean isTouching(GameObject other){
-        return (getDistance(other) <= (this.getPhysicalSize() + other.getPhysicalSize()) / 2);
+    public boolean isTouching(GameObject other) {
+        return ( getDistance(other) <= ( this.getPhysicalSize() + other.getPhysicalSize() ) / 2 );
     }
 
-    public double getDistance(GameObject other){
+    public double getDistance(GameObject other) {
         return getPosition().difference(other.getPosition());
     }
 
@@ -116,7 +117,7 @@ public class GameObject {
      * draws the object onto the screen
      */
 
-    public void draw(double radian){
-        StdDraw.picture(getPositionX(), getPositionY(), getSpriteFilepath(), GameObject.PIXEL_SIZE * 32, GameObject.PIXEL_SIZE * 32,  Math.toDegrees(radian));
+    public void draw(double radian) {
+        StdDraw.picture(getPositionX(), getPositionY(), getSpriteFilepath(), GameObject.PIXEL_SIZE * 32, GameObject.PIXEL_SIZE * 32, Math.toDegrees(radian));
     }
 }

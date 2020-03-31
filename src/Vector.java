@@ -38,7 +38,7 @@ public class Vector {
         this.x = x;
     }
 
-    public void addX(double x){
+    public void addX(double x) {
         this.x += x;
     }
 
@@ -50,7 +50,7 @@ public class Vector {
         this.y = y;
     }
 
-    public void addY(double y){
+    public void addY(double y) {
         this.y += y;
     }
 
@@ -62,7 +62,7 @@ public class Vector {
         this.z = z;
     }
 
-    public void addZ(double z){
+    public void addZ(double z) {
         this.z += z;
     }
     //endregion
@@ -70,58 +70,58 @@ public class Vector {
     //================================================================================================================
 
     //changes all of the fields by a Vector's parallel fields
-    public void update(Vector other){
+    public void update(Vector other) {
         this.x += other.x;
         this.y += other.y;
         this.z += other.z;
     }
 
-    public void scale(double scalar){
+    public void scale(double scalar) {
         x *= scalar;
         y *= scalar;
         z *= scalar;
     }
 
-    public Vector scaledVector(double scalar){
-        return new Vector(x * scalar, y * scalar , z * scalar);
+    public Vector scaledVector(double scalar) {
+        return new Vector(x * scalar, y * scalar, z * scalar);
     }
 
     //returns the magnitude of the Vector
-    public double magnitude(){
-        return Math.sqrt( Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2) );
+    public double magnitude() {
+        return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
     }
 
     //returns the difference between two Vectors
-    public double difference(Vector other){
-        return Math.sqrt( Math.pow( this.x - other.x, 2)+Math.pow(this.y - other.y , 2)+Math.pow(this.z - other.z , 2) );
+    public double difference(Vector other) {
+        return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2) + Math.pow(this.z - other.z, 2));
     }
 
-    public Vector differenceVector(Vector other){
+    public Vector differenceVector(Vector other) {
         return new Vector(other.x - this.x, other.y - this.y, other.z - this.z);
     }
 
-    public Vector getInverse(){
-        return  new Vector(-this.x, -this.y, -this.z);
+    public Vector getInverse() {
+        return new Vector(-this.x, -this.y, -this.z);
     }
 
     //returns the unit Vector
-    public Vector unitVector(){
+    public Vector unitVector() {
         double magnitude = magnitude();
         return new Vector(x / magnitude, y / magnitude, z / magnitude);
     }
 
     //only works on 2-D plains
-    public double getRadian(){
+    public double getRadian() {
         double radian = Math.atan(y / x);
 
-        if(x < 0){
+        if (x < 0) {
             radian += 3.1416;
         }
 
         return radian;
     }
 
-    public Vector dotProduct(Vector other){
+    public Vector dotProduct(Vector other) {
         Vector vector = new Vector();
         vector.setX(this.x * other.getX());
         vector.setY(this.y * other.getY());
@@ -129,7 +129,7 @@ public class Vector {
         return vector;
     }
 
-    public Vector crossProduct(Vector other){
+    public Vector crossProduct(Vector other) {
         Vector vector = new Vector();
         vector.setX(this.y * other.getZ() - this.z * other.getY());
         vector.setY(this.z * other.getX() - this.x * other.getZ());
@@ -137,13 +137,13 @@ public class Vector {
         return vector;
     }
 
-    public static Vector radianToVector(double radian){
-        return new Vector(Math.cos(radian) , Math.sin(radian));
+    public static Vector radianToVector(double radian) {
+        return new Vector(Math.cos(radian), Math.sin(radian));
     }
 
     //================================================================================================================
 
-    public String toString(){
-        return (x + " - " + y + " - " + z);
+    public String toString() {
+        return ( x + " - " + y + " - " + z );
     }
 }

@@ -7,12 +7,12 @@ public class StationaryGameObject extends GameObject {
 
     //==================================================================================================================
 
-    public StationaryGameObject(String name){
+    public StationaryGameObject(String name) {
         super(name);
         this.direction = new Vector(1, 0);
     }
 
-    public StationaryGameObject(Vector position, String name, int size){
+    public StationaryGameObject(Vector position, String name, int size) {
         super(position, name, size);
         this.direction = new Vector(1, 0);
     }
@@ -35,7 +35,7 @@ public class StationaryGameObject extends GameObject {
         this.direction.setY(y);
     }
 
-    public double getDirectionRadian(){
+    public double getDirectionRadian() {
         return direction.getRadian();
     }
 

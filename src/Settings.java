@@ -15,7 +15,7 @@ public class Settings extends GameMode {
 
     //==================================================================================================================
 
-    public Settings(Color background){
+    public Settings(Color background) {
         super("Settings", background);
     }
 

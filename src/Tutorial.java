@@ -14,7 +14,7 @@ public class Tutorial extends GameMode {
 
     //==================================================================================================================
 
-    public Tutorial(Color background){
+    public Tutorial(Color background) {
         super("Tutorial", background);
     }
 

@@ -2,10 +2,10 @@ public abstract class Weapon extends StationaryGameObject {
 
     /**
      * the euclidean distance that this weapon can fire
-     *
+     * <p>
      * NOTES : for ___ weapon:
-     *    lightning - the distance that the first bolt can travel
-     *    missileLauncher - the distance that the missile can travel
+     * lightning - the distance that the first bolt can travel
+     * missileLauncher - the distance that the missile can travel
      */
     private double range;
 
@@ -92,7 +92,7 @@ public abstract class Weapon extends StationaryGameObject {
 
     //==================================================================================================================
 
-    public Weapon(String name, double range, double degreesOfInaccuracy, double recoilForce, double knockBackForce, double criticalDamageChance, double criticalDamageAddedDamage, int price, double shotDelay){
+    public Weapon(String name, double range, double degreesOfInaccuracy, double recoilForce, double knockBackForce, double criticalDamageChance, double criticalDamageAddedDamage, int price, double shotDelay) {
         super(new Vector(), name, 1);
         this.range = range;
         this.degreesOfInaccuracy = degreesOfInaccuracy;
@@ -123,7 +123,7 @@ public abstract class Weapon extends StationaryGameObject {
         return range;
     }
 
-    public double getDegreesOfInaccuracy(){
+    public double getDegreesOfInaccuracy() {
         return degreesOfInaccuracy;
     }
 

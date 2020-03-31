@@ -31,10 +31,9 @@ public class Ammo extends MovingGameObject {
     private double knockBackForce;
 
 
-
     //==================================================================================================================
 
-    public Ammo(String name, int size, double maxSpeed, double mass, double range, double damage, double knockBackForce){
+    public Ammo(String name, int size, double maxSpeed, double mass, double range, double damage, double knockBackForce) {
         super(name, size, maxSpeed, mass);
         this.range = range;
         this.damage = damage;
@@ -66,7 +65,7 @@ public class Ammo extends MovingGameObject {
         return damage;
     }
 
-    public void addDamage(double damageToBeAdded){
+    public void addDamage(double damageToBeAdded) {
         this.damage += damageToBeAdded;
     }
 
@@ -74,7 +73,7 @@ public class Ammo extends MovingGameObject {
         return knockBackForce;
     }
 
-    public boolean isActive(){
+    public boolean isActive() {
         return getDistanceTraveled() >= range;
     }
 
@@ -83,13 +82,7 @@ public class Ammo extends MovingGameObject {
 
     //==================================================================================================================
 
-    public double move(){
-        super.move(false);
-
-        return 0;
-    }
-
-    public Ammo clone(Vector position){
+    public Ammo clone(Vector position) {
         Ammo ammo = new Ammo(getName(), getSize(), getMaxSpeed(), getMass(), range, getDamage(), getKnockBackForce());
         ammo.setPosition(position);
         ammo.distanceTraveled = 0;

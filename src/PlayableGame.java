@@ -2,7 +2,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayableGame extends GameMode{
+public class PlayableGame extends GameMode {
 
     /**
      * the user controlled protagonist of the game
@@ -55,15 +55,15 @@ public class PlayableGame extends GameMode{
 
     //==================================================================================================================
 
-    public boolean isPauseButtonActive(){
+    public boolean isPauseButtonActive() {
         return false;
     }
 
-    public double getCurrentGameDifficulty(){
-        double  difficulty = 0;
+    public double getCurrentGameDifficulty() {
+        double difficulty = 0;
 
         List<Enemy> enemyList = new ArrayList<>(this.enemyList);
-        for(Enemy enemy : enemyList){
+        for (Enemy enemy : enemyList) {
             difficulty += enemy.getDifficulty();
         }
 
@@ -76,10 +76,10 @@ public class PlayableGame extends GameMode{
     public void run() {
 
         //if the mouse is clicked - fire
-        if(StdDraw.isMousePressed()) {
+        if (StdDraw.isMousePressed()) {
 
             //if the Weapon is ready to be fired - set the last shot fired
-            if(fighter.getWeapon(0).isReadyToFire()) {
+            if (fighter.getWeapon(0).isReadyToFire()) {
                 fighter.getWeapon(0).setLastShotFiredFrameStamp(Game.currentFrame);
                 ammoList.add(fighter.getWeapon(0).fire());
             }
@@ -107,7 +107,7 @@ public class PlayableGame extends GameMode{
 
         //W
         if (StdDraw.isKeyPressed(87)) {
-            accelerationY+= fighter.getMaxAcceleration();
+            accelerationY += fighter.getMaxAcceleration();
         }
         //S
         if (StdDraw.isKeyPressed(83)) {
@@ -140,7 +140,7 @@ public class PlayableGame extends GameMode{
                 Ammo ammo = ammoList.get(ammoIndex);
 
                 //if the Ammo is touching the Enemy
-                if(enemy.isTouching(ammo)){
+                if (enemy.isTouching(ammo)) {
                     ammoList.remove(ammo);
 
                     //the direction the force is pointed with the magnitude of the force being exerted
@@ -163,15 +163,15 @@ public class PlayableGame extends GameMode{
     public void draw() {
         StdDraw.clear(getBackground());
 
-        for (Wall wall : wallList){
+        for (Wall wall : wallList) {
             wall.draw();
         }
 
-        for (Enemy enemy : enemyList){
+        for (Enemy enemy : enemyList) {
             enemy.draw(0);
         }
 
-        for (Ammo ammo : ammoList){
+        for (Ammo ammo : ammoList) {
             //draws the ammo facing towards where it is going
             ammo.draw(ammo.getVelocity().getRadian());
         }

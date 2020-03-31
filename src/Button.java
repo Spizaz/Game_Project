@@ -61,12 +61,13 @@ public class Button {
     public boolean isActive() {
         return isActive;
     }
-    
+
     //==================================================================================================================
+
     /**
      * draws the Button onto the screen
      */
-    public void draw(){
+    public void draw() {
 
     }
 }

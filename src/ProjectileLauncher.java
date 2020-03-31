@@ -36,8 +36,8 @@ public class ProjectileLauncher extends Weapon {
     }
 
     //something is wrong here
-    public double getAmmoMaxSpeed(){
-        return ammoTemplate.getMaxSpeed() * (1 + getAmmoSpeedUpgradePoints() / 5.);
+    public double getAmmoMaxSpeed() {
+        return ammoTemplate.getMaxSpeed() * ( 1 + getAmmoSpeedUpgradePoints() / 5. );
     }
 
     public int getAmmoSpeedUpgradePoints() {
@@ -54,8 +54,8 @@ public class ProjectileLauncher extends Weapon {
     }
 
     @Override
-    public boolean isReadyToFire(){
-        return (Game.currentFrame - getLastShotFiredFrameStamp()) * Game.FRAME_DELAY >= getShotDelay();
+    public boolean isReadyToFire() {
+        return ( Game.currentFrame - getLastShotFiredFrameStamp() ) * Game.FRAME_DELAY >= getShotDelay();
     }
 
     @Override
@@ -72,8 +72,8 @@ public class ProjectileLauncher extends Weapon {
         Ammo ammo = getAmmoTemplate().clone(getHeadPosition());
 
         double velocityDirection = getDirection().getRadian();
-        velocityDirection += (Math.random() * 2 - 1) * getDegreesOfInaccuracy();
-        ammo.setVelocity( Vector.radianToVector(velocityDirection).scaledVector(getAmmoMaxSpeed()) );
+        velocityDirection += ( Math.random() * 2 - 1 ) * getDegreesOfInaccuracy();
+        ammo.setVelocity(Vector.radianToVector(velocityDirection).scaledVector(getAmmoMaxSpeed()));
 
         setSpriteFilepath(getSpriteFilepath());
 

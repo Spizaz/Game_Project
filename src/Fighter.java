@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Fighter extends MovingGameObject{
+public class Fighter extends MovingGameObject {
 
     /**
      * the total experience the Fighter has accrued
@@ -167,16 +167,16 @@ public class Fighter extends MovingGameObject{
         Vector direction = getPosition().differenceVector(new Vector(StdDraw.mouseX(), StdDraw.mouseY()));
 
         //if the game can't find the mouse for some reason
-        if(direction.magnitude() == 0) return new Vector(1,0);
+        if (direction.magnitude() == 0) return new Vector(1, 0);
 
         return direction;
     }
 
-    public double getMaxSpeed(){
-        return super.getMaxSpeed() * (1 + getMaxSpeedUpgradePoints() / 5.);
+    public double getMaxSpeed() {
+        return super.getMaxSpeed() * ( 1 + getMaxSpeedUpgradePoints() / 5. );
     }
 
-    public double getMaxAcceleration(){
+    public double getMaxAcceleration() {
         return getMaxSpeed() * .0025;
     }
 
@@ -226,7 +226,7 @@ public class Fighter extends MovingGameObject{
         return weapons[weaponIndex];
     }
 
-    public void setWeapon(Weapon weapon, int index){
+    public void setWeapon(Weapon weapon, int index) {
         weapons[index] = weapon;
     }
 
@@ -328,26 +328,26 @@ public class Fighter extends MovingGameObject{
         this.unusedSkillPoints += unusedSkillPointsToBeAdded;
     }
 
-    public void setWeaponPositions(double direction){
+    public void setWeaponPositions(double direction) {
 
         for (int weaponIndex = 0 ; weaponIndex < weapons.length ; weaponIndex++) {
 
             Weapon weapon = weapons[weaponIndex];
 
-            if(weapon != null) {
+            if (weapon != null) {
                 //sets the position of the Weapon - rotated some from the center of the Fighter
                 weapon.setPosition(
-                                getPositionX() + Math.cos(direction + weaponIndex * ( 2 * Math.PI / weapons.length )) * GameObject.PIXEL_SIZE / 2 * 32,
-                                getPositionY() + Math.sin(direction + weaponIndex * ( 2 * Math.PI / weapons.length )) * GameObject.PIXEL_SIZE / 2 * 32
-                        );
+                        getPositionX() + Math.cos(direction + weaponIndex * ( 2 * Math.PI / weapons.length )) * GameObject.PIXEL_SIZE / 2 * 32,
+                        getPositionY() + Math.sin(direction + weaponIndex * ( 2 * Math.PI / weapons.length )) * GameObject.PIXEL_SIZE / 2 * 32
+                );
 
                 //sets the direction of the Weapon
                 // TODO: 3/12/2020 fixme
                 weapon.setDirection(
-                                Math.cos(direction + weaponIndex * (2 * Math.PI / weapons.length)),
-                                Math.sin(direction + weaponIndex * (2 * Math.PI / weapons.length))
+                        Math.cos(direction + weaponIndex * ( 2 * Math.PI / weapons.length )),
+                        Math.sin(direction + weaponIndex * ( 2 * Math.PI / weapons.length ))
 
-                        );
+                );
             }
         }
     }
@@ -355,7 +355,6 @@ public class Fighter extends MovingGameObject{
     //endregion
 
     //==================================================================================================================
-
 
 
     //==================================================================================================================
@@ -372,8 +371,8 @@ public class Fighter extends MovingGameObject{
         for (int weaponIndex = 0 ; weaponIndex < weapons.length ; weaponIndex++) {
             Weapon weapon = weapons[weaponIndex];
 
-            if(weapon != null) {
-                weapon.draw(direction + (Math.PI * 2 / weapons.length * weaponIndex));
+            if (weapon != null) {
+                weapon.draw(direction + ( Math.PI * 2 / weapons.length * weaponIndex ));
             }
         }
     }

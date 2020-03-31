@@ -29,7 +29,7 @@ public class Skill {
 
     //==================================================================================================================
 
-    public Skill(List<Skill> prerequisiteSkills, int cost, Text description, Vector position){
+    public Skill(List<Skill> prerequisiteSkills, int cost, Text description, Vector position) {
         this.prerequisiteSkills = prerequisiteSkills;
         this.cost = cost;
         this.active = false;
@@ -77,7 +77,7 @@ public class Skill {
      * @param unusedSkillPoints - the number of unused Skill points the Fighter has
      * @return true if can buy - false otherwise
      */
-    public boolean isBuyable(int unusedSkillPoints){
+    public boolean isBuyable(int unusedSkillPoints) {
         // TODO: 3/8/2020
         return false;
     }
