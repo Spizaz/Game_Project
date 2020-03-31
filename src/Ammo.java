@@ -90,4 +90,9 @@ public class Ammo extends MovingGameObject {
 
         return ammo;
     }
+
+    @Override
+    public void draw() {
+        super.draw(getVelocity().getRadian());
+    }
 }

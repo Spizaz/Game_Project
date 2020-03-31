@@ -35,6 +35,12 @@ public class PlayableGame extends GameMode {
      */
     private double gameDifficulty;
 
+    private Vector screenCenter;
+
+    private final double SCREEN_WIDTH = 2;
+
+    private final double SCREEN_WIDTH_BUFFER = .5;
+
     /*
     private final Button pauseButton = new Button();
      */
@@ -49,6 +55,7 @@ public class PlayableGame extends GameMode {
         this.ammoList = new ArrayList<>();
         this.wallList = new ArrayList<>();
         this.gameDifficulty = 1;
+        this.screenCenter = new Vector();
 
         enemyList.add(new Enemy(new Vector(.5, .5), 100, 8e-5, 100));
     }
@@ -168,16 +175,33 @@ public class PlayableGame extends GameMode {
         }
 
         for (Enemy enemy : enemyList) {
-            enemy.draw(0);
+            enemy.draw();
         }
 
         for (Ammo ammo : ammoList) {
             //draws the ammo facing towards where it is going
-            ammo.draw(ammo.getVelocity().getRadian());
+            ammo.draw();
         }
 
         //draw the fighter looking in the right direction
         fighter.draw();
+
+        if(screenCenter.getX() - fighter.getPositionX() > SCREEN_WIDTH_BUFFER){
+            screenCenter.setX(fighter.getPositionX() + SCREEN_WIDTH_BUFFER);
+        }
+        else if(fighter.getPositionX() - screenCenter.getX() > SCREEN_WIDTH_BUFFER){
+            screenCenter.setX(fighter.getPositionX() - SCREEN_WIDTH_BUFFER);
+        }
+
+        if(screenCenter.getY() - fighter.getPositionY() > SCREEN_WIDTH_BUFFER){
+            screenCenter.setY(fighter.getPositionY() + SCREEN_WIDTH_BUFFER);
+        }
+        else if(fighter.getPositionY() - screenCenter.getY() > SCREEN_WIDTH_BUFFER){
+            screenCenter.setY(fighter.getPositionY() - SCREEN_WIDTH_BUFFER);
+        }
+
+        StdDraw.setXscale(screenCenter.getX() - SCREEN_WIDTH / 2, screenCenter.getX() + SCREEN_WIDTH / 2);
+        StdDraw.setYscale(screenCenter.getY() - SCREEN_WIDTH / 2, screenCenter.getY() + SCREEN_WIDTH / 2);
 
         StdDraw.show();
     }

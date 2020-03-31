@@ -184,5 +184,9 @@ public class Enemy extends MovingGameObject {
         super.move(true);
     }
 
+    public void draw(){
+        super.draw(desiredDirection.getRadian());
+    }
+
 
 }

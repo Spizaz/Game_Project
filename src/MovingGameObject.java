@@ -1,6 +1,6 @@
 import java.awt.*;
 
-public class MovingGameObject extends GameObject {
+public abstract class MovingGameObject extends GameObject {
 
     /**
      * the magnitude of the x and y components of the Objects velocity
@@ -116,4 +116,7 @@ public class MovingGameObject extends GameObject {
 
         position.update(velocity);
     }
+
+    public abstract void draw();
+
 }
