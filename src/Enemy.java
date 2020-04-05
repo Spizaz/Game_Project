@@ -108,12 +108,40 @@ public class Enemy extends MovingGameObject {
     //region Gets and Sets
 
 
+    public void setDesiredDirection(Vector fighterPosition) {
+
+        //if the Enemy has a Weapon
+        if (hasWeapon()) {
+
+        }
+
+        //the Enemy does not have a Weapon
+        else {
+            desiredDirection = this.position.differenceVector(fighterPosition).unitVector();
+        }
+    }
+
+    public Vector getDesiredDirection(){
+        return desiredDirection;
+    }
+
     public double getMaxHealth() {
         return maxHealth;
     }
 
     public double getHealth() {
         return health;
+    }
+
+    public void addHealth(double healthToBeAdded){
+        health += healthToBeAdded;
+
+        if(health > getMaxHealth()) health = getMaxHealth();
+        else if(health < 0) health = 0;
+    }
+
+    public boolean isAlive(){
+        return getHealth() > 0;
     }
 
     public void setHealth(double health) {
@@ -148,7 +176,7 @@ public class Enemy extends MovingGameObject {
     public double getDifficulty() {
         return
                 ( maxHealth / 100. ) +
-                        ( getMaxSpeed() / getMass() * 100 ) +
+                        ( getMaxSpeed() / getMass() * 1e5 ) +
                         //if the weapon doesn't exist - don't add to difficulty
                         ( ( hasWeapon() ) ?
                                 weapon.getDamagePerSecond()
@@ -167,25 +195,19 @@ public class Enemy extends MovingGameObject {
 
     //==================================================================================================================
 
-    public void move(Vector fighterPosition) {
+    public void drawHealthBar(){
+        StdDraw.setPenColor(StdDraw.RED);
 
-        //if the Enemy has a Weapon
-        if (hasWeapon()) {
+        double lineLength = health / 1000;
+        StdDraw.filledRectangle(getPositionX(), getPositionY() - .06, lineLength / 2, .005);
 
-        }
-
-        //the Enemy does not have a Weapon
-        else {
-            desiredDirection = this.position.differenceVector(fighterPosition).unitVector();
-        }
-
-        setAcceleration(desiredDirection.scaledVector(getMaxAcceleration()));
-
-        super.move(true);
+        StdDraw.setPenColor(StdDraw.BLACK);
+        StdDraw.rectangle(getPositionX(), getPositionY() - .06, lineLength / 2, .005);
     }
 
     public void draw(){
         super.draw(desiredDirection.getRadian());
+        drawHealthBar();
     }
 
 

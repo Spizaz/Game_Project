@@ -70,16 +70,20 @@ public class Vector {
     //================================================================================================================
 
     //changes all of the fields by a Vector's parallel fields
-    public void update(Vector other) {
+    public Vector update(Vector other) {
         this.x += other.x;
         this.y += other.y;
         this.z += other.z;
+
+        return this;
     }
 
-    public void scale(double scalar) {
+    public Vector scale(double scalar) {
         x *= scalar;
         y *= scalar;
         z *= scalar;
+
+        return this;
     }
 
     public Vector scaledVector(double scalar) {
@@ -104,10 +108,22 @@ public class Vector {
         return new Vector(-this.x, -this.y, -this.z);
     }
 
+
     //returns the unit Vector
     public Vector unitVector() {
         double magnitude = magnitude();
         return new Vector(x / magnitude, y / magnitude, z / magnitude);
+    }
+
+    //changes this Vector and returns this
+    public Vector toUnitVector() {
+        double magnitude = magnitude();
+
+        this.x /= magnitude;
+        this.y /= magnitude;
+        this.z /= magnitude;
+
+        return this;
     }
 
     //only works on 2-D plains

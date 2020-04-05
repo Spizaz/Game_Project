@@ -152,11 +152,10 @@ public class Fighter extends MovingGameObject {
         this.unusedSkillPoints = 0;
         setSpriteFilepath("Images/fighter.png");
 
-        weapons[0] = new MachineGun(.5, .5, 0, 100, 0, 0, 0, 0, 500);
+        weapons[0] = new MachineGun(.5, 0, .1, .01, 0, 0, 0, 25, 500);
     }
 
     //==================================================================================================================
-
 
     //region Gets, Sets, and Adds
 
@@ -177,7 +176,29 @@ public class Fighter extends MovingGameObject {
     }
 
     public double getMaxAcceleration() {
-        return getMaxSpeed() * .0025;
+        return getMaxSpeed() * .005;
+    }
+
+    public void setMovementAcceleration(){
+        Vector acceleration = new Vector();
+        //W
+        if (StdDraw.isKeyPressed(87)) {
+            acceleration.addY(getMaxAcceleration());
+        }
+        //S
+        if (StdDraw.isKeyPressed(83)) {
+            acceleration.addY(-getMaxAcceleration());
+        }
+        //D
+        if (StdDraw.isKeyPressed(68)) {
+            acceleration.addX(getMaxAcceleration());
+        }
+        //A
+        if (StdDraw.isKeyPressed(65)) {
+            acceleration.addX(-getMaxAcceleration());
+        }
+
+        setAcceleration(acceleration);
     }
 
     public int getTotalExperience() {
@@ -228,6 +249,10 @@ public class Fighter extends MovingGameObject {
 
     public void setWeapon(Weapon weapon, int index) {
         weapons[index] = weapon;
+    }
+
+    public Weapon getPrimaryWeapon(){
+        return getWeapon(0);
     }
 
     public List<PowerUp> getActivePowerUps() {
@@ -357,9 +382,22 @@ public class Fighter extends MovingGameObject {
     //==================================================================================================================
 
 
+
     //==================================================================================================================
 
+    public void drawHealthBar(){
+        StdDraw.setPenColor(StdDraw.GREEN);
+
+        double lineLength = health / 1000;
+        StdDraw.filledRectangle(getPositionX(), getPositionY() - .06, lineLength / 2, .005);
+
+        StdDraw.setPenColor(StdDraw.BLACK);
+        StdDraw.rectangle(getPositionX(), getPositionY() - .06, lineLength / 2, .005);
+    }
+
     public void draw() {
+
+        drawHealthBar();
 
         double direction = getDirection().getRadian();
 

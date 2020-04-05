@@ -82,18 +82,30 @@ public class PlayableGame extends GameMode {
     @Override
     public void run() {
 
+        Vector fighterNetForce = new Vector();
+
         //if the mouse is clicked - fire
         if (StdDraw.isMousePressed()) {
 
             //if the Weapon is ready to be fired - set the last shot fired
-            if (fighter.getWeapon(0).isReadyToFire()) {
-                fighter.getWeapon(0).setLastShotFiredFrameStamp(Game.currentFrame);
-                ammoList.add(fighter.getWeapon(0).fire());
+            if (fighter.getPrimaryWeapon().isReadyToFire()) {
+                fighter.getPrimaryWeapon().setLastShotFiredFrameStamp(Game.currentFrame);
+
+                Ammo ammo = fighter.getPrimaryWeapon().fire();
+                ammo.movementVelocity.update(fighter.getTotalVelocity());
+                ammoList.add(ammo);
+
+                //push the fighter back with the recoil force of the Weapon
+                fighterNetForce.addX(- Math.cos(ammo.getTotalVelocity().getRadian()) * fighter.getPrimaryWeapon().getRecoilForce());
+                fighterNetForce.addY(- Math.sin(ammo.getTotalVelocity().getRadian()) * fighter.getPrimaryWeapon().getRecoilForce());
             }
 
         }
 
+        //==================================================================================================================
         //movement for ammo
+        //==================================================================================================================
+
         for (int i = 0 ; i < ammoList.size() ; i++) {
             Ammo ammo = ammoList.get(i);
 
@@ -104,64 +116,82 @@ public class PlayableGame extends GameMode {
                 continue;
             }
 
-            ammo.position.update(ammo.getVelocity());
-            ammo.addDistanceTraveled(ammo.getVelocity().magnitude());
+            ammo.position.update(ammo.getTotalVelocity());
+            ammo.addDistanceTraveled(ammo.getTotalVelocity().magnitude());
         }
 
-        //setting movement for Fighter
-        double accelerationX = 0;
-        double accelerationY = 0;
+        //==================================================================================================================
+        //Fighter movement
+        //==================================================================================================================
 
-        //W
-        if (StdDraw.isKeyPressed(87)) {
-            accelerationY += fighter.getMaxAcceleration();
-        }
-        //S
-        if (StdDraw.isKeyPressed(83)) {
-            accelerationY -= fighter.getMaxAcceleration();
-        }
-        //D
-        if (StdDraw.isKeyPressed(68)) {
-            accelerationX += fighter.getMaxAcceleration();
-        }
-        //A
-        if (StdDraw.isKeyPressed(65)) {
-            accelerationX -= fighter.getMaxAcceleration();
-        }
+        //setting up the Enemy's acceleration
+        fighter.setMovementAcceleration();
 
-        fighter.setAcceleration(accelerationX, accelerationY);
+        //movement speed is updated by intentional acceleration
+        fighter.movementVelocity.update(fighter.getAcceleration().scaledVector(Game.FRAME_DELAY));
 
-        fighter.move(true);
+        //caps the movementVelocity
+        fighter.limitVelocity();
 
+        //the additional Forces that are acted on by the
+        fighter.additionalVelocity.update(fighterNetForce.scale(1 / fighter.getMass()).scale(Game.FRAME_DELAY));
+
+        fighter.addFriction();
+        fighter.updatePosition();
+
+        //==================================================================================================================
         //enemy movement
-        for (int enemyIndex = 0 ; enemyIndex < enemyList.size() ; enemyIndex++) {
-            enemyList.get(enemyIndex).move(fighter.getPosition());
-        }
+        //==================================================================================================================
 
         //are any of the Enemies touching any Ammo
         for (int enemyIndex = 0 ; enemyIndex < enemyList.size() ; enemyIndex++) {
             Enemy enemy = enemyList.get(enemyIndex);
-            Vector enemyAcceleration = new Vector();
+            Vector enemyNetForce = new Vector();
 
             for (int ammoIndex = 0 ; ammoIndex < ammoList.size() ; ammoIndex++) {
                 Ammo ammo = ammoList.get(ammoIndex);
 
                 //if the Ammo is touching the Enemy
-                if (enemy.isTouching(ammo)) {
+                if (enemy.isAlive() && enemy.isTouching(ammo)) {
+                    //the enemy takes damage and the ammo is gone
+                    enemy.addHealth(-ammo.getDamage());
                     ammoList.remove(ammo);
+                    ammoIndex--;
 
-                    //the direction the force is pointed with the magnitude of the force being exerted
-                    Vector forceMagnitude = ammo.position.differenceVector(enemy.position).unitVector().scaledVector(ammo.getKnockBackForce());
-
-                    enemyAcceleration.update(forceMagnitude.scaledVector(1 / enemy.getMass()));
+                    //add the force of the ammo on the Enemy to the net enemy force Vector
+                    //the direction of the force is the ammo's velocity
+                    Vector ammoForce = ammo.getTotalVelocity().unitVector().scale(ammo.getKnockBackForce());
+                    enemyNetForce.update(ammoForce);
                 }
+
             }
 
-            //changing the velocity by the net force exerted by the Ammo
-            Vector enemyVelocity = enemy.getVelocity();
-            enemyVelocity.update(enemyAcceleration.scaledVector(1 / enemy.getMass()));
+            //if the enemy is dead - remove it from the list
+            if(!enemy.isAlive()){
+                enemyList.remove(enemy);
+                enemyIndex--;
+            }
+            else {
+                //setting up the Enemy's acceleration
+                enemy.setDesiredDirection(fighter.position);
+                enemy.setAcceleration(enemy.getDesiredDirection().scaledVector(fighter.getMaxAcceleration()));
 
-            enemy.setVelocity(enemyVelocity);
+                //movement speed is updated by intentional acceleration
+                enemy.movementVelocity.update(enemy.getAcceleration().scale(Game.FRAME_DELAY));
+
+                //caps the movementVelocity
+                enemy.limitVelocity();
+
+                //the additional Forces that are acted on by the
+                enemy.additionalVelocity.update(enemyNetForce.scale(Game.FRAME_DELAY / enemy.getMass()));
+
+                enemy.addFriction();
+                enemy.updatePosition();
+
+
+
+
+            }
         }
 
     }

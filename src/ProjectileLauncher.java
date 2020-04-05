@@ -73,7 +73,7 @@ public class ProjectileLauncher extends Weapon {
 
         double velocityDirection = getDirection().getRadian();
         velocityDirection += ( Math.random() * 2 - 1 ) * getDegreesOfInaccuracy();
-        ammo.setVelocity(Vector.radianToVector(velocityDirection).scaledVector(getAmmoMaxSpeed()));
+        ammo.movementVelocity = Vector.radianToVector(velocityDirection).scaledVector(getAmmoMaxSpeed());
 
         setSpriteFilepath(getSpriteFilepath());
 

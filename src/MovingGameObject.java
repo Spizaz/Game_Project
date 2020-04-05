@@ -3,9 +3,14 @@ import java.awt.*;
 public abstract class MovingGameObject extends GameObject {
 
     /**
-     * the magnitude of the x and y components of the Objects velocity
+     * the magnitude of the x and y components of the Objects velocity caused by intentional movement
      */
-    private Vector velocity;
+    public Vector movementVelocity;
+
+    /**
+     * the magnitude of the x and y components of the Objects velocity caused by unintentional movement
+     */
+    public Vector additionalVelocity;
 
     /**
      * the magnitude of the x and y components of the Objects acceleration
@@ -26,7 +31,8 @@ public abstract class MovingGameObject extends GameObject {
 
     public MovingGameObject(String name, int size, double maxSpeed, double mass) {
         super(name, size);
-        this.velocity = new Vector();
+        this.movementVelocity = new Vector();
+        this.additionalVelocity = new Vector();
         this.acceleration = new Vector();
         this.maxSpeed = maxSpeed;
         this.mass = mass;
@@ -34,7 +40,8 @@ public abstract class MovingGameObject extends GameObject {
 
     public MovingGameObject(Vector position, String name, int size, double maxSpeed, double mass) {
         super(position, name, size);
-        this.velocity = new Vector();
+        this.movementVelocity = new Vector();
+        this.additionalVelocity = new Vector();
         this.acceleration = new Vector();
         this.maxSpeed = maxSpeed;
         this.mass = mass;
@@ -44,26 +51,13 @@ public abstract class MovingGameObject extends GameObject {
 
     //region Gets and Sets
 
+    public Vector getTotalVelocity(){
+        Vector totalVelocity = new Vector();
 
-    public double getVelocityX() {
-        return velocity.getX();
-    }
+        totalVelocity.update(movementVelocity);
+        totalVelocity.update(additionalVelocity);
 
-    public double getVelocityY() {
-        return velocity.getY();
-    }
-
-    public Vector getVelocity() {
-        return velocity;
-    }
-
-    public void setVelocity(Vector velocity) {
-        this.velocity = velocity;
-    }
-
-    public void setVelocity(double x, double y) {
-        this.velocity.setX(x);
-        this.velocity.setY(y);
+        return totalVelocity;
     }
 
     public double getAccelerationX() {
@@ -82,11 +76,6 @@ public abstract class MovingGameObject extends GameObject {
         this.acceleration = acceleration;
     }
 
-    public void setAcceleration(double x, double y) {
-        this.acceleration.setX(x);
-        this.acceleration.setY(y);
-    }
-
     public double getMaxSpeed() {
         return maxSpeed * Game.FRAME_DELAY;
     }
@@ -100,22 +89,36 @@ public abstract class MovingGameObject extends GameObject {
 
     //==================================================================================================================
 
-    /**
-     * moves the Object by first updating velocity and the position
-     */
+    public void limitVelocity(){
+        //if the Object is moving faster than its max speed
+        if(getTotalVelocity().magnitude() > getMaxSpeed()){
 
-    public void move(boolean friction) {
-        velocity.update(acceleration.scaledVector(Game.FRAME_DELAY));
-
-        if (velocity.magnitude() > getMaxSpeed()) {
-            velocity = velocity.unitVector().scaledVector(getMaxSpeed());
+            //and if the movementVelocity wants to slow down the Object - allow the movementVelocity to go above its max Speed
+            if(getTotalVelocity().update(movementVelocity).magnitude() > getTotalVelocity().magnitude()){
+                movementVelocity.toUnitVector().scale(getMaxSpeed()).update(additionalVelocity.getInverse());
+            }
         }
-
-        if (friction && acceleration.magnitude() == 0)
-            velocity = velocity.scaledVector(Math.pow(.994, Game.FRAME_DELAY));
-
-        position.update(velocity);
     }
+
+    public void scaleTotalVelocity(double scalar){
+        movementVelocity.scale(scalar);
+        additionalVelocity.scale(scalar);
+    }
+
+    public void updatePosition(){
+        position.update(getTotalVelocity());
+    }
+
+    /**
+     * changes the velocity of the Object after experiencing friction
+     */
+    public void addFriction(){
+        double scalar = Math.pow(.994, Game.FRAME_DELAY);
+
+        scaleTotalVelocity(scalar);
+    }
+
+    //==================================================================================================================
 
     public abstract void draw();
 

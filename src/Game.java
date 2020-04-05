@@ -9,6 +9,8 @@ public class Game {
      */
     public static final int FRAME_DELAY = 1000 / 100;
 
+    public static final double FRAMES_PER_SECOND = 1000. / FRAME_DELAY;
+
     /**
      * the number of frames that have passed since the start of the game
      */
