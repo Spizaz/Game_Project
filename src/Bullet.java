@@ -4,7 +4,4 @@ public class Bullet extends Ammo {
         super("Bullet", 11, 18e-5, 1, range, damage, knockBackForce);
         setSpriteFilepath("Images/bullet.png");
     }
-
-    //==================================================================================================================
-
 }

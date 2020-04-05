@@ -152,7 +152,8 @@ public class Fighter extends MovingGameObject {
         this.unusedSkillPoints = 0;
         setSpriteFilepath("Images/fighter.png");
 
-        weapons[0] = new MachineGun(.5, 0, .1, .01, 0, 0, 0, 25, 500);
+        //weapons[0] = new MachineGun(.5, 0, .05, .01, 0, 0, 0, 25, 500);
+        weapons[0] = new MissileLauncher(.5, 0, .1, .2, 0, 0, 0, 25, 1000);
     }
 
     //==================================================================================================================

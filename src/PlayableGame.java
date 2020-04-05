@@ -92,7 +92,6 @@ public class PlayableGame extends GameMode {
                 fighter.getPrimaryWeapon().setLastShotFiredFrameStamp(Game.currentFrame);
 
                 Ammo ammo = fighter.getPrimaryWeapon().fire();
-                ammo.movementVelocity.update(fighter.getTotalVelocity());
                 ammoList.add(ammo);
 
                 //push the fighter back with the recoil force of the Weapon

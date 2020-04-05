@@ -159,6 +159,12 @@ public class Vector {
 
     //================================================================================================================
 
+    public void clear(){
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
+    }
+
     public String toString() {
         return ( x + " - " + y + " - " + z );
     }

@@ -95,7 +95,7 @@ public abstract class MovingGameObject extends GameObject {
 
             //and if the movementVelocity wants to slow down the Object - allow the movementVelocity to go above its max Speed
             if(getTotalVelocity().update(movementVelocity).magnitude() > getTotalVelocity().magnitude()){
-                movementVelocity.toUnitVector().scale(getMaxSpeed()).update(additionalVelocity.getInverse());
+                movementVelocity.clear();
             }
         }
     }
