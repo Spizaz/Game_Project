@@ -25,6 +25,11 @@ public class PlayableGame extends GameMode {
     private List<Ammo> ammoList;
 
     /**
+     * a list containing all the Shrapnel that is in the game
+     */
+    private List<Shrapnel> shrapnelList;
+
+    /**
      * a list containing all the walls that are in the game
      */
     private List<Wall> wallList;
@@ -53,6 +58,7 @@ public class PlayableGame extends GameMode {
         this.enemyList = new ArrayList<>();
         this.itemsList = new ArrayList<>();
         this.ammoList = new ArrayList<>();
+        this.shrapnelList = new ArrayList<>();
         this.wallList = new ArrayList<>();
         this.gameDifficulty = 1;
         this.screenCenter = new Vector();
@@ -84,6 +90,10 @@ public class PlayableGame extends GameMode {
 
         Vector fighterNetForce = new Vector();
 
+        //==================================================================================================================
+        //WEAPON FIRE
+        //==================================================================================================================
+
         //if the mouse is clicked - fire
         if (StdDraw.isMousePressed()) {
 
@@ -102,25 +112,39 @@ public class PlayableGame extends GameMode {
         }
 
         //==================================================================================================================
-        //movement for ammo
+        //AMMO MOVEMENT
         //==================================================================================================================
 
         for (int i = 0 ; i < ammoList.size() ; i++) {
             Ammo ammo = ammoList.get(i);
 
             //remove the ammo if it is out of range
-            if (ammo.isActive()) {
+            if (!ammo.isActive()) {
                 ammoList.remove(ammo);
                 i--;
                 continue;
             }
 
-            ammo.position.update(ammo.getTotalVelocity());
-            ammo.addDistanceTraveled(ammo.getTotalVelocity().magnitude());
+            //if the Ammo is really a Missile
+            if(ammo instanceof Missile){
+                ((Missile) ammo).setTargetedEnemy(enemyList);
+            }
+
+
+            ammo.move();
         }
 
         //==================================================================================================================
-        //Fighter movement
+        //SHRAPNEL MOVEMENT
+        //==================================================================================================================
+
+        for(Shrapnel shrapnel : shrapnelList){
+            shrapnel.addFriction();
+            shrapnel.updatePosition();
+        }
+
+        //==================================================================================================================
+        //FIGHTER MOVEMENT
         //==================================================================================================================
 
         //setting up the Enemy's acceleration
@@ -139,7 +163,7 @@ public class PlayableGame extends GameMode {
         fighter.updatePosition();
 
         //==================================================================================================================
-        //enemy movement
+        //ENEMY MOVEMENT
         //==================================================================================================================
 
         //are any of the Enemies touching any Ammo
@@ -154,6 +178,14 @@ public class PlayableGame extends GameMode {
                 if (enemy.isAlive() && enemy.isTouching(ammo)) {
                     //the enemy takes damage and the ammo is gone
                     enemy.addHealth(-ammo.getDamage());
+
+                    //adding in the shrapnel
+                    if(ammo instanceof Missile && SkillTree.shrapnelActive.isActive()){
+                        for (int i = 0 ; i < 3 ; i++) {
+                            shrapnelList.add(new Shrapnel(ammo.getPosition()));
+                        }
+                    }
+
                     ammoList.remove(ammo);
                     ammoIndex--;
 
@@ -165,6 +197,17 @@ public class PlayableGame extends GameMode {
 
             }
 
+            //for every Shrapnel - if the enemy is touching it - deal damage
+            for (int i = 0 ; i < shrapnelList.size() ; i++){
+                Shrapnel shrapnel = shrapnelList.get(i);
+
+                if(shrapnel.isActive() && enemy.isTouching(shrapnel)){
+                    enemy.addHealth(-10);
+                    shrapnelList.remove(shrapnel);
+                    i--;
+                }
+            }
+
             //if the enemy is dead - remove it from the list
             if(!enemy.isAlive()){
                 enemyList.remove(enemy);
@@ -172,7 +215,7 @@ public class PlayableGame extends GameMode {
             }
             else {
                 //setting up the Enemy's acceleration
-                enemy.setDesiredDirection(fighter.position);
+                enemy.setDesiredDirection(fighter.getPosition());
                 enemy.setAcceleration(enemy.getDesiredDirection().scaledVector(fighter.getMaxAcceleration()));
 
                 //movement speed is updated by intentional acceleration
@@ -193,11 +236,30 @@ public class PlayableGame extends GameMode {
             }
         }
 
+        //==================================================================================================================
+        //FIGHTER DAMAGE
+        //==================================================================================================================
+
+        //for every Shrapnel - if the fighter is touching it - deal damage
+        for (int i = 0 ; i < shrapnelList.size() ; i++){
+            Shrapnel shrapnel = shrapnelList.get(i);
+
+            if(shrapnel.isActive() && fighter.isTouching(shrapnel)){
+                fighter.addHealth(-10);
+                shrapnelList.remove(shrapnel);
+                i--;
+            }
+        }
+
     }
 
     @Override
     public void draw() {
         StdDraw.clear(getBackground());
+
+        for(Shrapnel shrapnel : shrapnelList){
+            shrapnel.draw();
+        }
 
         for (Wall wall : wallList) {
             wall.draw();

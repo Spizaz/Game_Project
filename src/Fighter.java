@@ -110,25 +110,9 @@ public class Fighter extends MovingGameObject {
 
     //==================================================================================================================
 
-    //SKILLS
-
-    /*
-    private final static Skill bulletsPassThroughEnemies = new Skill();
-
-    private final static Skill enemiesExplodeOnDeath = new Skill();
-
-    private final static Skill fireSpreads = new Skill();
-
-    private final static Skill enemiesStayFrozen = new Skill();
-
-    private final static Skill killsGainHealth = new Skill();
-     */
-
-    //==================================================================================================================
-
     public Fighter(Vector position) throws InterruptedException {
         // TODO: 3/8/2020 may need to edit the stats one line below
-        super(position, "Fighter", 1, 12e-5, 100);
+        super(position, "Fighter", 32, 12e-5, 100);
         this.totalExperience = 0;
         this.levelExperience = 0;
         this.experienceToLevelUp = 25;
@@ -154,6 +138,7 @@ public class Fighter extends MovingGameObject {
 
         //weapons[0] = new MachineGun(.5, 0, .05, .01, 0, 0, 0, 25, 500);
         weapons[0] = new MissileLauncher(.5, 0, .1, .2, 0, 0, 0, 25, 1000);
+        //SkillTree.shrapnelActive.setActive(true);
     }
 
     //==================================================================================================================
@@ -397,7 +382,6 @@ public class Fighter extends MovingGameObject {
     }
 
     public void draw() {
-
         drawHealthBar();
 
         double direction = getDirection().getRadian();

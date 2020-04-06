@@ -117,7 +117,7 @@ public class Enemy extends MovingGameObject {
 
         //the Enemy does not have a Weapon
         else {
-            desiredDirection = this.position.differenceVector(fighterPosition).unitVector();
+            desiredDirection = this.getPosition().differenceVector(fighterPosition).unitVector();
         }
     }
 

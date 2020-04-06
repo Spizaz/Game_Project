@@ -69,7 +69,7 @@ public abstract class MovingGameObject extends GameObject {
     }
 
     public Vector getAcceleration() {
-        return acceleration;
+        return acceleration.clone();
     }
 
     public void setAcceleration(Vector acceleration) {
@@ -106,7 +106,7 @@ public abstract class MovingGameObject extends GameObject {
     }
 
     public void updatePosition(){
-        position.update(getTotalVelocity());
+        updatePosition(getTotalVelocity());
     }
 
     /**

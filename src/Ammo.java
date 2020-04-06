@@ -1,19 +1,9 @@
-public class Ammo extends MovingGameObject {
+public abstract class Ammo extends MovingGameObject {
 
     /**
      * the max distance this Ammo will be able to travel
      */
     private double range;
-
-    /**
-     * the direction towards the targetedEnemy
-     */
-    private Vector desiredDirection;
-
-    /**
-     * the nearest Enemy
-     */
-    private Enemy targetedEnemy;
 
     /**
      * the total distance the Ammo has already traveled
@@ -38,6 +28,7 @@ public class Ammo extends MovingGameObject {
         this.range = range;
         this.damage = damage;
         this.knockBackForce = knockBackForce;
+        this.distanceTraveled = 0;
     }
 
     //==================================================================================================================
@@ -45,20 +36,16 @@ public class Ammo extends MovingGameObject {
     //region Gets, Sets, and Adds
 
 
-    public Vector getDesiredDirection() {
-        return desiredDirection;
-    }
-
-    public Enemy getTargetedEnemy() {
-        return targetedEnemy;
-    }
-
     public double getDistanceTraveled() {
         return distanceTraveled;
     }
 
     public void addDistanceTraveled(double distanceTraveledToBeAdded) {
         this.distanceTraveled += distanceTraveledToBeAdded;
+    }
+
+    public double getRange() {
+        return range;
     }
 
     public double getDamage() {
@@ -74,7 +61,7 @@ public class Ammo extends MovingGameObject {
     }
 
     public boolean isActive() {
-        return getDistanceTraveled() >= range;
+        return getDistanceTraveled() <= range;
     }
 
 
@@ -82,14 +69,12 @@ public class Ammo extends MovingGameObject {
 
     //==================================================================================================================
 
-    public Ammo clone(Vector position) {
-        Ammo ammo = new Ammo(getName(), getSize(), getMaxSpeed(), getMass(), range, getDamage(), getKnockBackForce());
-        ammo.setPosition(position);
-        ammo.distanceTraveled = 0;
-        ammo.setSpriteFilepath(getSpriteFilepath());
-
-        return ammo;
+    public void move(){
+        updatePosition();
+        addDistanceTraveled(getTotalVelocity().magnitude());
     }
+
+    public abstract Ammo clone(Vector position);
 
     @Override
     public void draw() {

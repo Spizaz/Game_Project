@@ -8,7 +8,7 @@ public class GameObject {
     /**
      * the physical location of the GameObject (x , y)
      */
-    public volatile Vector position;
+    private volatile Vector position;
 
     /**
      * the filename of the picture that will be used to draw the Object
@@ -60,7 +60,7 @@ public class GameObject {
     }
 
     public Vector getPosition() {
-        return position;
+        return position.clone();
     }
 
     public void setPosition(Vector position) {
@@ -70,6 +70,10 @@ public class GameObject {
     public void setPosition(double x, double y) {
         this.position.setX(x);
         this.position.setY(y);
+    }
+
+    public void updatePosition(Vector vector){
+        position.update(vector);
     }
 
     public String getSpriteFilepath() {

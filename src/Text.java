@@ -19,16 +19,23 @@ public class Text {
 
     //==================================================================================================================
 
-
-    public Text(String text, Font font, Color textColor) {
+    public Text(String text) {
         this.text = text;
-        this.font = font;
+        this.font = new Font("SansSerif", Font.BOLD, 10);
+        this.textColor = StdDraw.BLACK;
+    }
+
+    public Text(String text, Color textColor) {
+        this.text = text;
+        this.font = new Font("SansSerif", Font.BOLD, 10);
         this.textColor = textColor;
     }
 
     //==================================================================================================================
 
     public void draw(double xPos, double yPos) {
-
+        StdDraw.setPenColor(textColor);
+        StdDraw.setFont(font);
+        StdDraw.textLeft(xPos, yPos, text);
     }
 }

@@ -165,6 +165,10 @@ public class Vector {
         this.z = 0;
     }
 
+    public Vector clone(){
+        return new Vector(this.x, this.y, this.z);
+    }
+
     public String toString() {
         return ( x + " - " + y + " - " + z );
     }
