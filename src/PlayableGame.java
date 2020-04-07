@@ -35,15 +35,18 @@ public class PlayableGame extends GameMode {
     private List<Wall> wallList;
 
     /**
-     * a number indicating how difficult the game should be
-     * to keep the game interesting
+     * the coordinates of the center of the screen (duh)
      */
-    private double gameDifficulty;
-
     private Vector screenCenter;
 
+    /**
+     * the total width of the screen
+     */
     private final double SCREEN_WIDTH = 2;
 
+    /**
+     * how far from the center of the screen the fighter has to move before the screen starts to adjust
+     */
     private final double SCREEN_WIDTH_BUFFER = .5;
 
     /*
@@ -60,27 +63,64 @@ public class PlayableGame extends GameMode {
         this.ammoList = new ArrayList<>();
         this.shrapnelList = new ArrayList<>();
         this.wallList = new ArrayList<>();
-        this.gameDifficulty = 1;
         this.screenCenter = new Vector();
 
-        enemyList.add(new Enemy(new Vector(.5, .5), 100, 8e-5, 100));
+        addNewEnemy();
     }
 
     //==================================================================================================================
 
-    public boolean isPauseButtonActive() {
-        return false;
+    /**
+     * @return a Vector that contains a good position for a new Enemy to be spawned in at
+     */
+    private Vector getRandomEnemyPosition(){
+        double leftBound = screenCenter.getX() - SCREEN_WIDTH / 2;
+        double lowerBound = screenCenter.getY() - SCREEN_WIDTH / 2;
+
+        Vector fighterPosition = fighter.getPosition();
+        Vector enemyPosition;
+
+        do{
+            enemyPosition = new Vector(
+                    Math.random() * SCREEN_WIDTH + leftBound,
+                    Math.random() * SCREEN_WIDTH + lowerBound
+                    );
+        }while (fighterPosition.difference(enemyPosition) <= SCREEN_WIDTH / 2);
+
+        return enemyPosition;
     }
 
-    public double getCurrentGameDifficulty() {
-        double difficulty = 0;
+    /**
+     * adds a new Enemy to EnemyList that is at a good difficulty for the fighter
+     */
+    private void addNewEnemy(){
 
-        List<Enemy> enemyList = new ArrayList<>(this.enemyList);
-        for (Enemy enemy : enemyList) {
-            difficulty += enemy.getDifficulty();
+        switch (fighter.getLevel()){
+            case 0:
+            case 1:
+            case 2:
+                enemyList.add(new Enemy(getRandomEnemyPosition(), 100, 10e-5, 100));
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                enemyList.add(new Enemy(getRandomEnemyPosition(), 100, 10e-5, 100,
+                        new Gun(.5, .5, .05, .025, 0, 0, 25, 1000)) );
+                break;
+            case 6:
+                break;
+            case 7:
+                break;
+            case 8:
+                break;
+            case 9:
+                break;
+            case 10:
+                break;
+
         }
-
-        return difficulty;
     }
 
     //==================================================================================================================
@@ -216,7 +256,7 @@ public class PlayableGame extends GameMode {
             else {
                 //setting up the Enemy's acceleration
                 enemy.setDesiredDirection(fighter.getPosition());
-                enemy.setAcceleration(enemy.getDesiredDirection().scaledVector(fighter.getMaxAcceleration()));
+                enemy.setAcceleration(enemy.getDesiredDirection().scaledVector(enemy.getMaxAcceleration()));
 
                 //movement speed is updated by intentional acceleration
                 enemy.movementVelocity.update(enemy.getAcceleration().scale(Game.FRAME_DELAY));

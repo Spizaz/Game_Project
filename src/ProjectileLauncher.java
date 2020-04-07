@@ -11,8 +11,8 @@ public class ProjectileLauncher extends Weapon {
 
     //==================================================================================================================
 
-    public ProjectileLauncher(String name, double range, double degreesOfInaccuracy, double recoilForce, double knockBackForce, double criticalDamageChance, double criticalDamageAddedDamage, int price, double damagePerShot, double shotDelay) {
-        super(name, range, degreesOfInaccuracy, recoilForce, knockBackForce, criticalDamageChance, criticalDamageAddedDamage, price, shotDelay);
+    public ProjectileLauncher(String name, double range, double degreesOfInaccuracy, double recoilForce, double knockBackForce, double criticalDamageChance, double criticalDamageAddedDamage, double damagePerShot, double shotDelay) {
+        super(name, range, degreesOfInaccuracy, recoilForce, knockBackForce, criticalDamageChance, criticalDamageAddedDamage, shotDelay);
         this.damagePerShot = damagePerShot;
         this.ammoSpeedUpgradePoints = 0;
     }

@@ -116,7 +116,7 @@ public class Fighter extends MovingGameObject {
         this.totalExperience = 0;
         this.levelExperience = 0;
         this.experienceToLevelUp = 25;
-        this.level = 0;
+        this.level = 5;
         this.money = 0; // TODO: 3/8/2020 give Fighter enough money to buy a basic gun
         this.health = 100;
         this.maxHealth = 100;
@@ -136,8 +136,8 @@ public class Fighter extends MovingGameObject {
         this.unusedSkillPoints = 0;
         setSpriteFilepath("Images/fighter.png");
 
-        //weapons[0] = new MachineGun(.5, 0, .05, .01, 0, 0, 0, 25, 500);
-        weapons[0] = new MissileLauncher(.5, 0, .1, .2, 0, 0, 0, 25, 1000);
+        //weapons[0] = new MachineGun(.5, 0, .05, .01, 0, 0, 25, 500);
+        weapons[0] = new MissileLauncher(.5, 0, .05, .05, 0, 0, 25, 1000);
         //SkillTree.shrapnelActive.setActive(true);
     }
 

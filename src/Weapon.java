@@ -92,7 +92,7 @@ public abstract class Weapon extends StationaryGameObject {
 
     //==================================================================================================================
 
-    public Weapon(String name, double range, double degreesOfInaccuracy, double recoilForce, double knockBackForce, double criticalDamageChance, double criticalDamageAddedDamage, int price, double shotDelay) {
+    public Weapon(String name, double range, double degreesOfInaccuracy, double recoilForce, double knockBackForce, double criticalDamageChance, double criticalDamageAddedDamage, double shotDelay) {
         super(new Vector(), name, 1);
         this.range = range;
         this.degreesOfInaccuracy = degreesOfInaccuracy;
@@ -101,7 +101,6 @@ public abstract class Weapon extends StationaryGameObject {
         this.criticalDamageChance = criticalDamageChance;
         this.criticalDamageAddedDamage = criticalDamageAddedDamage;
         this.autoFire = false;
-        this.price = price;
         this.damageUpgradePoints = 0;
         this.rangeUpgradePoints = 0;
         this.accuracyUpgradePoints = 0;
@@ -153,6 +152,10 @@ public abstract class Weapon extends StationaryGameObject {
 
     public int getPrice() {
         return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     public int getDamageUpgradePoints() {
