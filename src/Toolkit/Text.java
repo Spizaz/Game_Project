@@ -22,15 +22,21 @@ public class Text {
 
     //==================================================================================================================
 
-    public Text(String text) {
+    public Text(String text, int fontSize) {
         this.text = text;
-        this.font = new Font("SansSerif", Font.BOLD, 10);
+        this.font = new Font("SanSerif", Font.BOLD, fontSize);
         this.textColor = StdDraw.BLACK;
     }
 
-    public Text(String text, Color textColor) {
+    public Text(String text, String fontName, int fontSize) {
         this.text = text;
-        this.font = new Font("SansSerif", Font.BOLD, 10);
+        this.font = new Font(fontName, Font.BOLD, fontSize);
+        this.textColor = StdDraw.BLACK;
+    }
+
+    public Text(String text, Color textColor, String fontName, int fontSize) {
+        this.text = text;
+        this.font = new Font(fontName, Font.BOLD, fontSize);
         this.textColor = textColor;
     }
 
@@ -39,6 +45,6 @@ public class Text {
     public void draw(double xPos, double yPos) {
         StdDraw.setPenColor(textColor);
         StdDraw.setFont(font);
-        StdDraw.textLeft(xPos, yPos, text);
+        StdDraw.text(xPos, yPos, text);
     }
 }

@@ -137,6 +137,11 @@ public class PlayableGame extends GameMode {
     //==================================================================================================================
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public void run() {
 
         Vector fighterNetForce = new Vector();
@@ -212,6 +217,8 @@ public class PlayableGame extends GameMode {
 
         fighter.addFriction();
         fighter.updatePosition();
+
+        fighter.setDirection();
 
         //==================================================================================================================
         //ENEMY MOVEMENT

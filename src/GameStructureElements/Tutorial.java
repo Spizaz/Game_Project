@@ -34,6 +34,11 @@ public class Tutorial extends GameMode {
     }
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public void run() {
 
     }

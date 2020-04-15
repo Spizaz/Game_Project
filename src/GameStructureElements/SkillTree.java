@@ -21,5 +21,5 @@ public class SkillTree {
      */
 
     public final static Skill shrapnelActive = new Skill(new ArrayList<>(), 0,
-            new Text("Missiles, upon impact, will leave behind shrapnel for the Enemies to move across"), new Vector(-.5, -.5));
+            new Text("Missiles, upon impact, will leave behind shrapnel for the Enemies to move across", 20), new Vector(-.5, -.5));
 }

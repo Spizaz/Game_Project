@@ -37,20 +37,19 @@ public class Button {
 
     //==================================================================================================================
 
-    public Button(Vector position, double width, double height, Color backgroundColor, Color borderColor) {
+    public Button(Vector position, double width, double height, Color backgroundColor, Color borderColor, Text text) {
         this.position = position;
         this.width = width;
         this.height = height;
         this.text = null;
         this.backgroundColor = backgroundColor;
         this.borderColor = borderColor;
+        this.text = text;
     }
 
     //==================================================================================================================
 
-    public void setText(Text text) {
-        this.text = text;
-    }
+
 
     //==================================================================================================================
 
@@ -63,5 +62,8 @@ public class Button {
 
         StdDraw.setPenColor(borderColor);
         StdDraw.rectangle(position.getX(), position.getY(), width / 2, height / 2);
+
+        if(text != null)
+            text.draw(position.getX(), position.getY());
     }
 }

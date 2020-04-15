@@ -23,6 +23,8 @@ public abstract class GameMode {
 
     //==================================================================================================================
 
+    public abstract void init();
+
     public abstract void run();
 
     public abstract void draw();

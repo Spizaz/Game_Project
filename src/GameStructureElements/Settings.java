@@ -35,6 +35,11 @@ public class Settings extends GameMode {
     }
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public void run() {
 
     }

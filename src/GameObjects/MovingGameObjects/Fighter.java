@@ -10,6 +10,11 @@ import java.util.List;
 public class Fighter extends MovingGameObject {
 
     /**
+     * the direction that the Fighter will be drawn looking towards
+     */
+    private Vector direction;
+
+    /**
      * the total experience the GameObjects.MovingGameObjects.Fighter has accrued
      */
     private int totalExperience;
@@ -116,9 +121,10 @@ public class Fighter extends MovingGameObject {
 
     //==================================================================================================================
 
-    public Fighter(Vector position) throws InterruptedException {
+    public Fighter(Vector position) {
         // TODO: 3/8/2020 may need to edit the stats one line below
         super(position, "GameObjects.MovingGameObjects.Fighter", 32, 12e-5, 100);
+        this.direction = new Vector(0, 0);
         this.totalExperience = 0;
         this.levelExperience = 0;
         this.experienceToLevelUp = 25;
@@ -143,7 +149,7 @@ public class Fighter extends MovingGameObject {
         setSpriteFilepath("Images/fighter.png");
 
         //weapons[0] = new GameObjects.StationaryGameObjects.MachineGun(.5, 0, .05, .01, 0, 0, 25, 500);
-        weapons[0] = new MissileLauncher(.5, 0, .05, .05, 0, 0, 25, 1000);
+        weapons[0] = new MissileLauncher(.5, .05, .05, 0, 0, 25, 1000);
         //GameStructureElements.SkillTree.shrapnelActive.setActive(true);
     }
 
@@ -151,14 +157,19 @@ public class Fighter extends MovingGameObject {
 
     //region Gets, Sets, and Adds
 
-    /**
-     * @return the Toolkit.Vector that points towards the Mouse from the GameObjects.MovingGameObjects.Fighter
-     */
-    public Vector getDirection() {
-        Vector direction = getPosition().differenceVector(new Vector(StdDraw.mouseX(), StdDraw.mouseY()));
 
-        //if the game can't find the mouse for some reason
-        if (direction.magnitude() == 0) return new Vector(1, 0);
+    public void setDirection(){
+        direction = getPosition().differenceVector(new Vector(StdDraw.mouseX(), StdDraw.mouseY()));
+        setWeaponPositions(this.direction.getRadian());
+    }
+
+    public void setDirection(Vector direction){
+        this.direction = direction.toUnitVector();
+        setWeaponPositions(this.direction.getRadian());
+    }
+
+    public Vector getDirection() {
+        if(direction.magnitude() == 0) return new Vector(1,0);
 
         return direction;
     }
@@ -369,6 +380,21 @@ public class Fighter extends MovingGameObject {
         }
     }
 
+    public int getMaxNumberOfWeapons(){
+        return weapons.length;
+    }
+
+    public int getNumberOfWeapons(){
+        int numberOfWeapons = 0;
+
+        for (int i = 0 ; i < weapons.length ; i++) {
+            if(weapons[i] != null)
+                numberOfWeapons++;
+        }
+
+        return numberOfWeapons;
+    }
+
     //endregion
 
     //==================================================================================================================
@@ -393,8 +419,6 @@ public class Fighter extends MovingGameObject {
         double direction = getDirection().getRadian();
 
         super.draw(direction);
-
-        setWeaponPositions(direction);
 
         //for every weapon so long as it exists - draw it facing the right way
         for (int weaponIndex = 0 ; weaponIndex < weapons.length ; weaponIndex++) {

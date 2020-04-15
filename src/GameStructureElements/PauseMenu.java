@@ -31,6 +31,11 @@ public class PauseMenu extends GameMode {
     }
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public void run() {
 
     }

@@ -84,6 +84,10 @@ public abstract class MovingGameObject extends GameObject {
         return maxSpeed * Game.FRAME_DELAY;
     }
 
+    public void setMaxSpeed(double maxSpeed) {
+        this.maxSpeed = maxSpeed;
+    }
+
     public double getMass() {
         return mass;
     }

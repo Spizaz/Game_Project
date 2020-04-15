@@ -25,6 +25,11 @@ public class Game {
     private String gameModeID;
 
     /**
+     * the previous gamemode that the game is currently in
+     */
+    private String previousGameModeID;
+
+    /**
      * the gamemode that the game is currently in
      */
     private GameMode gameMode;
@@ -52,26 +57,33 @@ public class Game {
     //==================================================================================================================
 
     public Game() throws InterruptedException {
-        gameModeID = PlayableGame.getName();
+        gameModeID = GameMenu.getName();
+        //gameModeID = PlayableGame.getName();
         gameMode = null;
+        previousGameModeID = "";
         Timer timer = new Timer("Game_Timer");
-
         TimerTask timerTask = new TimerTask() {
 
             @Override
             public void run() {
 
-                switch (gameModeID){
-                    case "Game_Menu":
-                        StdDraw.setScale(-1, 1);
-                        gameMode = gameMenu;
-                        break;
-                    case "Playable_Game":
-                        gameMode = playableGame;
-                        break;
-                    case "Pause_Menu":
-                        gameMode = pauseMenu;
-                        break;
+                //if there was a change in gameModeID
+                if(!gameModeID.equals(previousGameModeID)) {
+
+                    switch (gameModeID) {
+                        case "Game_Menu":
+                            gameMode = gameMenu;
+                            break;
+                        case "Playable_Game":
+                            gameMode = playableGame;
+                            break;
+                        case "Pause_Menu":
+                            gameMode = pauseMenu;
+                            break;
+                    }
+
+                    previousGameModeID = gameModeID;
+                    gameMode.init();
                 }
 
                 gameMode.run();
