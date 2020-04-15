@@ -16,7 +16,11 @@ public class Settings extends GameMode {
     //==================================================================================================================
 
     public Settings(Color background) {
-        super("Settings", background);
+        super(background);
+    }
+
+    public static String getName(){
+        return "Settings";
     }
 
     //==================================================================================================================

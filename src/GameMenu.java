@@ -14,7 +14,11 @@ public class GameMenu extends GameMode {
     //==================================================================================================================
 
     public GameMenu(Color background) {
-        super("Game_Mode", background);
+        super(background);
+    }
+
+    public static String getName() {
+        return "Game_Menu";
     }
 
     //==================================================================================================================

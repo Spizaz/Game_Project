@@ -27,17 +27,29 @@ public class Game {
     private GameMode gameMode;
 
     /**
+     * the starting screen of the Game
+     */
+    private GameMode gameMenu = new GameMenu(StdDraw.WHITE);
+
+    /**
      * the playable game mode
      */
-    private PlayableGame playableGame = new PlayableGame(StdDraw.WHITE);
+    private GameMode playableGame = new PlayableGame(StdDraw.WHITE);
+
+    /**
+     * the playable game mode
+     */
+    private GameMode pauseMenu = new PauseMenu(StdDraw.WHITE);
 
     /**
      * the thread of the gameMode
      */
     private Thread gameModeThread;
 
+    //==================================================================================================================
+
     public Game() throws InterruptedException {
-        gameModeID = playableGame.getName();
+        gameModeID = PlayableGame.getName();
         gameMode = null;
         Timer timer = new Timer("Game_Timer");
 
@@ -46,8 +58,16 @@ public class Game {
             @Override
             public void run() {
 
-                if (gameModeID.equals(playableGame.getName())) {
-                    gameMode = playableGame;
+                switch (gameModeID){
+                    case "Game_Menu":
+                        gameMode = gameMenu;
+                        break;
+                    case "Playable_Game":
+                        gameMode = playableGame;
+                        break;
+                    case "Pause_Menu":
+                        gameMode = pauseMenu;
+                        break;
                 }
 
                 gameMode.run();
@@ -60,5 +80,12 @@ public class Game {
 
         timer.scheduleAtFixedRate(timerTask, 0, Game.FRAME_DELAY);
 
+    }
+
+    //==================================================================================================================
+
+
+    public void setGameModeID(String gameModeID) {
+        this.gameModeID = gameModeID;
     }
 }

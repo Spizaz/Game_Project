@@ -56,7 +56,7 @@ public class PlayableGame extends GameMode {
     //==================================================================================================================
 
     public PlayableGame(Color backgroundColor) throws InterruptedException {
-        super("Playable_Game", backgroundColor);
+        super(backgroundColor);
         this.fighter = new Fighter(new Vector(0, 0));
         this.enemyList = new ArrayList<>();
         this.itemsList = new ArrayList<>();
@@ -66,6 +66,10 @@ public class PlayableGame extends GameMode {
         this.screenCenter = new Vector();
 
         addNewEnemy();
+    }
+
+    public static String getName() {
+        return "Playable_Game";
     }
 
     //==================================================================================================================

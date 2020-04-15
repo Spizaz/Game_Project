@@ -23,43 +23,30 @@ public class Button {
     private Text text;
 
     /**
-     * the Color of the background when the mouse is over the Button or is active
+     * the background Color of the Button
      */
-    private Color activeBackgroundColor;
-
-    /**
-     * the background Color if the Button is not active
-     */
-    private Color passiveBackgroundColor;
+    private Color backgroundColor;
 
     /**
      * the Color of the border
      */
     private Color borderColor;
 
-    /**
-     * if the Button has been clicked on
-     */
-    private boolean isActive;
-
     //==================================================================================================================
 
-    public Button(Vector position, double width, double height, Text text, Color activeBackgroundColor, Color passiveBackgroundColor, Color borderColor) {
+    public Button(Vector position, double width, double height, Color backgroundColor, Color borderColor) {
         this.position = position;
         this.width = width;
         this.height = height;
-        this.text = text;
-        this.activeBackgroundColor = activeBackgroundColor;
-        this.passiveBackgroundColor = passiveBackgroundColor;
+        this.text = null;
+        this.backgroundColor = backgroundColor;
         this.borderColor = borderColor;
-        this.isActive = false;
     }
 
     //==================================================================================================================
 
-    // TODO: 3/9/2020 find a way to measure if active 
-    public boolean isActive() {
-        return isActive;
+    public void setText(Text text) {
+        this.text = text;
     }
 
     //==================================================================================================================
@@ -68,6 +55,10 @@ public class Button {
      * draws the Button onto the screen
      */
     public void draw() {
+        StdDraw.setPenColor(backgroundColor);
+        StdDraw.filledRectangle(position.getX(), position.getY(), width / 2, height / 2);
 
+        StdDraw.setPenColor(borderColor);
+        StdDraw.rectangle(position.getX(), position.getY(), width / 2, height / 2);
     }
 }

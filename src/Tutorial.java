@@ -15,7 +15,11 @@ public class Tutorial extends GameMode {
     //==================================================================================================================
 
     public Tutorial(Color background) {
-        super("Tutorial", background);
+        super(background);
+    }
+
+    public static String getName(){
+        return "Tutorial";
     }
 
     //==================================================================================================================

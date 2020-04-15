@@ -14,8 +14,14 @@ public class PauseMenu extends GameMode {
      */
 
     public PauseMenu(Color background) {
-        super("Pause_Menu", background);
+        super(background);
     }
+
+    public static String getName() {
+        return "Pause_Menu";
+    }
+
+    //==================================================================================================================
 
     @Override
     public void draw() {
