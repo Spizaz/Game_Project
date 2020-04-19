@@ -71,7 +71,7 @@ public class Vector {
 
     //================================================================================================================
 
-    //changes all of the fields by a Toolkit.Vector's parallel fields
+    //changes all of the fields by a Vector's parallel fields
     public Vector update(Vector other) {
         this.x += other.x;
         this.y += other.y;
@@ -92,7 +92,7 @@ public class Vector {
         return new Vector(x * scalar, y * scalar, z * scalar);
     }
 
-    //returns the magnitude of the Toolkit.Vector
+    //returns the magnitude of the Vector
     public double magnitude() {
         return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
     }
@@ -111,21 +111,10 @@ public class Vector {
     }
 
 
-    //returns the unit Toolkit.Vector
+    //returns the unit Vector
     public Vector unitVector() {
         double magnitude = magnitude();
         return new Vector(x / magnitude, y / magnitude, z / magnitude);
-    }
-
-    //changes this Toolkit.Vector and returns this
-    public Vector toUnitVector() {
-        double magnitude = magnitude();
-
-        this.x /= magnitude;
-        this.y /= magnitude;
-        this.z /= magnitude;
-
-        return this;
     }
 
     //only works on 2-D plains

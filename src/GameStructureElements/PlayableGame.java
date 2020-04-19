@@ -150,22 +150,25 @@ public class PlayableGame extends GameMode {
         //WEAPON FIRE
         //==================================================================================================================
 
-        //if the mouse is clicked - fire
-        if (StdDraw.isMousePressed()) {
+        for (int weaponIndex = 0 ; weaponIndex < fighter.getWeapons().length ; weaponIndex++) {
+            Weapon weapon = fighter.getWeapon(weaponIndex);
 
-            //if the GameObjects.StationaryGameObjects.Weapon is ready to be fired - set the last shot fired
-            if (fighter.getPrimaryWeapon().isReadyToFire()) {
-                fighter.getPrimaryWeapon().setLastShotFiredFrameStamp(Game.currentFrame);
+            if(weapon == null) continue;
 
-                Ammo ammo = fighter.getPrimaryWeapon().fire();
+            //fire the weapon if the weapon is ready to fire
+            //but if the weapon is the primary weapon - fire only if the mouse is pressed
+            if((weaponIndex == 0) ? weapon.isReadyToFire() && StdDraw.isMousePressed() : weapon.isReadyToFire()){
+                Ammo ammo = weapon.fire();
+
                 ammoList.add(ammo);
 
-                //push the fighter back with the recoil force of the GameObjects.StationaryGameObjects.Weapon
-                fighterNetForce.addX(- Math.cos(ammo.getTotalVelocity().getRadian()) * fighter.getPrimaryWeapon().getRecoilForce());
-                fighterNetForce.addY(- Math.sin(ammo.getTotalVelocity().getRadian()) * fighter.getPrimaryWeapon().getRecoilForce());
+                //setting recoil force
+                fighterNetForce.update(weapon.getDirection().scale(weapon.getRecoilForce()).getInverse());
+
+                weapon.setLastShotFiredFrameStamp(Game.currentFrame);
             }
 
-        }
+        }//weaponIndex
 
         //==================================================================================================================
         //AMMO MOVEMENT
@@ -181,7 +184,7 @@ public class PlayableGame extends GameMode {
                 continue;
             }
 
-            //if the GameObjects.MovingGameObjects.Ammo is really a GameObjects.MovingGameObjects.Missile
+            //if the Ammo is really a GameObjects.MovingGameObjects.Missile
             if(ammo instanceof Missile){
                 ((Missile) ammo).setTargetedEnemy(enemyList);
             }
@@ -195,28 +198,17 @@ public class PlayableGame extends GameMode {
         //==================================================================================================================
 
         for(Shrapnel shrapnel : shrapnelList){
-            shrapnel.addFriction();
-            shrapnel.updatePosition();
+            shrapnel.move(null, true);
         }
 
         //==================================================================================================================
         //FIGHTER MOVEMENT
         //==================================================================================================================
 
-        //setting up the GameObjects.MovingGameObjects.Enemy's acceleration
+        //setting up the Enemy's acceleration
         fighter.setMovementAcceleration();
 
-        //movement speed is updated by intentional acceleration
-        fighter.movementVelocity.update(fighter.getAcceleration().scaledVector(Game.FRAME_DELAY));
-
-        //caps the movementVelocity
-        fighter.limitVelocity();
-
-        //the additional Forces that are acted on by the
-        fighter.additionalVelocity.update(fighterNetForce.scale(1 / fighter.getMass()).scale(Game.FRAME_DELAY));
-
-        fighter.addFriction();
-        fighter.updatePosition();
+        fighter.move(fighterNetForce, true);
 
         fighter.setDirection();
 
@@ -232,7 +224,7 @@ public class PlayableGame extends GameMode {
             for (int ammoIndex = 0 ; ammoIndex < ammoList.size() ; ammoIndex++) {
                 Ammo ammo = ammoList.get(ammoIndex);
 
-                //if the GameObjects.MovingGameObjects.Ammo is touching the GameObjects.MovingGameObjects.Enemy
+                //if the Ammo is touching the Enemy
                 if (enemy.isAlive() && enemy.isTouching(ammo)) {
                     //the enemy takes damage and the ammo is gone
                     enemy.addHealth(-ammo.getDamage());
@@ -247,15 +239,15 @@ public class PlayableGame extends GameMode {
                     ammoList.remove(ammo);
                     ammoIndex--;
 
-                    //add the force of the ammo on the GameObjects.MovingGameObjects.Enemy to the net enemy force Toolkit.Vector
+                    //add the force of the ammo on the Enemy to the net enemy force Toolkit.Vector
                     //the direction of the force is the ammo's velocity
                     Vector ammoForce = ammo.getTotalVelocity().unitVector().scale(ammo.getKnockBackForce());
                     enemyNetForce.update(ammoForce);
                 }
 
-            }
+            }//ammoIndex
 
-            //for every GameObjects.MovingGameObjects.Shrapnel - if the enemy is touching it - deal damage
+            //for every Shrapnel - if the enemy is touching it - deal damage
             for (int i = 0 ; i < shrapnelList.size() ; i++){
                 Shrapnel shrapnel = shrapnelList.get(i);
 
@@ -276,29 +268,17 @@ public class PlayableGame extends GameMode {
                 enemy.setDesiredDirection(fighter.getPosition());
                 enemy.setAcceleration(enemy.getDesiredDirection().scaledVector(enemy.getMaxAcceleration()));
 
-                //movement speed is updated by intentional acceleration
-                enemy.movementVelocity.update(enemy.getAcceleration().scale(Game.FRAME_DELAY));
-
-                //caps the movementVelocity
-                enemy.limitVelocity();
-
-                //the additional Forces that are acted on by the
-                enemy.additionalVelocity.update(enemyNetForce.scale(Game.FRAME_DELAY / enemy.getMass()));
-
-                enemy.addFriction();
-                enemy.updatePosition();
-
-
-
-
+                //moving the Enemy
+                enemy.move(enemyNetForce, true);
             }
-        }
+
+        }//enemyIndex
 
         //==================================================================================================================
         //FIGHTER DAMAGE
         //==================================================================================================================
 
-        //for every GameObjects.MovingGameObjects.Shrapnel - if the fighter is touching it - deal damage
+        //for every Shrapnel - if the fighter is touching it - deal damage
         for (int i = 0 ; i < shrapnelList.size() ; i++){
             Shrapnel shrapnel = shrapnelList.get(i);
 

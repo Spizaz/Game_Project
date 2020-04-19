@@ -19,7 +19,7 @@ public class Shrapnel extends MovingGameObject {
         setSpriteFilepath("Images/shrapnel" + (int) (Math.random() * 5 + 1) + ".png");
 
         direction = Math.random();
-        movementVelocity = new Vector((Math.random() - .5) * 2, (Math.random() - .5) * 2).toUnitVector().scaledVector(getMaxSpeed());
+        movementVelocity = new Vector(Math.cos(direction), Math.sin(direction)).scale(getMaxSpeed());
     }
 
     //==================================================================================================================

@@ -74,7 +74,7 @@ public abstract class Ammo extends MovingGameObject {
     //==================================================================================================================
 
     public void move(){
-        updatePosition();
+        super.move(null, false);
         addDistanceTraveled(getTotalVelocity().magnitude());
     }
 

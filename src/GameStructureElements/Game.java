@@ -57,8 +57,8 @@ public class Game {
     //==================================================================================================================
 
     public Game() throws InterruptedException {
-        gameModeID = GameMenu.getName();
-        //gameModeID = PlayableGame.getName();
+        //gameModeID = GameMenu.getName();
+        gameModeID = PlayableGame.getName();
         gameMode = null;
         previousGameModeID = "";
         Timer timer = new Timer("Game_Timer");

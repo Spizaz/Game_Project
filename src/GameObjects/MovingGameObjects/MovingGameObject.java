@@ -34,7 +34,7 @@ public abstract class MovingGameObject extends GameObject {
     //==================================================================================================================
 
     public MovingGameObject(String name, int size, double maxSpeed, double mass) {
-        super(name, size);
+        super( name, size );
         this.movementVelocity = new Vector();
         this.additionalVelocity = new Vector();
         this.acceleration = new Vector();
@@ -43,7 +43,7 @@ public abstract class MovingGameObject extends GameObject {
     }
 
     public MovingGameObject(Vector position, String name, int size, double maxSpeed, double mass) {
-        super(position, name, size);
+        super( position, name, size );
         this.movementVelocity = new Vector();
         this.additionalVelocity = new Vector();
         this.acceleration = new Vector();
@@ -55,11 +55,11 @@ public abstract class MovingGameObject extends GameObject {
 
     //region Gets and Sets
 
-    public Vector getTotalVelocity(){
+    public Vector getTotalVelocity() {
         Vector totalVelocity = new Vector();
 
-        totalVelocity.update(movementVelocity);
-        totalVelocity.update(additionalVelocity);
+        totalVelocity.update( movementVelocity );
+        totalVelocity.update( additionalVelocity );
 
         return totalVelocity;
     }
@@ -97,33 +97,46 @@ public abstract class MovingGameObject extends GameObject {
 
     //==================================================================================================================
 
-    public void limitVelocity(){
+    private void limitVelocity() {
         //if the Object is moving faster than its max speed
-        if(getTotalVelocity().magnitude() > getMaxSpeed()){
-
-            //and if the movementVelocity wants to slow down the Object - allow the movementVelocity to go above its max Speed
-            if(getTotalVelocity().update(movementVelocity).magnitude() > getTotalVelocity().magnitude()){
-                movementVelocity.clear();
-            }
+        if (movementVelocity.magnitude() > getMaxSpeed()) {
+            movementVelocity = movementVelocity.unitVector().scale(getMaxSpeed());
         }
     }
 
-    public void scaleTotalVelocity(double scalar){
-        movementVelocity.scale(scalar);
-        additionalVelocity.scale(scalar);
+    public void scaleTotalVelocity(double scalar) {
+        movementVelocity.scale( scalar );
+        additionalVelocity.scale( scalar );
     }
 
-    public void updatePosition(){
-        updatePosition(getTotalVelocity());
+    private void updateVelocity(Vector netForce, boolean friction) {
+        //intentional movement is caused by intentional acceleration
+        movementVelocity.update( acceleration.scaledVector( Game.FRAME_DELAY ) );
+
+        //limit the amount of intentional velocity to the maximum speed
+        limitVelocity();
+
+        //the unintentional forces acting on the Object changing its velocity
+        if (netForce != null)
+            additionalVelocity.update( netForce.scaledVector( Game.FRAME_DELAY / getMass() ) );
+
+        if (friction)
+            addFriction();
+    }
+
+    public void move(Vector netForce, boolean friction) {
+        updateVelocity( netForce, friction );
+
+        updatePosition( getTotalVelocity() );
     }
 
     /**
      * changes the velocity of the Object after experiencing friction
      */
-    public void addFriction(){
-        double scalar = Math.pow(.994, Game.FRAME_DELAY);
+    private void addFriction() {
+        double scalar = Math.pow( .994, Game.FRAME_DELAY );
 
-        scaleTotalVelocity(scalar);
+        scaleTotalVelocity( scalar );
     }
 
     //==================================================================================================================

@@ -4,6 +4,7 @@ import GameObjects.GameObject;
 import GameObjects.StationaryGameObjects.*;
 import Toolkit.Vector;
 import edu.princeton.cs.introcs.StdDraw;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -158,18 +159,22 @@ public class Fighter extends MovingGameObject {
     //region Gets, Sets, and Adds
 
 
-    public void setDirection(){
+    public void setDirection() {
         direction = getPosition().differenceVector(new Vector(StdDraw.mouseX(), StdDraw.mouseY()));
+
+        if (direction.magnitude() == 0)
+            direction = new Vector(1, 0);
+
         setWeaponPositions(this.direction.getRadian());
     }
 
-    public void setDirection(Vector direction){
-        this.direction = direction.toUnitVector();
+    public void setDirection(Vector direction) {
+        this.direction = direction.unitVector();
         setWeaponPositions(this.direction.getRadian());
     }
 
     public Vector getDirection() {
-        if(direction.magnitude() == 0) return new Vector(1,0);
+        if (direction.magnitude() == 0) return new Vector(1, 0);
 
         return direction;
     }
@@ -182,7 +187,7 @@ public class Fighter extends MovingGameObject {
         return getMaxSpeed() * .005;
     }
 
-    public void setMovementAcceleration(){
+    public void setMovementAcceleration() {
         Vector acceleration = new Vector();
         //W
         if (StdDraw.isKeyPressed(87)) {
@@ -250,11 +255,15 @@ public class Fighter extends MovingGameObject {
         return weapons[weaponIndex];
     }
 
+    public Weapon[] getWeapons() {
+        return weapons;
+    }
+
     public void setWeapon(Weapon weapon, int index) {
         weapons[index] = weapon;
     }
 
-    public Weapon getPrimaryWeapon(){
+    public Weapon getPrimaryWeapon() {
         return getWeapon(0);
     }
 
@@ -264,7 +273,7 @@ public class Fighter extends MovingGameObject {
     }
 
     public void addActivePowerPp(PowerUp powerUp) {
-        // TODO: 3/8/2020 set all the stats necessary for the GameObjects.StationaryGameObjects.PowerUp being added
+        // TODO: 3/8/2020 set all the stats necessary for the PowerUp being added
         this.activePowerUps.add(powerUp);
     }
 
@@ -380,15 +389,15 @@ public class Fighter extends MovingGameObject {
         }
     }
 
-    public int getMaxNumberOfWeapons(){
+    public int getMaxNumberOfWeapons() {
         return weapons.length;
     }
 
-    public int getNumberOfWeapons(){
+    public int getNumberOfWeapons() {
         int numberOfWeapons = 0;
 
         for (int i = 0 ; i < weapons.length ; i++) {
-            if(weapons[i] != null)
+            if (weapons[i] != null)
                 numberOfWeapons++;
         }
 
@@ -399,11 +408,9 @@ public class Fighter extends MovingGameObject {
 
     //==================================================================================================================
 
-
-
     //==================================================================================================================
 
-    public void drawHealthBar(){
+    public void drawHealthBar() {
         StdDraw.setPenColor(StdDraw.GREEN);
 
         double lineLength = health / 1000;
