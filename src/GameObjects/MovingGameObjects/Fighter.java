@@ -372,14 +372,13 @@ public class Fighter extends MovingGameObject {
             Weapon weapon = weapons[weaponIndex];
 
             if (weapon != null) {
-                //sets the position of the GameObjects.StationaryGameObjects.Weapon - rotated some from the center of the GameObjects.MovingGameObjects.Fighter
+                //sets the position of the Weapon - rotated some from the center of the Fighter
                 weapon.setPosition(
                         getPositionX() + Math.cos(direction + weaponIndex * ( 2 * Math.PI / weapons.length )) * GameObject.PIXEL_SIZE / 2 * 32,
                         getPositionY() + Math.sin(direction + weaponIndex * ( 2 * Math.PI / weapons.length )) * GameObject.PIXEL_SIZE / 2 * 32
                 );
 
-                //sets the direction of the GameObjects.StationaryGameObjects.Weapon
-                // TODO: 3/12/2020 fixme
+                //sets the direction of the Weapon
                 weapon.setDirection(
                         Math.cos(direction + weaponIndex * ( 2 * Math.PI / weapons.length )),
                         Math.sin(direction + weaponIndex * ( 2 * Math.PI / weapons.length ))

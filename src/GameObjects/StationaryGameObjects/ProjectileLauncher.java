@@ -55,11 +55,6 @@ public class ProjectileLauncher extends Weapon {
     }
 
     @Override
-    public Vector getHeadPosition() {
-        return new Vector(getPositionX(), getPositionY());
-    }
-
-    @Override
     public boolean isReadyToFire() {
         return ( Game.currentFrame - getLastShotFiredFrameStamp() ) * Game.FRAME_DELAY >= getShotDelay();
     }

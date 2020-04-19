@@ -59,8 +59,6 @@ public class Missile extends Ammo {
         if ( targetedEnemy != null ) {
             setAcceleration( getPosition().differenceVector( targetedEnemy.getPosition() ).scale(7e-6) );
             movementVelocity.update(getAcceleration().scaledVector(Game.FRAME_DELAY));
-
-            movementVelocity = movementVelocity.unitVector().scale(getMaxSpeed());
         }
 
         super.move();

@@ -1,5 +1,6 @@
 package GameObjects.StationaryGameObjects;
 
+import GameStructureElements.PlayableGame;
 import Toolkit.Vector;
 import GameObjects.MovingGameObjects.Ammo;
 
@@ -224,9 +225,17 @@ public abstract class Weapon extends StationaryGameObject {
     }
 
     /**
-     * @return a Toolkit.Vector containing the position of the Head of the GameObjects.StationaryGameObjects.Weapon
+     * @return a Vector containing the position of the Head of the Weapon
      */
-    public abstract Vector getHeadPosition();
+    public Vector getHeadPosition(){
+        double radian = getDirection().getRadian();
+        Vector headPosition = getPosition().clone();
+
+        headPosition.addX(Math.cos(radian) * getSize() * PIXEL_SIZE * 10);
+        headPosition.addY(Math.sin(radian) * getSize() * PIXEL_SIZE * 10);
+
+        return headPosition;
+    }
 
     /**
      * @return a boolean representing if the weapon is ready to be fired

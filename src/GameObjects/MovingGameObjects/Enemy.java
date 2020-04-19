@@ -1,5 +1,6 @@
 package GameObjects.MovingGameObjects;
 
+import GameObjects.GameObject;
 import GameObjects.StationaryGameObjects.Weapon;
 import Toolkit.Vector;
 import edu.princeton.cs.introcs.StdDraw;
@@ -182,6 +183,23 @@ public class Enemy extends MovingGameObject {
      */
     public boolean hasWeapon() {
         return getWeapon() != null;
+    }
+
+    public void setWeaponPositions() {
+
+        if(hasWeapon()) {
+            Weapon weapon = getWeapon();
+            double direction = getDesiredDirection().getRadian();
+
+            //sets the position of the Weapon
+            weapon.setPosition(
+                    getPositionX() + Math.cos(direction) * getSize() / 2 * PIXEL_SIZE,
+                    getPositionY() + Math.sin(direction) * getSize() / 2 * PIXEL_SIZE
+            );
+
+            //sets the direction of the Weapon
+            weapon.setDirection(Vector.radianToVector(direction));
+        }
     }
 
 

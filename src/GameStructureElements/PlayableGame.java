@@ -118,7 +118,7 @@ public class PlayableGame extends GameMode {
                 break;
             case 5:
                 enemyList.add(new Enemy(getRandomEnemyPosition(), 100, 10e-5, 100,
-                        new Gun(.5, .5, .05, .025, 0, 0, 25, 1000)) );
+                        new Gun(.5, .5, .02, .025, 0, 0, 25, 3000)) );
                 break;
             case 6:
                 break;
@@ -147,7 +147,7 @@ public class PlayableGame extends GameMode {
         Vector fighterNetForce = new Vector();
 
         //==================================================================================================================
-        //WEAPON FIRE
+        //FIGHTER WEAPON FIRE
         //==================================================================================================================
 
         for (int weaponIndex = 0 ; weaponIndex < fighter.getWeapons().length ; weaponIndex++) {
@@ -213,7 +213,7 @@ public class PlayableGame extends GameMode {
         fighter.setDirection();
 
         //==================================================================================================================
-        //ENEMY MOVEMENT
+        //ENEMY MOVEMENT && ENEMY WEAPON FIRE
         //==================================================================================================================
 
         //are any of the Enemies touching any GameObjects.MovingGameObjects.Ammo
@@ -262,15 +262,27 @@ public class PlayableGame extends GameMode {
             if(!enemy.isAlive()){
                 enemyList.remove(enemy);
                 enemyIndex--;
+                continue;
             }
-            else {
-                //setting up the GameObjects.MovingGameObjects.Enemy's acceleration
-                enemy.setDesiredDirection(fighter.getPosition());
-                enemy.setAcceleration(enemy.getDesiredDirection().scaledVector(enemy.getMaxAcceleration()));
 
-                //moving the Enemy
-                enemy.move(enemyNetForce, true);
+            if(enemy.hasWeapon() && enemy.getWeapon().isReadyToFire()){
+                Ammo ammo = enemy.getWeapon().fire();
+
+                ammoList.add(ammo);
+
+                enemy.getWeapon().setLastShotFiredFrameStamp(Game.currentFrame);
+
+                enemyNetForce.update( ammo.getTotalVelocity().unitVector().scale(enemy.getWeapon().getRecoilForce()).getInverse() );
             }
+
+            //setting up the GameObjects.MovingGameObjects.Enemy's acceleration
+            enemy.setDesiredDirection(fighter.getPosition());
+            enemy.setAcceleration(enemy.getDesiredDirection().scaledVector(enemy.getMaxAcceleration()));
+
+            //moving the Enemy
+            enemy.move(enemyNetForce, true);
+
+            enemy.setWeaponPositions();
 
         }//enemyIndex
 
