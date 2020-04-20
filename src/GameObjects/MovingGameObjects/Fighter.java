@@ -129,7 +129,7 @@ public class Fighter extends MovingGameObject {
         this.totalExperience = 0;
         this.levelExperience = 0;
         this.experienceToLevelUp = 25;
-        this.level = 5;
+        this.level = 1;
         this.money = 0; // TODO: 3/8/2020 give GameObjects.MovingGameObjects.Fighter enough money to buy a basic gun
         this.health = 100;
         this.maxHealth = 100;
@@ -150,7 +150,7 @@ public class Fighter extends MovingGameObject {
         setSpriteFilepath("Images/fighter.png");
 
         //weapons[0] = new GameObjects.StationaryGameObjects.MachineGun(.5, 0, .05, .01, 0, 0, 25, 500);
-        weapons[0] = new MissileLauncher(.5, .05, .05, 0, 0, 25, 1000);
+        weapons[0] = new MissileLauncher(.5, .05, .05, 0, 0, 100, 1000);
         //GameStructureElements.SkillTree.shrapnelActive.setActive(true);
     }
 
@@ -220,11 +220,15 @@ public class Fighter extends MovingGameObject {
     public void addLevelExperience(int experienceToBeAdded) {
         this.levelExperience += experienceToBeAdded;
         this.totalExperience += experienceToBeAdded;
+
+        if(levelExperience > getExperienceToLevelUp()){
+            levelExperience %= getExperienceToLevelUp();
+            level++;
+        }
     }
 
     public int getExperienceToLevelUp() {
-        // TODO: 3/8/2020 add some equation to calculate the experience needed y = 25 * 2 ^ current level
-        return 0;
+        return (int) (100 * Math.pow(1.1, getLevel() - 1));
     }
 
     public int getLevel() {

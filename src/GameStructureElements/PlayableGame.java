@@ -42,6 +42,11 @@ public class PlayableGame extends GameMode {
     private List<Wall> wallList;
 
     /**
+     * a list containing all the Experience that is in the game
+     */
+    private List<Experience> experienceList;
+
+    /**
      * the coordinates of the center of the screen (duh)
      */
     private Vector screenCenter;
@@ -64,15 +69,6 @@ public class PlayableGame extends GameMode {
 
     public PlayableGame(Color backgroundColor) throws InterruptedException {
         super(backgroundColor);
-        this.fighter = new Fighter(new Vector(0, 0));
-        this.enemyList = new ArrayList<>();
-        this.itemsList = new ArrayList<>();
-        this.ammoList = new ArrayList<>();
-        this.shrapnelList = new ArrayList<>();
-        this.wallList = new ArrayList<>();
-        this.screenCenter = new Vector();
-
-        addNewEnemy();
     }
 
     public static String getName() {
@@ -107,12 +103,10 @@ public class PlayableGame extends GameMode {
     private void addNewEnemy(){
 
         switch (fighter.getLevel()){
-            case 0:
             case 1:
             case 2:
-                enemyList.add(new Enemy(getRandomEnemyPosition(), 100, 10e-5, 100));
-                break;
             case 3:
+                enemyList.add(new Enemy(getRandomEnemyPosition(), 100, 10e-5, 100));
                 break;
             case 4:
                 break;
@@ -134,15 +128,57 @@ public class PlayableGame extends GameMode {
         }
     }
 
+    private void deadEnemy(Enemy enemy){
+        int enemyExperienceOnDeath = enemy.getExperienceOnDeath();
+        int enemyMoneyOnDeath = enemy.getMoneyOnDeath();
+
+        fighter.addMoney(enemyMoneyOnDeath);
+
+        List<Integer> experienceAmountList;
+        int runningExperience;
+
+        //repeat until the experience amount is equal to what it needs to be
+        do{
+            experienceAmountList = new ArrayList<>();
+            runningExperience = 0;
+
+            do {
+                int experience = (int) (Math.random() * 5) + 5;
+
+                experienceAmountList.add(experience);
+                runningExperience += experience;
+
+            }while(runningExperience < enemyExperienceOnDeath);
+        }while (runningExperience != enemyExperienceOnDeath);
+
+        //add the experience into the game
+        for (int experienceIndex = 0 ; experienceIndex < experienceAmountList.size() ; experienceIndex++) {
+
+            experienceList.add(new Experience(enemy.getPosition().clone(), experienceAmountList.get(experienceIndex)) );
+
+        }
+    }
+
     //==================================================================================================================
 
     @Override
     public void init() {
+        this.fighter = new Fighter(new Vector(0, 0));
+        this.enemyList = new ArrayList<>();
+        this.itemsList = new ArrayList<>();
+        this.ammoList = new ArrayList<>();
+        this.shrapnelList = new ArrayList<>();
+        this.wallList = new ArrayList<>();
+        this.experienceList = new ArrayList<>();
+        this.screenCenter = new Vector();
 
+        addNewEnemy();
     }
 
     @Override
     public void run() {
+
+        if(enemyList.size() == 0) addNewEnemy();
 
         Vector fighterNetForce = new Vector();
 
@@ -191,6 +227,17 @@ public class PlayableGame extends GameMode {
 
 
             ammo.move();
+
+            if(ammo.isTouching(fighter)){
+                fighter.addHealth(-ammo.getDamage());
+
+                //knockback force
+                fighterNetForce.update(ammo.getTotalVelocity().unitVector().scale(ammo.getKnockBackForce()));
+
+                ammoList.remove(ammo);
+                i--;
+                continue;
+            }
         }
 
         //==================================================================================================================
@@ -262,6 +309,8 @@ public class PlayableGame extends GameMode {
             if(!enemy.isAlive()){
                 enemyList.remove(enemy);
                 enemyIndex--;
+
+                deadEnemy(enemy);
                 continue;
             }
 
@@ -301,11 +350,46 @@ public class PlayableGame extends GameMode {
             }
         }
 
+        //==================================================================================================================
+        //EXPERIENCE MOVEMENT
+        //==================================================================================================================
+
+        for (int i = 0 ; i < experienceList.size() ; i++) {
+            Experience experience = experienceList.get(i);
+
+            experience.move(fighter.getPosition());
+            if(fighter.isTouching(experience)){
+                fighter.addLevelExperience(experience.getExperience());
+
+                experienceList.remove(experience);
+                i--;
+            }
+        }
+
     }
 
     @Override
     public void draw() {
         StdDraw.clear(getBackground());
+
+        //adding the background lines
+        double frequency = .2;
+        double leftLineX = Math.floor((screenCenter.getX() - SCREEN_WIDTH / 2) / frequency) * frequency;
+        double bottomLineY = Math.floor((screenCenter.getY() - SCREEN_WIDTH / 2) / frequency) * frequency;
+
+        StdDraw.setPenColor(StdDraw.GRAY);
+        for (double x = leftLineX ; x < screenCenter.getX() + SCREEN_WIDTH / 2 ; x += frequency) {
+            StdDraw.line(x, screenCenter.getY() - SCREEN_WIDTH / 2, x, screenCenter.getY() + SCREEN_WIDTH / 2);
+        }
+
+        for (double y = bottomLineY ; y < screenCenter.getY() + SCREEN_WIDTH / 2 ; y += frequency) {
+            StdDraw.line( screenCenter.getX() - SCREEN_WIDTH / 2, y, screenCenter.getX() + SCREEN_WIDTH / 2, y);
+        }
+
+        //==================================================================================================================
+        //START DRAWING
+        //==================================================================================================================
+
 
         for(Shrapnel shrapnel : shrapnelList){
             shrapnel.draw();
@@ -313,6 +397,10 @@ public class PlayableGame extends GameMode {
 
         for (Wall wall : wallList) {
             wall.draw();
+        }
+
+        for(Experience experience : experienceList){
+            experience.draw();
         }
 
         for (Enemy enemy : enemyList) {
@@ -327,6 +415,12 @@ public class PlayableGame extends GameMode {
         //draw the fighter looking in the right direction
         fighter.draw();
 
+        //==================================================================================================================
+        //END DRAWING
+        //==================================================================================================================
+
+
+        //setting the screen position
         if(screenCenter.getX() - fighter.getPositionX() > SCREEN_WIDTH_BUFFER){
             screenCenter.setX(fighter.getPositionX() + SCREEN_WIDTH_BUFFER);
         }
@@ -343,6 +437,41 @@ public class PlayableGame extends GameMode {
 
         StdDraw.setXscale(screenCenter.getX() - SCREEN_WIDTH / 2, screenCenter.getX() + SCREEN_WIDTH / 2);
         StdDraw.setYscale(screenCenter.getY() - SCREEN_WIDTH / 2, screenCenter.getY() + SCREEN_WIDTH / 2);
+
+        //inside of experience bar
+        StdDraw.setPenColor(StdDraw.WHITE);
+        StdDraw.filledRectangle(screenCenter.getX(), screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15, SCREEN_WIDTH / 3, .025);
+        StdDraw.filledCircle(screenCenter.getX() - SCREEN_WIDTH / 3, screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15, .025);
+        StdDraw.filledCircle(screenCenter.getX() + SCREEN_WIDTH / 3, screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15, .025);
+
+        if(fighter.getLevelExperience() > 0){
+            double percentOfLevel = (double) fighter.getLevelExperience() / fighter.getExperienceToLevelUp();
+
+            StdDraw.setPenColor(StdDraw.YELLOW);
+            StdDraw.filledRectangle(
+                    SCREEN_WIDTH / 3 * percentOfLevel - SCREEN_WIDTH / 3 + screenCenter.getX(), screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15,
+                    SCREEN_WIDTH / 3 * percentOfLevel, .025
+            );
+            StdDraw.filledCircle(screenCenter.getX() - SCREEN_WIDTH / 3, screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15, .025);
+        }
+
+        //outside of experience bar
+        StdDraw.setPenColor(StdDraw.BLACK);
+        StdDraw.arc(screenCenter.getX() - SCREEN_WIDTH / 3, screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15, .025, 90, 270);
+
+        StdDraw.line(
+                screenCenter.getX() - SCREEN_WIDTH / 3, screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15 + .025,
+                screenCenter.getX() + SCREEN_WIDTH / 3, screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15 + .025
+        );
+        StdDraw.line(
+                screenCenter.getX() - SCREEN_WIDTH / 3, screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15 - .025,
+                screenCenter.getX() + SCREEN_WIDTH / 3, screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15 - .025
+        );
+
+        StdDraw.arc(screenCenter.getX() + SCREEN_WIDTH / 3, screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15, .025, 270, 90);
+
+        StdDraw.text(screenCenter.getX(), screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15 - .005, fighter.getLevelExperience() + " / "+ fighter.getExperienceToLevelUp());
+        StdDraw.text(screenCenter.getX(), screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15 + .05, "Level " + fighter.getLevel());
 
         StdDraw.show();
     }

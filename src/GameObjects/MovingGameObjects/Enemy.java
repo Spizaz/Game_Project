@@ -149,7 +149,7 @@ public class Enemy extends MovingGameObject {
     }
 
     public int getExperienceOnDeath() {
-        return (int) Math.ceil(( getMaxHealth() / 100 ) + getMaxSpeed() + ( getRegenHealthPerSecond() * 100 ));
+        return (int) Math.ceil( (( getMaxHealth() / 10) + ( getMaxSpeed() / getMass() * 1e6 )  + ( getRegenHealthPerSecond() * 5 )) * (Math.random() * .25 + .875) );
     }
 
     public int getMoneyOnDeath() {
@@ -179,7 +179,7 @@ public class Enemy extends MovingGameObject {
     }
 
     /**
-     * @return true if the GameObjects.MovingGameObjects.Enemy has a GameObjects.StationaryGameObjects.Weapon
+     * @return true if the Enemy has a Weapon
      */
     public boolean hasWeapon() {
         return getWeapon() != null;
