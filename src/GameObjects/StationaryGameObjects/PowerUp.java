@@ -45,7 +45,7 @@ public class PowerUp extends Item {
 
     /**
      * determines if the GameObjects.StationaryGameObjects.PowerUp is currently active
-     *
+     * <p>
      * the GameObjects.StationaryGameObjects.PowerUp is active if the activationTime has been set and
      * the frames passed since the activation time is less than activeTime
      *

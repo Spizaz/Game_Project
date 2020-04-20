@@ -22,7 +22,7 @@ public class Tutorial extends GameMode {
         super(background);
     }
 
-    public static String getName(){
+    public static String getName() {
         return "GameStructureElements.Tutorial";
     }
 

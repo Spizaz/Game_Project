@@ -227,7 +227,7 @@ public abstract class Weapon extends StationaryGameObject {
     /**
      * @return a Vector containing the position of the Head of the Weapon
      */
-    public Vector getHeadPosition(){
+    public Vector getHeadPosition() {
         double radian = getDirection().getRadian();
         Vector headPosition = getPosition().clone();
 

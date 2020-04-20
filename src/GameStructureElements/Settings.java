@@ -23,7 +23,7 @@ public class Settings extends GameMode {
         super(background);
     }
 
-    public static String getName(){
+    public static String getName() {
         return "GameStructureElements.Settings";
     }
 

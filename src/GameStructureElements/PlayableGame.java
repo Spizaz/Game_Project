@@ -7,6 +7,7 @@ import Toolkit.Vector;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+
 import edu.princeton.cs.introcs.StdDraw;
 
 public class PlayableGame extends GameMode {
@@ -80,19 +81,19 @@ public class PlayableGame extends GameMode {
     /**
      * @return a Toolkit.Vector that contains a good position for a new GameObjects.MovingGameObjects.Enemy to be spawned in at
      */
-    private Vector getRandomEnemyPosition(){
+    private Vector getRandomEnemyPosition() {
         double leftBound = screenCenter.getX() - SCREEN_WIDTH / 2;
         double lowerBound = screenCenter.getY() - SCREEN_WIDTH / 2;
 
         Vector fighterPosition = fighter.getPosition();
         Vector enemyPosition;
 
-        do{
+        do {
             enemyPosition = new Vector(
                     Math.random() * SCREEN_WIDTH + leftBound,
                     Math.random() * SCREEN_WIDTH + lowerBound
-                    );
-        }while (fighterPosition.difference(enemyPosition) <= SCREEN_WIDTH / 2);
+            );
+        } while (fighterPosition.difference(enemyPosition) <= SCREEN_WIDTH / 2);
 
         return enemyPosition;
     }
@@ -100,9 +101,9 @@ public class PlayableGame extends GameMode {
     /**
      * adds a new GameObjects.MovingGameObjects.Enemy to EnemyList that is at a good difficulty for the fighter
      */
-    private void addNewEnemy(){
+    private void addNewEnemy() {
 
-        switch (fighter.getLevel()){
+        switch (fighter.getLevel()) {
             case 1:
             case 2:
             case 3:
@@ -112,7 +113,7 @@ public class PlayableGame extends GameMode {
                 break;
             case 5:
                 enemyList.add(new Enemy(getRandomEnemyPosition(), 100, 10e-5, 100,
-                        new Gun(.5, .5, .02, .025, 0, 0, 25, 3000)) );
+                        new Gun(.5, .5, .02, .025, 0, 0, 25, 3000)));
                 break;
             case 6:
                 break;
@@ -128,7 +129,7 @@ public class PlayableGame extends GameMode {
         }
     }
 
-    private void deadEnemy(Enemy enemy){
+    private void deadEnemy(Enemy enemy) {
         int enemyExperienceOnDeath = enemy.getExperienceOnDeath();
         int enemyMoneyOnDeath = enemy.getMoneyOnDeath();
 
@@ -138,23 +139,23 @@ public class PlayableGame extends GameMode {
         int runningExperience;
 
         //repeat until the experience amount is equal to what it needs to be
-        do{
+        do {
             experienceAmountList = new ArrayList<>();
             runningExperience = 0;
 
             do {
-                int experience = (int) (Math.random() * 5) + 5;
+                int experience = (int) ( Math.random() * 5 ) + 5;
 
                 experienceAmountList.add(experience);
                 runningExperience += experience;
 
-            }while(runningExperience < enemyExperienceOnDeath);
-        }while (runningExperience != enemyExperienceOnDeath);
+            } while (runningExperience < enemyExperienceOnDeath);
+        } while (runningExperience != enemyExperienceOnDeath);
 
         //add the experience into the game
         for (int experienceIndex = 0 ; experienceIndex < experienceAmountList.size() ; experienceIndex++) {
 
-            experienceList.add(new Experience(enemy.getPosition().clone(), experienceAmountList.get(experienceIndex)) );
+            experienceList.add(new Experience(enemy.getPosition().clone(), experienceAmountList.get(experienceIndex)));
 
         }
     }
@@ -178,7 +179,7 @@ public class PlayableGame extends GameMode {
     @Override
     public void run() {
 
-        if(enemyList.size() == 0) addNewEnemy();
+        if (enemyList.size() == 0) addNewEnemy();
 
         Vector fighterNetForce = new Vector();
 
@@ -189,11 +190,11 @@ public class PlayableGame extends GameMode {
         for (int weaponIndex = 0 ; weaponIndex < fighter.getWeapons().length ; weaponIndex++) {
             Weapon weapon = fighter.getWeapon(weaponIndex);
 
-            if(weapon == null) continue;
+            if (weapon == null) continue;
 
             //fire the weapon if the weapon is ready to fire
             //but if the weapon is the primary weapon - fire only if the mouse is pressed
-            if((weaponIndex == 0) ? weapon.isReadyToFire() && StdDraw.isMousePressed() : weapon.isReadyToFire()){
+            if (( weaponIndex == 0 ) ? weapon.isReadyToFire() && StdDraw.isMousePressed() : weapon.isReadyToFire()) {
                 Ammo ammo = weapon.fire();
 
                 ammoList.add(ammo);
@@ -221,14 +222,14 @@ public class PlayableGame extends GameMode {
             }
 
             //if the Ammo is really a GameObjects.MovingGameObjects.Missile
-            if(ammo instanceof Missile){
-                ((Missile) ammo).setTargetedEnemy(enemyList);
+            if (ammo instanceof Missile) {
+                ( (Missile) ammo ).setTargetedEnemy(enemyList);
             }
 
 
             ammo.move();
 
-            if(ammo.isTouching(fighter)){
+            if (ammo.isTouching(fighter)) {
                 fighter.addHealth(-ammo.getDamage());
 
                 //knockback force
@@ -244,7 +245,7 @@ public class PlayableGame extends GameMode {
         //SHRAPNEL MOVEMENT
         //==================================================================================================================
 
-        for(Shrapnel shrapnel : shrapnelList){
+        for (Shrapnel shrapnel : shrapnelList) {
             shrapnel.move(null, true);
         }
 
@@ -277,7 +278,7 @@ public class PlayableGame extends GameMode {
                     enemy.addHealth(-ammo.getDamage());
 
                     //adding in the shrapnel
-                    if(ammo instanceof Missile && SkillTree.shrapnelActive.isActive()){
+                    if (ammo instanceof Missile && SkillTree.shrapnelActive.isActive()) {
                         for (int i = 0 ; i < 3 ; i++) {
                             shrapnelList.add(new Shrapnel(ammo.getPosition()));
                         }
@@ -295,10 +296,10 @@ public class PlayableGame extends GameMode {
             }//ammoIndex
 
             //for every Shrapnel - if the enemy is touching it - deal damage
-            for (int i = 0 ; i < shrapnelList.size() ; i++){
+            for (int i = 0 ; i < shrapnelList.size() ; i++) {
                 Shrapnel shrapnel = shrapnelList.get(i);
 
-                if(shrapnel.isActive() && enemy.isTouching(shrapnel)){
+                if (shrapnel.isActive() && enemy.isTouching(shrapnel)) {
                     enemy.addHealth(-10);
                     shrapnelList.remove(shrapnel);
                     i--;
@@ -306,7 +307,7 @@ public class PlayableGame extends GameMode {
             }
 
             //if the enemy is dead - remove it from the list
-            if(!enemy.isAlive()){
+            if (!enemy.isAlive()) {
                 enemyList.remove(enemy);
                 enemyIndex--;
 
@@ -314,14 +315,14 @@ public class PlayableGame extends GameMode {
                 continue;
             }
 
-            if(enemy.hasWeapon() && enemy.getWeapon().isReadyToFire()){
+            if (enemy.hasWeapon() && enemy.getWeapon().isReadyToFire()) {
                 Ammo ammo = enemy.getWeapon().fire();
 
                 ammoList.add(ammo);
 
                 enemy.getWeapon().setLastShotFiredFrameStamp(Game.currentFrame);
 
-                enemyNetForce.update( ammo.getTotalVelocity().unitVector().scale(enemy.getWeapon().getRecoilForce()).getInverse() );
+                enemyNetForce.update(ammo.getTotalVelocity().unitVector().scale(enemy.getWeapon().getRecoilForce()).getInverse());
             }
 
             //setting up the GameObjects.MovingGameObjects.Enemy's acceleration
@@ -340,10 +341,10 @@ public class PlayableGame extends GameMode {
         //==================================================================================================================
 
         //for every Shrapnel - if the fighter is touching it - deal damage
-        for (int i = 0 ; i < shrapnelList.size() ; i++){
+        for (int i = 0 ; i < shrapnelList.size() ; i++) {
             Shrapnel shrapnel = shrapnelList.get(i);
 
-            if(shrapnel.isActive() && fighter.isTouching(shrapnel)){
+            if (shrapnel.isActive() && fighter.isTouching(shrapnel)) {
                 fighter.addHealth(-10);
                 shrapnelList.remove(shrapnel);
                 i--;
@@ -358,7 +359,7 @@ public class PlayableGame extends GameMode {
             Experience experience = experienceList.get(i);
 
             experience.move(fighter.getPosition());
-            if(fighter.isTouching(experience)){
+            if (fighter.isTouching(experience)) {
                 fighter.addLevelExperience(experience.getExperience());
 
                 experienceList.remove(experience);
@@ -374,8 +375,8 @@ public class PlayableGame extends GameMode {
 
         //adding the background lines
         double frequency = .2;
-        double leftLineX = Math.floor((screenCenter.getX() - SCREEN_WIDTH / 2) / frequency) * frequency;
-        double bottomLineY = Math.floor((screenCenter.getY() - SCREEN_WIDTH / 2) / frequency) * frequency;
+        double leftLineX = Math.floor(( screenCenter.getX() - SCREEN_WIDTH / 2 ) / frequency) * frequency;
+        double bottomLineY = Math.floor(( screenCenter.getY() - SCREEN_WIDTH / 2 ) / frequency) * frequency;
 
         StdDraw.setPenColor(StdDraw.GRAY);
         for (double x = leftLineX ; x < screenCenter.getX() + SCREEN_WIDTH / 2 ; x += frequency) {
@@ -383,7 +384,7 @@ public class PlayableGame extends GameMode {
         }
 
         for (double y = bottomLineY ; y < screenCenter.getY() + SCREEN_WIDTH / 2 ; y += frequency) {
-            StdDraw.line( screenCenter.getX() - SCREEN_WIDTH / 2, y, screenCenter.getX() + SCREEN_WIDTH / 2, y);
+            StdDraw.line(screenCenter.getX() - SCREEN_WIDTH / 2, y, screenCenter.getX() + SCREEN_WIDTH / 2, y);
         }
 
         //==================================================================================================================
@@ -391,7 +392,7 @@ public class PlayableGame extends GameMode {
         //==================================================================================================================
 
 
-        for(Shrapnel shrapnel : shrapnelList){
+        for (Shrapnel shrapnel : shrapnelList) {
             shrapnel.draw();
         }
 
@@ -399,7 +400,7 @@ public class PlayableGame extends GameMode {
             wall.draw();
         }
 
-        for(Experience experience : experienceList){
+        for (Experience experience : experienceList) {
             experience.draw();
         }
 
@@ -421,17 +422,15 @@ public class PlayableGame extends GameMode {
 
 
         //setting the screen position
-        if(screenCenter.getX() - fighter.getPositionX() > SCREEN_WIDTH_BUFFER){
+        if (screenCenter.getX() - fighter.getPositionX() > SCREEN_WIDTH_BUFFER) {
             screenCenter.setX(fighter.getPositionX() + SCREEN_WIDTH_BUFFER);
-        }
-        else if(fighter.getPositionX() - screenCenter.getX() > SCREEN_WIDTH_BUFFER){
+        } else if (fighter.getPositionX() - screenCenter.getX() > SCREEN_WIDTH_BUFFER) {
             screenCenter.setX(fighter.getPositionX() - SCREEN_WIDTH_BUFFER);
         }
 
-        if(screenCenter.getY() - fighter.getPositionY() > SCREEN_WIDTH_BUFFER){
+        if (screenCenter.getY() - fighter.getPositionY() > SCREEN_WIDTH_BUFFER) {
             screenCenter.setY(fighter.getPositionY() + SCREEN_WIDTH_BUFFER);
-        }
-        else if(fighter.getPositionY() - screenCenter.getY() > SCREEN_WIDTH_BUFFER){
+        } else if (fighter.getPositionY() - screenCenter.getY() > SCREEN_WIDTH_BUFFER) {
             screenCenter.setY(fighter.getPositionY() - SCREEN_WIDTH_BUFFER);
         }
 
@@ -444,7 +443,7 @@ public class PlayableGame extends GameMode {
         StdDraw.filledCircle(screenCenter.getX() - SCREEN_WIDTH / 3, screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15, .025);
         StdDraw.filledCircle(screenCenter.getX() + SCREEN_WIDTH / 3, screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15, .025);
 
-        if(fighter.getLevelExperience() > 0){
+        if (fighter.getLevelExperience() > 0) {
             double percentOfLevel = (double) fighter.getLevelExperience() / fighter.getExperienceToLevelUp();
 
             StdDraw.setPenColor(StdDraw.YELLOW);
@@ -470,7 +469,7 @@ public class PlayableGame extends GameMode {
 
         StdDraw.arc(screenCenter.getX() + SCREEN_WIDTH / 3, screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15, .025, 270, 90);
 
-        StdDraw.text(screenCenter.getX(), screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15 - .005, fighter.getLevelExperience() + " / "+ fighter.getExperienceToLevelUp());
+        StdDraw.text(screenCenter.getX(), screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15 - .005, fighter.getLevelExperience() + " / " + fighter.getExperienceToLevelUp());
         StdDraw.text(screenCenter.getX(), screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15 + .05, "Level " + fighter.getLevel());
 
         StdDraw.show();

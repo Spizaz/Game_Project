@@ -221,14 +221,14 @@ public class Fighter extends MovingGameObject {
         this.levelExperience += experienceToBeAdded;
         this.totalExperience += experienceToBeAdded;
 
-        if(levelExperience > getExperienceToLevelUp()){
+        if (levelExperience > getExperienceToLevelUp()) {
             levelExperience %= getExperienceToLevelUp();
             level++;
         }
     }
 
     public int getExperienceToLevelUp() {
-        return (int) (100 * Math.pow(1.1, getLevel() - 1));
+        return (int) ( 100 * Math.pow(1.1, getLevel() - 1) );
     }
 
     public int getLevel() {

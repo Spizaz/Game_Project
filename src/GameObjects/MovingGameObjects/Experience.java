@@ -3,7 +3,7 @@ package GameObjects.MovingGameObjects;
 import GameStructureElements.Game;
 import Toolkit.Vector;
 
-public class Experience extends MovingGameObject{
+public class Experience extends MovingGameObject {
 
     private int experience;
 
@@ -26,10 +26,10 @@ public class Experience extends MovingGameObject{
 
     //==================================================================================================================
 
-    public void move(Vector fighterPosition){
+    public void move(Vector fighterPosition) {
         double distance = getPosition().difference(fighterPosition);
 
-        if(distance < .4)
+        if (distance < .4)
             setAcceleration(getPosition().differenceVector(fighterPosition).scale(3e-10 / Math.pow(distance, 10)));
 
         super.move(null, true);

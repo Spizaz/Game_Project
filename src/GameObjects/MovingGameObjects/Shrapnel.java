@@ -16,7 +16,7 @@ public class Shrapnel extends MovingGameObject {
 
     public Shrapnel(Vector position) {
         super(position, "GameObjects.MovingGameObjects.Shrapnel", 16, 5e-4, 1);
-        setSpriteFilepath("Images/shrapnel" + (int) (Math.random() * 5 + 1) + ".png");
+        setSpriteFilepath("Images/shrapnel" + (int) ( Math.random() * 5 + 1 ) + ".png");
 
         direction = Math.random();
         movementVelocity = new Vector(Math.cos(direction), Math.sin(direction)).scale(getMaxSpeed());
@@ -24,7 +24,7 @@ public class Shrapnel extends MovingGameObject {
 
     //==================================================================================================================
 
-    public boolean isActive(){
+    public boolean isActive() {
         return getTotalVelocity().magnitude() < getMaxSpeed() / 100;
     }
 

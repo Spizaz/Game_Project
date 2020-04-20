@@ -15,8 +15,8 @@ public class Missile extends Ammo {
     //==================================================================================================================
 
     public Missile(double range, double damage, double knockBackForce) {
-        super( "GameObjects.MovingGameObjects.Missile", 17, 18e-5, 1, range, damage, knockBackForce );
-        setSpriteFilepath( "Images/missile.png" );
+        super("GameObjects.MovingGameObjects.Missile", 17, 18e-5, 1, range, damage, knockBackForce);
+        setSpriteFilepath("Images/missile.png");
 
 
         targetedEnemy = null;
@@ -37,9 +37,9 @@ public class Missile extends Ammo {
 
         //for all the enemies - if it is the closest and inside the missile's range
         for (Enemy enemy : enemies) {
-            double enemyDistance = getDistance( enemy );
+            double enemyDistance = getDistance(enemy);
 
-            if ( enemyDistance < smallestDistance && enemyDistance < getRange() ) {
+            if (enemyDistance < smallestDistance && enemyDistance < getRange()) {
                 target = enemy;
             }
         }
@@ -56,8 +56,8 @@ public class Missile extends Ammo {
     public void move() {
 
         //if there is a targeted GameObjects.MovingGameObjects.Enemy - move towards it
-        if ( targetedEnemy != null ) {
-            setAcceleration( getPosition().differenceVector( targetedEnemy.getPosition() ).scale(7e-6) );
+        if (targetedEnemy != null) {
+            setAcceleration(getPosition().differenceVector(targetedEnemy.getPosition()).scale(7e-6));
             movementVelocity.update(getAcceleration().scaledVector(Game.FRAME_DELAY));
         }
 
@@ -66,8 +66,8 @@ public class Missile extends Ammo {
 
     @Override
     public Missile clone(Vector position) {
-        Missile clone = new Missile( getRange(), getDamage(), getKnockBackForce() );
-        clone.setPosition( position );
+        Missile clone = new Missile(getRange(), getDamage(), getKnockBackForce());
+        clone.setPosition(position);
 
         return clone;
     }

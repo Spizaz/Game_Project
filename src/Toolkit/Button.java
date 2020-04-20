@@ -1,6 +1,7 @@
 package Toolkit;
 
 import java.awt.*;
+
 import edu.princeton.cs.introcs.StdDraw;
 
 public class Button {
@@ -50,7 +51,6 @@ public class Button {
     //==================================================================================================================
 
 
-
     //==================================================================================================================
 
     /**
@@ -63,7 +63,7 @@ public class Button {
         StdDraw.setPenColor(borderColor);
         StdDraw.rectangle(position.getX(), position.getY(), width / 2, height / 2);
 
-        if(text != null)
+        if (text != null)
             text.draw(position.getX(), position.getY());
     }
 }

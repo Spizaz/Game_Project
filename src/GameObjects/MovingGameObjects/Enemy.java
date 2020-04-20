@@ -119,7 +119,7 @@ public class Enemy extends MovingGameObject {
         desiredDirection = this.getPosition().differenceVector(fighterPosition).unitVector();
     }
 
-    public Vector getDesiredDirection(){
+    public Vector getDesiredDirection() {
         return desiredDirection;
     }
 
@@ -128,19 +128,19 @@ public class Enemy extends MovingGameObject {
     }
 
     public double getHealth() {
-        if(health > maxHealth) health = maxHealth;
-        else if(health < 0) health = 0;
+        if (health > maxHealth) health = maxHealth;
+        else if (health < 0) health = 0;
 
         return health;
     }
 
-    public void addHealth(double healthToBeAdded){
-        if(health > 0){
+    public void addHealth(double healthToBeAdded) {
+        if (health > 0) {
             health += healthToBeAdded;
         }
     }
 
-    public boolean isAlive(){
+    public boolean isAlive() {
         return getHealth() > 0;
     }
 
@@ -149,7 +149,7 @@ public class Enemy extends MovingGameObject {
     }
 
     public int getExperienceOnDeath() {
-        return (int) Math.ceil( (( getMaxHealth() / 10) + ( getMaxSpeed() / getMass() * 1e6 )  + ( getRegenHealthPerSecond() * 5 )) * (Math.random() * .25 + .875) );
+        return (int) Math.ceil(( ( getMaxHealth() / 10 ) + ( getMaxSpeed() / getMass() * 1e6 ) + ( getRegenHealthPerSecond() * 5 ) ) * ( Math.random() * .25 + .875 ));
     }
 
     public int getMoneyOnDeath() {
@@ -170,12 +170,12 @@ public class Enemy extends MovingGameObject {
      * @return a double representing how much this enemy's presence makes the game more difficult
      */
     public double getDifficulty() {
-        return( getMaxHealth() / 100 ) +
-                        ( getMaxSpeed() / getMass() * 1e5 ) +
+        return ( getMaxHealth() / 100 ) +
+                ( getMaxSpeed() / getMass() * 1e5 ) +
 
-                        //if the weapon doesn't exist - don't add to difficulty
-                        ( ( hasWeapon() ) ? getWeapon().getDamagePerSecond() : 0 ) +
-                        ( getRegenHealthPerSecond() / 10);
+                //if the weapon doesn't exist - don't add to difficulty
+                ( ( hasWeapon() ) ? getWeapon().getDamagePerSecond() : 0 ) +
+                ( getRegenHealthPerSecond() / 10 );
     }
 
     /**
@@ -187,7 +187,7 @@ public class Enemy extends MovingGameObject {
 
     public void setWeaponPositions() {
 
-        if(hasWeapon()) {
+        if (hasWeapon()) {
             Weapon weapon = getWeapon();
             double direction = getDesiredDirection().getRadian();
 
@@ -207,7 +207,7 @@ public class Enemy extends MovingGameObject {
 
     //==================================================================================================================
 
-    public void drawHealthBar(){
+    public void drawHealthBar() {
         StdDraw.setPenColor(StdDraw.RED);
 
         double lineLength = getHealth() / 1000;
@@ -217,11 +217,11 @@ public class Enemy extends MovingGameObject {
         StdDraw.rectangle(getPositionX(), getPositionY() - .06, lineLength / 2, .005);
     }
 
-    public void draw(){
+    public void draw() {
         double radian = getDesiredDirection().getRadian();
         super.draw(radian);
         drawHealthBar();
-        if(hasWeapon()) weapon.draw(radian);
+        if (hasWeapon()) weapon.draw(radian);
     }
 
 

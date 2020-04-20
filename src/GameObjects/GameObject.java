@@ -77,7 +77,7 @@ public class GameObject {
         this.position.setY(y);
     }
 
-    public void updatePosition(Vector vector){
+    public void updatePosition(Vector vector) {
         position.update(vector);
     }
 

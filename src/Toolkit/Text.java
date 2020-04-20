@@ -1,6 +1,7 @@
 package Toolkit;
 
 import java.awt.*;
+
 import edu.princeton.cs.introcs.StdDraw;
 
 public class Text {

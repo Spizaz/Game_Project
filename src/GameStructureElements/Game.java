@@ -2,6 +2,7 @@ package GameStructureElements;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
 import edu.princeton.cs.introcs.StdDraw;
 
 public class Game {
@@ -68,7 +69,7 @@ public class Game {
             public void run() {
 
                 //if there was a change in gameModeID
-                if(!gameModeID.equals(previousGameModeID)) {
+                if (!gameModeID.equals(previousGameModeID)) {
 
                     switch (gameModeID) {
                         case "Game_Menu":
