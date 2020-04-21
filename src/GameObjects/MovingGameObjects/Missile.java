@@ -8,14 +8,14 @@ import java.util.List;
 public class Missile extends Ammo {
 
     /**
-     * the nearest GameObjects.MovingGameObjects.Enemy
+     * the nearest Enemy
      */
     private Enemy targetedEnemy;
 
     //==================================================================================================================
 
     public Missile(double range, double damage, double knockBackForce) {
-        super("GameObjects.MovingGameObjects.Missile", 17, 18e-5, 1, range, damage, knockBackForce);
+        super("Missile", 17, 18e-5, 1, range, damage, knockBackForce);
         setSpriteFilepath("Images/missile.png");
 
 
@@ -52,12 +52,15 @@ public class Missile extends Ammo {
 
     //==================================================================================================================
 
-    @Override
-    public void move() {
+    public void move(Fighter fighter) {
 
-        //if there is a targeted GameObjects.MovingGameObjects.Enemy - move towards it
+        //if there is a targeted Enemy - move towards it
         if (targetedEnemy != null) {
-            setAcceleration(getPosition().differenceVector(targetedEnemy.getPosition()).scale(7e-6));
+            if (getDistance(fighter) > 0) {
+                setAcceleration(getPosition().differenceVector(targetedEnemy.getPosition()).scale(7e-6 * ( 1 + getAmmoSpeedUpgradePoints() / 5. )));
+            } else {
+                setAcceleration(fighter.getPosition().differenceVector(this.getPosition()).scale(7e-6 * ( 1 + getAmmoSpeedUpgradePoints() / 5. )));
+            }
             movementVelocity.update(getAcceleration().scaledVector(Game.FRAME_DELAY));
         }
 
@@ -68,6 +71,7 @@ public class Missile extends Ammo {
     public Missile clone(Vector position) {
         Missile clone = new Missile(getRange(), getDamage(), getKnockBackForce());
         clone.setPosition(position);
+        clone.addAmmoSpeedUpgradePoints(this.getAmmoSpeedUpgradePoints());
 
         return clone;
     }

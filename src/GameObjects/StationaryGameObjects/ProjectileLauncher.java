@@ -13,14 +13,11 @@ public class ProjectileLauncher extends Weapon {
 
     private Ammo ammoTemplate;
 
-    private int ammoSpeedUpgradePoints;
-
     //==================================================================================================================
 
     public ProjectileLauncher(String name, double range, double degreesOfInaccuracy, double recoilForce, double knockBackForce, double criticalDamageChance, double criticalDamageAddedDamage, double damagePerShot, double shotDelay) {
         super(name, range, degreesOfInaccuracy, recoilForce, knockBackForce, criticalDamageChance, criticalDamageAddedDamage, shotDelay);
         this.damagePerShot = damagePerShot;
-        this.ammoSpeedUpgradePoints = 0;
     }
 
     //==================================================================================================================
@@ -41,17 +38,8 @@ public class ProjectileLauncher extends Weapon {
         this.ammoTemplate = ammoTemplate;
     }
 
-    //something is wrong here
-    public double getAmmoMaxSpeed() {
-        return ammoTemplate.getMaxSpeed() * ( 1 + getAmmoSpeedUpgradePoints() / 5. );
-    }
-
-    public int getAmmoSpeedUpgradePoints() {
-        return ammoSpeedUpgradePoints;
-    }
-
     public void addAmmoSpeedUpgradePoints(int ammoSpeedUpgradePointsToBeAdded) {
-        this.ammoSpeedUpgradePoints += ammoSpeedUpgradePointsToBeAdded;
+        ammoTemplate.addAmmoSpeedUpgradePoints(ammoSpeedUpgradePointsToBeAdded);
     }
 
     @Override
@@ -74,7 +62,7 @@ public class ProjectileLauncher extends Weapon {
 
         double velocityDirection = getDirection().getRadian();
         velocityDirection += ( Math.random() * 2 - 1 ) * getDegreesOfInaccuracy();
-        ammo.movementVelocity = Vector.radianToVector(velocityDirection).scaledVector(getAmmoMaxSpeed());
+        ammo.movementVelocity = Vector.radianToVector(velocityDirection).scaledVector(ammo.getMaxSpeed());
 
         setSpriteFilepath(getSpriteFilepath());
 

@@ -14,6 +14,7 @@ public class Bullet extends Ammo {
     public Bullet clone(Vector position) {
         Bullet clone = new Bullet(getRange(), getDamage(), getKnockBackForce());
         clone.setPosition(position);
+        clone.addAmmoSpeedUpgradePoints(this.getAmmoSpeedUpgradePoints());
 
         return clone;
     }

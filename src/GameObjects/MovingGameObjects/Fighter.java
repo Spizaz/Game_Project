@@ -244,6 +244,8 @@ public class Fighter extends MovingGameObject {
     }
 
     public double getHealth() {
+        if (health > maxHealth) health = maxHealth;
+        else if (health < 0) health = 0;
         return health;
     }
 
@@ -416,7 +418,7 @@ public class Fighter extends MovingGameObject {
     public void drawHealthBar() {
         StdDraw.setPenColor(StdDraw.GREEN);
 
-        double lineLength = health / 1000;
+        double lineLength = getHealth() / 1000;
         StdDraw.filledRectangle(getPositionX(), getPositionY() - .06, lineLength / 2, .005);
 
         StdDraw.setPenColor(StdDraw.BLACK);

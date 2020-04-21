@@ -71,8 +71,8 @@ public class Game {
 
     //==================================================================================================================
     public Game() throws InterruptedException {
-        //gameModeID = GameMenu.getName() + "_init";
-        gameModeID = PlayableGame.getName() + "_init";
+        gameModeID = GameMenu.getName() + "_init";
+        //gameModeID = PlayableGame.getName() + "_init";
         //gameModeID = PauseMenu.getName() + "_init";
         gameMode = null;
         previousGameModeID = "";

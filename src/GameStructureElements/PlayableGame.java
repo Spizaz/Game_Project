@@ -251,14 +251,15 @@ public class PlayableGame extends GameMode {
                 continue;
             }
 
-            //if the Ammo is really a GameObjects.MovingGameObjects.Missile
+            //if the Ammo is really a Missile
             if (ammo instanceof Missile) {
                 ( (Missile) ammo ).setTargetedEnemy(enemyList);
+                ( (Missile) ammo ).move(fighter);
+            } else {
+                ammo.move();
             }
 
-
-            ammo.move();
-
+            //ammo has hit the Fighter
             if (ammo.isTouching(fighter)) {
                 fighter.addHealth(-ammo.getDamage());
 

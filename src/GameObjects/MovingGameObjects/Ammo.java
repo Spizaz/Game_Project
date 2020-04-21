@@ -5,24 +5,29 @@ import Toolkit.Vector;
 public abstract class Ammo extends MovingGameObject {
 
     /**
-     * the max distance this GameObjects.MovingGameObjects.Ammo will be able to travel
+     * the max distance this Ammo will be able to travel
      */
     private double range;
 
     /**
-     * the total distance the GameObjects.MovingGameObjects.Ammo has already traveled
+     * the total distance the Ammo has already traveled
      */
     private double distanceTraveled;
 
     /**
-     * the damage the GameObjects.MovingGameObjects.Ammo will do upon impact
+     * the damage the Ammo will do upon impact
      */
     private double damage;
 
     /**
-     * the force the GameObjects.MovingGameObjects.Ammo will exert on the Object it impacts
+     * the force the Ammo will exert on the Object it impacts
      */
     private double knockBackForce;
+
+    /**
+     * the amount of upgrade points that has been spent on the Ammo's max speed
+     */
+    private int ammoSpeedUpgradePoints;
 
 
     //==================================================================================================================
@@ -39,6 +44,10 @@ public abstract class Ammo extends MovingGameObject {
 
     //region Gets, Sets, and Adds
 
+
+    public double getMaxSpeed() {
+        return super.getMaxSpeed() * ( 1 + ammoSpeedUpgradePoints / 5. );
+    }
 
     public double getDistanceTraveled() {
         return distanceTraveled;
@@ -66,6 +75,14 @@ public abstract class Ammo extends MovingGameObject {
 
     public boolean isActive() {
         return getDistanceTraveled() <= range;
+    }
+
+    public int getAmmoSpeedUpgradePoints() {
+        return ammoSpeedUpgradePoints;
+    }
+
+    public void addAmmoSpeedUpgradePoints(int ammoSpeedUpgradePointsToBeAdded) {
+        ammoSpeedUpgradePoints += ammoSpeedUpgradePointsToBeAdded;
     }
 
 

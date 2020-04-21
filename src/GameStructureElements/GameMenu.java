@@ -62,72 +62,56 @@ public class GameMenu extends GameMode {
         return nearestEnemy;
     }
 
-    //==================================================================================================================
+    private void addEnemy() {
+        //sets the enemyPosition at least .5 away from the center of the screen
+        Vector enemyPosition;
 
-    @Override
-    public void draw() {
-        StdDraw.clear(getBackground());
+        do {
+            enemyPosition = new Vector(( Math.random() - .5 ) * 2, ( Math.random() - .5 ) * 2);
+        } while (enemyPosition.difference(new Vector(0, 0)) < .5);
 
-        for (Ammo ammo : ammoList) {
-            ammo.draw();
-        }
 
-        for (Enemy enemy : enemyList) {
-            enemy.draw();
-        }
-
-        fighter.draw();
-
-        for (Button button : buttons) {
-            button.draw();
-        }
-
-        new Text("CAN'T THINK OF GAME NAME YET", 40).draw(0, .75);
-
-        StdDraw.show();
+        //adds a random type of Enemy
+        switch ((int) ( Math.random() * 6 )) {
+            case 0:
+                enemyList.add(new Enemy(enemyPosition, 100 * ( Math.random() + .5 ), 10e-5 * ( Math.random() + .5 ), 100 * ( Math.random() + .5 )));
+                break;
+            case 1:
+                enemyList.add(new Enemy(enemyPosition, 100, 3 * ( Math.random() + .5 ), 10e-5 * ( Math.random() + .5 ), 100));
+                break;
+            case 2:
+                enemyList.add(new ArmoredEnemy(enemyPosition, 100, 7e-5 * ( Math.random() + .5 ), 200));
+                break;
+            case 3:
+                enemyList.add(new ArmoredEnemy(enemyPosition, 100, 3 * ( Math.random() + .5 ), 7e-5 * ( Math.random() + .5 ), 200));
+                break;
+            case 4:
+                enemyList.add(new SpeedEnemy(enemyPosition, 100, 14e-5 * ( Math.random() + .5 ), 50));
+                break;
+            case 5:
+                enemyList.add(new SpeedEnemy(enemyPosition, 100, 3 * ( Math.random() + .5 ), 14e-5 * ( Math.random() + .5 ), 50));
+                break;
+        }//switch
     }
+
+    private void addWaveOfEnemies() {
+        int numberOfEnemies = (int) ( Math.random() * 3 ) + 2 - enemyList.size();
+
+        for (int i = 0 ; i < numberOfEnemies ; i++) {
+            addEnemy();
+        }//i
+    }
+
+    //==================================================================================================================
 
     @Override
     public void init() {
         StdDraw.setScale(-1, 1);
 
-        int numberOfEnemies = (int) ( Math.random() * 3 ) + 2;
-
-        for (int i = 0 ; i < numberOfEnemies ; i++) {
-
-            //sets the enemyPosition at least .5 away from the center of the screen
-            Vector enemyPosition;
-
-            do {
-                enemyPosition = new Vector(( Math.random() - .5 ) * 2, ( Math.random() - .5 ) * 2);
-            } while (enemyPosition.difference(new Vector(0, 0)) < .5);
-
-
-            //adds a random type of Enemy
-            switch ((int) ( Math.random() * 6 )) {
-                case 0:
-                    enemyList.add(new Enemy(enemyPosition, 100 * ( Math.random() + .5 ), 10e-5 * ( Math.random() + .5 ), 100 * ( Math.random() + .5 )));
-                    break;
-                case 1:
-                    enemyList.add(new Enemy(enemyPosition, 100, 3 * ( Math.random() + .5 ), 10e-5 * ( Math.random() + .5 ), 100));
-                    break;
-                case 2:
-                    enemyList.add(new ArmoredEnemy(enemyPosition, 100, 7e-5 * ( Math.random() + .5 ), 200));
-                    break;
-                case 3:
-                    enemyList.add(new ArmoredEnemy(enemyPosition, 100, 3 * ( Math.random() + .5 ), 7e-5 * ( Math.random() + .5 ), 200));
-                    break;
-                case 4:
-                    enemyList.add(new SpeedEnemy(enemyPosition, 100, 14e-5 * ( Math.random() + .5 ), 50));
-                    break;
-                case 5:
-                    enemyList.add(new SpeedEnemy(enemyPosition, 100, 3 * ( Math.random() + .5 ), 14e-5 * ( Math.random() + .5 ), 50));
-                    break;
-            }//switch
-        }//i
+        addWaveOfEnemies();
 
         fighter = new Fighter(new Vector(0, 0));
-        fighter.setMaxSpeed(8e-4);
+        fighter.setMaxSpeed(24e-5);
 
         //add weapons to the Fighter while the Fighter has 1 or 0 Weapons or no Primary Weapon
         do {
@@ -139,12 +123,15 @@ public class GameMenu extends GameMode {
                     switch ((int) ( Math.random() * 3 )) {
                         case 0:
                             fighter.setWeapon(new Gun(.5, .2, .01, .01, .1, 10, 25, 1000), weaponIndex);
+                            ( (Gun) fighter.getWeapon(weaponIndex) ).addAmmoSpeedUpgradePoints(10);
                             break;
                         case 1:
                             fighter.setWeapon(new MachineGun(.5, .5, .01, .03, .1, 10, 10, 500), weaponIndex);
+                            ( (MachineGun) fighter.getWeapon(weaponIndex) ).addAmmoSpeedUpgradePoints(10);
                             break;
                         case 2:
                             fighter.setWeapon(new MissileLauncher(.5, .01, .05, .1, 10, 25, 2000), weaponIndex);
+                            ( (MissileLauncher) fighter.getWeapon(weaponIndex) ).addAmmoSpeedUpgradePoints(10);
                             break;
                     }//switch
                 }//if
@@ -158,6 +145,10 @@ public class GameMenu extends GameMode {
 
     @Override
     public void run() {
+
+        if (enemyList.size() < 2) {
+            addWaveOfEnemies();
+        }
 
         //==================================================================================================================
         //WEAPON FIRE
@@ -195,8 +186,34 @@ public class GameMenu extends GameMode {
         //AMMO MOVEMENT
         //==================================================================================================================
 
-        for (Ammo ammo : ammoList) {
-            ammo.move();
+        for (int i = 0 ; i < ammoList.size() ; i++) {
+            Ammo ammo = ammoList.get(i);
+
+            //remove the ammo if it is out of range
+            if (!ammo.isActive()) {
+                ammoList.remove(ammo);
+                i--;
+                continue;
+            }
+
+            //if the Ammo is really a GameObjects.MovingGameObjects.Missile
+            if (ammo instanceof Missile) {
+                ( (Missile) ammo ).setTargetedEnemy(enemyList);
+                ( (Missile) ammo ).move(fighter);
+            } else {
+                ammo.move();
+            }
+
+            if (ammo.isTouching(fighter)) {
+                fighter.addHealth(-ammo.getDamage());
+
+                //knockback force
+                fighterNetForce.update(ammo.getTotalVelocity().unitVector().scale(ammo.getKnockBackForce()));
+
+                ammoList.remove(ammo);
+                i--;
+                continue;
+            }
         }
 
         //==================================================================================================================
@@ -262,6 +279,33 @@ public class GameMenu extends GameMode {
             enemy.setAcceleration(enemy.getDesiredDirection().scaledVector(enemy.getMaxAcceleration()));
 
             enemy.move(enemyNetForce, true);
+
+            //==================================================================================================================
+            //OTHER STUFF
+            //==================================================================================================================
         }
+    }
+
+    @Override
+    public void draw() {
+        StdDraw.clear(getBackground());
+
+        for (Ammo ammo : ammoList) {
+            ammo.draw();
+        }
+
+        for (Enemy enemy : enemyList) {
+            enemy.draw();
+        }
+
+        fighter.draw();
+
+        for (Button button : buttons) {
+            button.draw();
+        }
+
+        new Text("CAN'T THINK OF GAME NAME YET", 40).draw(0, .75);
+
+        StdDraw.show();
     }
 }
