@@ -1,5 +1,6 @@
 package GameStructureElements;
 
+import GameObjects.GameObject;
 import GameObjects.MovingGameObjects.*;
 import GameObjects.StationaryGameObjects.*;
 import Toolkit.Vector;
@@ -46,6 +47,11 @@ public class PlayableGame extends GameMode {
      * a list containing all the Experience that is in the game
      */
     private List<Experience> experienceList;
+
+    /**
+     * a list containing all the Fire that is in the game
+     */
+    private List<Fire> fireList;
 
     /**
      * the coordinates of the center of the screen (duh)
@@ -199,6 +205,7 @@ public class PlayableGame extends GameMode {
         this.ammoList = new ArrayList<>();
         this.shrapnelList = new ArrayList<>();
         this.wallList = new ArrayList<>();
+        this.fireList = new ArrayList<>();
         this.experienceList = new ArrayList<>();
         this.screenCenter = new Vector();
 
@@ -246,6 +253,11 @@ public class PlayableGame extends GameMode {
 
             //remove the ammo if it is out of range
             if (!ammo.isActive()) {
+
+                if (ammo instanceof Missile) {
+                    fireList.addAll(( (Missile) ammo ).explode());
+                }
+
                 ammoList.remove(ammo);
                 i--;
                 continue;
@@ -255,6 +267,15 @@ public class PlayableGame extends GameMode {
             if (ammo instanceof Missile) {
                 ( (Missile) ammo ).setTargetedEnemy(enemyList);
                 ( (Missile) ammo ).move(fighter);
+
+                if (Math.random() > .035 * Game.FRAME_DELAY) {
+                    Vector position = new Vector(
+                            ammo.getPositionX() - Math.cos(ammo.getTotalVelocity().getRadian()) * ammo.getSize() / 2 * GameObject.PIXEL_SIZE,
+                            ammo.getPositionY() - Math.sin(ammo.getTotalVelocity().getRadian()) * ammo.getSize() / 2 * GameObject.PIXEL_SIZE
+                    );
+
+                    fireList.add(new Fire(position, ammo.getTotalVelocity().getInverse().getRadian(), 100));
+                }
             } else {
                 ammo.move();
             }
@@ -266,6 +287,10 @@ public class PlayableGame extends GameMode {
                 //knockback force
                 fighterNetForce.update(ammo.getTotalVelocity().unitVector().scale(ammo.getKnockBackForce()));
 
+                if (ammo instanceof Missile) {
+                    fireList.addAll(( (Missile) ammo ).explode());
+                }
+
                 ammoList.remove(ammo);
                 i--;
                 continue;
@@ -273,11 +298,25 @@ public class PlayableGame extends GameMode {
         }
 
         //==================================================================================================================
-        //SHRAPNEL MOVEMENT
+        //SHRAPNEL & FIRE MOVEMENT
         //==================================================================================================================
 
         for (Shrapnel shrapnel : shrapnelList) {
             shrapnel.move(null, true);
+        }
+
+        for (int i = 0 ; i < fireList.size() ; i++) {
+            Fire fire = fireList.get(i);
+
+            if (!fire.isActive()) {
+                fireList.remove(fire);
+                i--;
+                continue;
+            }
+
+            fire.timeAlive -= Game.FRAME_DELAY;
+
+            fire.move(null, true);
         }
 
         //==================================================================================================================
@@ -308,11 +347,9 @@ public class PlayableGame extends GameMode {
                     //the enemy takes damage and the ammo is gone
                     enemy.addHealth(-ammo.getDamage());
 
-                    //adding in the shrapnel
-                    if (ammo instanceof Missile && SkillTree.shrapnelActive.isActive()) {
-                        for (int i = 0 ; i < 3 ; i++) {
-                            shrapnelList.add(new Shrapnel(ammo.getPosition()));
-                        }
+                    //adding in the explosion of fire
+                    if (ammo instanceof Missile) {
+                        fireList.addAll(( (Missile) ammo ).explode());
                     }
 
                     ammoList.remove(ammo);
@@ -356,7 +393,7 @@ public class PlayableGame extends GameMode {
                 enemyNetForce.update(ammo.getTotalVelocity().unitVector().scale(enemy.getWeapon().getRecoilForce()).getInverse());
             }
 
-            //setting up the GameObjects.MovingGameObjects.Enemy's acceleration
+            //setting up the Enemy's acceleration
             enemy.setDesiredDirection(fighter.getPosition());
             enemy.setAcceleration(enemy.getDesiredDirection().scaledVector(enemy.getMaxAcceleration()));
 
@@ -435,6 +472,10 @@ public class PlayableGame extends GameMode {
 
         for (Shrapnel shrapnel : shrapnelList) {
             shrapnel.draw();
+        }
+
+        for (Fire fire : fireList) {
+            fire.draw();
         }
 
         for (Wall wall : wallList) {

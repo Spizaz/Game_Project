@@ -1,6 +1,7 @@
 package GameStructureElements;
 
 
+import GameObjects.GameObject;
 import Toolkit.*;
 import Toolkit.Button;
 import edu.princeton.cs.introcs.StdDraw;
@@ -34,13 +35,13 @@ public class GameMenu extends GameMode {
 
     private List<Ammo> ammoList;
 
+    private List<Fire> fireList;
+
 
     //==================================================================================================================
 
     public GameMenu(Color background) {
         super(background);
-        enemyList = new ArrayList<>();
-        ammoList = new ArrayList<>();
     }
 
     public static String getName() {
@@ -68,7 +69,7 @@ public class GameMenu extends GameMode {
 
         do {
             enemyPosition = new Vector(( Math.random() - .5 ) * 2, ( Math.random() - .5 ) * 2);
-        } while (enemyPosition.difference(new Vector(0, 0)) < .5);
+        } while (enemyPosition.difference(fighter.getPosition()) < .5);
 
 
         //adds a random type of Enemy
@@ -106,12 +107,16 @@ public class GameMenu extends GameMode {
 
     @Override
     public void init() {
-        StdDraw.setScale(-1, 1);
+        this.enemyList = new ArrayList<>();
+        this.ammoList = new ArrayList<>();
+        this.fireList = new ArrayList<>();
 
-        addWaveOfEnemies();
+        StdDraw.setScale(-1, 1);
 
         fighter = new Fighter(new Vector(0, 0));
         fighter.setMaxSpeed(24e-5);
+
+        addWaveOfEnemies();
 
         //add weapons to the Fighter while the Fighter has 1 or 0 Weapons or no Primary Weapon
         do {
@@ -130,7 +135,7 @@ public class GameMenu extends GameMode {
                             ( (MachineGun) fighter.getWeapon(weaponIndex) ).addAmmoSpeedUpgradePoints(10);
                             break;
                         case 2:
-                            fighter.setWeapon(new MissileLauncher(.5, .01, .05, .1, 10, 25, 2000), weaponIndex);
+                            fighter.setWeapon(new MissileLauncher(.75, .01, .05, .1, 10, 25, 2000), weaponIndex);
                             ( (MissileLauncher) fighter.getWeapon(weaponIndex) ).addAmmoSpeedUpgradePoints(10);
                             break;
                     }//switch
@@ -191,15 +196,29 @@ public class GameMenu extends GameMode {
 
             //remove the ammo if it is out of range
             if (!ammo.isActive()) {
+
+                if (ammo instanceof Missile) {
+                    fireList.addAll(( (Missile) ammo ).explode());
+                }
+
                 ammoList.remove(ammo);
                 i--;
                 continue;
             }
 
-            //if the Ammo is really a GameObjects.MovingGameObjects.Missile
+            //if the Ammo is really a Missile
             if (ammo instanceof Missile) {
                 ( (Missile) ammo ).setTargetedEnemy(enemyList);
                 ( (Missile) ammo ).move(fighter);
+
+                if (Math.random() > .035 * Game.FRAME_DELAY) {
+                    Vector position = new Vector(
+                            ammo.getPositionX() - Math.cos(ammo.getTotalVelocity().getRadian()) * ammo.getSize() / 2 * GameObject.PIXEL_SIZE,
+                            ammo.getPositionY() - Math.sin(ammo.getTotalVelocity().getRadian()) * ammo.getSize() / 2 * GameObject.PIXEL_SIZE
+                    );
+
+                    fireList.add(new Fire(position, ammo.getTotalVelocity().getInverse().getRadian(), 100));
+                }
             } else {
                 ammo.move();
             }
@@ -210,10 +229,31 @@ public class GameMenu extends GameMode {
                 //knockback force
                 fighterNetForce.update(ammo.getTotalVelocity().unitVector().scale(ammo.getKnockBackForce()));
 
+                if (ammo instanceof Missile) {
+                    fireList.addAll(( (Missile) ammo ).explode());
+                }
+
                 ammoList.remove(ammo);
                 i--;
                 continue;
             }
+        }
+
+        //==================================================================================================================
+        //FIRE MOVEMENT
+        //==================================================================================================================
+
+        for (int i = 0 ; i < fireList.size() ; i++) {
+            Fire fire = fireList.get(i);
+            fire.move(null, true);
+
+            if (!fire.isActive()) {
+                fireList.remove(fire);
+                i--;
+                continue;
+            }
+
+            fire.timeAlive -= Game.FRAME_DELAY;
         }
 
         //==================================================================================================================
@@ -265,6 +305,11 @@ public class GameMenu extends GameMode {
                     enemyNetForce.update(ammoForce);
 
                     enemy.addHealth(-ammo.getDamage());
+
+                    if (ammo instanceof Missile) {
+                        fireList.addAll(( (Missile) ammo ).explode());
+                    }
+
                     ammoList.remove(ammo);
                 }
 
@@ -283,12 +328,20 @@ public class GameMenu extends GameMode {
             //==================================================================================================================
             //OTHER STUFF
             //==================================================================================================================
+
+            if (playGameButton.isClicked()) {
+                Game.gameModeID = PlayableGame.getName() + "_init";
+            }
         }
     }
 
     @Override
     public void draw() {
         StdDraw.clear(getBackground());
+
+        for (Fire fire : fireList) {
+            fire.draw();
+        }
 
         for (Ammo ammo : ammoList) {
             ammo.draw();
