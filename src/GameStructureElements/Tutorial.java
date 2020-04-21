@@ -23,7 +23,7 @@ public class Tutorial extends GameMode {
     }
 
     public static String getName() {
-        return "GameStructureElements.Tutorial";
+        return "Tutorial";
     }
 
     //==================================================================================================================

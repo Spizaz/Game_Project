@@ -7,13 +7,13 @@ import java.awt.*;
 public class Settings extends GameMode {
 
     /*
-    private final Toolkit.Button increaseVolume = new Toolkit.Button();
+    private final Button increaseVolume = new Toolkit.Button();
 
-    private final Toolkit.Button decreaseVolume = new Toolkit.Button();
+    private final Button decreaseVolume = new Toolkit.Button();
 
     private int volumeLevel;
 
-    private final Toolkit.Button goBackAPage = new Toolkit.Button();
+    private final Button goBackAPage = new Toolkit.Button();
 
      */
 
@@ -24,7 +24,7 @@ public class Settings extends GameMode {
     }
 
     public static String getName() {
-        return "GameStructureElements.Settings";
+        return "Settings";
     }
 
     //==================================================================================================================

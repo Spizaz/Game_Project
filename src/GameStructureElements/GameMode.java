@@ -1,6 +1,7 @@
 package GameStructureElements;
 
 import java.awt.*;
+import java.io.IOException;
 
 public abstract class GameMode {
 
@@ -23,7 +24,7 @@ public abstract class GameMode {
 
     //==================================================================================================================
 
-    public abstract void init();
+    public abstract void init() throws IOException;
 
     public abstract void run();
 

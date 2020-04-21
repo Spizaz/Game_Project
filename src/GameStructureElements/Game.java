@@ -1,5 +1,7 @@
 package GameStructureElements;
 
+import java.awt.*;
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -13,7 +15,15 @@ public class Game {
      */
     public static final int FRAME_DELAY = 1000 / 100;
 
-    public static final double FRAMES_PER_SECOND = 1000. / FRAME_DELAY;
+    /**
+     * the color of most Buttons in the Game
+     */
+    public static final Color BUTTON_COLOR = new Color(56, 140, 234, 255);
+
+    /**
+     * the default Font of most Texts in the Game
+     */
+    public static final Font UI_FONT = new Font(null, Font.BOLD, 15);
 
     /**
      * the number of frames that have passed since the start of the game
@@ -23,7 +33,7 @@ public class Game {
     /**
      * the gamemode that the game is currently in
      */
-    private String gameModeID;
+    public static String gameModeID;
 
     /**
      * the previous gamemode that the game is currently in
@@ -38,28 +48,32 @@ public class Game {
     /**
      * the starting screen of the GameStructureElements.Game
      */
-    private GameMode gameMenu = new GameMenu(StdDraw.WHITE);
+    private GameMenu gameMenu = new GameMenu(StdDraw.WHITE);
 
     /**
      * the playable game mode
      */
-    private GameMode playableGame = new PlayableGame(StdDraw.WHITE);
+    private PlayableGame playableGame = new PlayableGame(StdDraw.WHITE);
 
     /**
      * the playable game mode
      */
-    private GameMode pauseMenu = new PauseMenu(StdDraw.WHITE);
+    private PauseMenu pauseMenu = new PauseMenu(StdDraw.WHITE);
 
     /**
      * the thread of the gameMode
      */
     private Thread gameModeThread;
 
-    //==================================================================================================================
+    /**
+     * the default font for all things in the Game
+     */
 
+    //==================================================================================================================
     public Game() throws InterruptedException {
-        //gameModeID = GameMenu.getName();
-        gameModeID = PlayableGame.getName();
+        //gameModeID = GameMenu.getName() + "_init";
+        gameModeID = PlayableGame.getName() + "_init";
+        //gameModeID = PauseMenu.getName() + "_init";
         gameMode = null;
         previousGameModeID = "";
         Timer timer = new Timer("Game_Timer");
@@ -71,20 +85,35 @@ public class Game {
                 //if there was a change in gameModeID
                 if (!gameModeID.equals(previousGameModeID)) {
 
+                    boolean init = gameModeID.contains("_init");
+
+                    if (init)
+                        gameModeID = gameModeID.substring(0, gameModeID.length() - 5);
+
                     switch (gameModeID) {
                         case "Game_Menu":
                             gameMode = gameMenu;
                             break;
                         case "Playable_Game":
                             gameMode = playableGame;
+                            playableGame.setIgnoreMouse(15);
                             break;
                         case "Pause_Menu":
                             gameMode = pauseMenu;
+                            pauseMenu.setPreviousGameModeID(previousGameModeID);
                             break;
                     }
 
+                    if (init) {
+                        try {
+                            gameMode.init();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+
                     previousGameModeID = gameModeID;
-                    gameMode.init();
                 }
 
                 gameMode.run();

@@ -9,15 +9,15 @@ public class SkillTree {
     //SKILLS
 
     /*
-    private final static GameStructureElements.Skill bulletsPassThroughEnemies = new GameStructureElements.Skill();
+    private final static Skill bulletsPassThroughEnemies = new GameStructureElements.Skill();
 
-    private final static GameStructureElements.Skill enemiesExplodeOnDeath = new GameStructureElements.Skill();
+    private final static Skill enemiesExplodeOnDeath = new GameStructureElements.Skill();
 
-    private final static GameStructureElements.Skill fireSpreads = new GameStructureElements.Skill();
+    private final static Skill fireSpreads = new GameStructureElements.Skill();
 
-    private final static GameStructureElements.Skill enemiesStayFrozen = new GameStructureElements.Skill();
+    private final static Skill enemiesStayFrozen = new GameStructureElements.Skill();
 
-    private final static GameStructureElements.Skill killsGainHealth = new GameStructureElements.Skill();
+    private final static Skill killsGainHealth = new GameStructureElements.Skill();
      */
 
     public final static Skill shrapnelActive = new Skill(new ArrayList<>(), 0,

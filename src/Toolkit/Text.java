@@ -25,19 +25,19 @@ public class Text {
 
     public Text(String text, int fontSize) {
         this.text = text;
-        this.font = new Font("SanSerif", Font.BOLD, fontSize);
+        this.font = new Font(null, Font.BOLD, fontSize);
         this.textColor = StdDraw.BLACK;
     }
 
-    public Text(String text, String fontName, int fontSize) {
+    public Text(String text, Font font) {
         this.text = text;
-        this.font = new Font(fontName, Font.BOLD, fontSize);
+        this.font = font;
         this.textColor = StdDraw.BLACK;
     }
 
-    public Text(String text, Color textColor, String fontName, int fontSize) {
+    public Text(String text, Color textColor, Font font) {
         this.text = text;
-        this.font = new Font(fontName, Font.BOLD, fontSize);
+        this.font = font;
         this.textColor = textColor;
     }
 

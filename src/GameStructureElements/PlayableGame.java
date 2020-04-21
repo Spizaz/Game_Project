@@ -62,9 +62,10 @@ public class PlayableGame extends GameMode {
      */
     private final double SCREEN_WIDTH_BUFFER = .5;
 
-    /*
-    private final Toolkit.Button pauseButton = new Toolkit.Button();
+    /**
+     * how many frames the Game will ignore the mouse for
      */
+    private int ignoreMouse = 0;
 
     //==================================================================================================================
 
@@ -72,14 +73,14 @@ public class PlayableGame extends GameMode {
         super(backgroundColor);
     }
 
+    //==================================================================================================================
+
     public static String getName() {
         return "Playable_Game";
     }
 
-    //==================================================================================================================
-
     /**
-     * @return a Toolkit.Vector that contains a good position for a new GameObjects.MovingGameObjects.Enemy to be spawned in at
+     * @return a Vector that contains a good position for a new Enemy to be spawned in at
      */
     private Vector getRandomEnemyPosition() {
         double leftBound = screenCenter.getX() - SCREEN_WIDTH / 2;
@@ -99,7 +100,7 @@ public class PlayableGame extends GameMode {
     }
 
     /**
-     * adds a new GameObjects.MovingGameObjects.Enemy to EnemyList that is at a good difficulty for the fighter
+     * adds a new Enemy to EnemyList that is at a good difficulty for the fighter
      */
     private void addNewEnemy() {
 
@@ -160,6 +161,34 @@ public class PlayableGame extends GameMode {
         }
     }
 
+    //setting the screen position
+    private void centerTheScreen() {
+        if (screenCenter.getX() - fighter.getPositionX() > SCREEN_WIDTH_BUFFER) {
+            screenCenter.setX(fighter.getPositionX() + SCREEN_WIDTH_BUFFER);
+        } else if (fighter.getPositionX() - screenCenter.getX() > SCREEN_WIDTH_BUFFER) {
+            screenCenter.setX(fighter.getPositionX() - SCREEN_WIDTH_BUFFER);
+        }
+
+        if (screenCenter.getY() - fighter.getPositionY() > SCREEN_WIDTH_BUFFER) {
+            screenCenter.setY(fighter.getPositionY() + SCREEN_WIDTH_BUFFER);
+        } else if (fighter.getPositionY() - screenCenter.getY() > SCREEN_WIDTH_BUFFER) {
+            screenCenter.setY(fighter.getPositionY() - SCREEN_WIDTH_BUFFER);
+        }
+
+        StdDraw.setXscale(screenCenter.getX() - SCREEN_WIDTH / 2, screenCenter.getX() + SCREEN_WIDTH / 2);
+        StdDraw.setYscale(screenCenter.getY() - SCREEN_WIDTH / 2, screenCenter.getY() + SCREEN_WIDTH / 2);
+    }
+
+    public void setIgnoreMouse(int ignoreMouse) {
+        this.ignoreMouse = ignoreMouse;
+    }
+
+    //returns if the mouse is ready to be used
+    public boolean isMouseActive() {
+        return ignoreMouse == 0 && StdDraw.isMousePressed();
+    }
+
+
     //==================================================================================================================
 
     @Override
@@ -173,6 +202,7 @@ public class PlayableGame extends GameMode {
         this.experienceList = new ArrayList<>();
         this.screenCenter = new Vector();
 
+        centerTheScreen();
         addNewEnemy();
     }
 
@@ -194,7 +224,7 @@ public class PlayableGame extends GameMode {
 
             //fire the weapon if the weapon is ready to fire
             //but if the weapon is the primary weapon - fire only if the mouse is pressed
-            if (( weaponIndex == 0 ) ? weapon.isReadyToFire() && StdDraw.isMousePressed() : weapon.isReadyToFire()) {
+            if (( weaponIndex == 0 ) ? weapon.isReadyToFire() && isMouseActive() : weapon.isReadyToFire()) {
                 Ammo ammo = weapon.fire();
 
                 ammoList.add(ammo);
@@ -367,6 +397,16 @@ public class PlayableGame extends GameMode {
             }
         }
 
+        //==================================================================================================================
+        //OTHER STUFF
+        //==================================================================================================================
+
+        //pause button - esc
+        if (StdDraw.isKeyPressed(27)) {
+            Game.gameModeID = PauseMenu.getName() + "_init";
+        }
+
+        if (ignoreMouse != 0) ignoreMouse--;
     }
 
     @Override
@@ -422,20 +462,7 @@ public class PlayableGame extends GameMode {
 
 
         //setting the screen position
-        if (screenCenter.getX() - fighter.getPositionX() > SCREEN_WIDTH_BUFFER) {
-            screenCenter.setX(fighter.getPositionX() + SCREEN_WIDTH_BUFFER);
-        } else if (fighter.getPositionX() - screenCenter.getX() > SCREEN_WIDTH_BUFFER) {
-            screenCenter.setX(fighter.getPositionX() - SCREEN_WIDTH_BUFFER);
-        }
-
-        if (screenCenter.getY() - fighter.getPositionY() > SCREEN_WIDTH_BUFFER) {
-            screenCenter.setY(fighter.getPositionY() + SCREEN_WIDTH_BUFFER);
-        } else if (fighter.getPositionY() - screenCenter.getY() > SCREEN_WIDTH_BUFFER) {
-            screenCenter.setY(fighter.getPositionY() - SCREEN_WIDTH_BUFFER);
-        }
-
-        StdDraw.setXscale(screenCenter.getX() - SCREEN_WIDTH / 2, screenCenter.getX() + SCREEN_WIDTH / 2);
-        StdDraw.setYscale(screenCenter.getY() - SCREEN_WIDTH / 2, screenCenter.getY() + SCREEN_WIDTH / 2);
+        centerTheScreen();
 
         //inside of experience bar
         StdDraw.setPenColor(StdDraw.WHITE);
@@ -454,7 +481,7 @@ public class PlayableGame extends GameMode {
             StdDraw.filledCircle(screenCenter.getX() - SCREEN_WIDTH / 3, screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15, .025);
         }
 
-        //outside of experience bar
+        //edge of experience bar
         StdDraw.setPenColor(StdDraw.BLACK);
         StdDraw.arc(screenCenter.getX() - SCREEN_WIDTH / 3, screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15, .025, 90, 270);
 
@@ -469,6 +496,7 @@ public class PlayableGame extends GameMode {
 
         StdDraw.arc(screenCenter.getX() + SCREEN_WIDTH / 3, screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15, .025, 270, 90);
 
+        StdDraw.setFont(Game.UI_FONT);
         StdDraw.text(screenCenter.getX(), screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15 - .005, fighter.getLevelExperience() + " / " + fighter.getExperienceToLevelUp());
         StdDraw.text(screenCenter.getX(), screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15 + .05, "Level " + fighter.getLevel());
 

@@ -15,16 +15,16 @@ import java.util.List;
 public class GameMenu extends GameMode {
 
     private final Button playGameButton = new Button(new Vector(0, .1666), .5, .333 / 2,
-            new Color(56, 140, 234, 255), StdDraw.BLACK,
-            new Text("Play", "SanSerif", 20));
+            Game.BUTTON_COLOR, StdDraw.BLACK,
+            new Text("Play", Game.UI_FONT));
 
     private final Button tutorialButton = new Button(new Vector(0, -.1666), .5, .333 / 2,
-            new Color(56, 140, 234, 255), StdDraw.BLACK,
-            new Text("Tutorial", "SanSerif", 20));
+            Game.BUTTON_COLOR, StdDraw.BLACK,
+            new Text("Tutorial", Game.UI_FONT));
 
     private final Button settingsButton = new Button(new Vector(0, -.5), .5, .333 / 2,
-            new Color(56, 140, 234, 255), StdDraw.BLACK,
-            new Text("Settings", "SanSerif", 20));
+            Game.BUTTON_COLOR, StdDraw.BLACK,
+            new Text("Settings", Game.UI_FONT));
 
     private final Button[] buttons = {playGameButton, tutorialButton, settingsButton};
 
@@ -83,8 +83,6 @@ public class GameMenu extends GameMode {
         }
 
         new Text("CAN'T THINK OF GAME NAME YET", 40).draw(0, .75);
-
-        //StdDraw.line(fighter.getPositionX(), fighter.getPositionY(), fighter.getPositionX() + vector.getX(), fighter.getPositionY() + vector.getY());
 
         StdDraw.show();
     }

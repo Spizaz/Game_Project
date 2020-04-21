@@ -1,22 +1,48 @@
 package GameStructureElements;
 
+import edu.princeton.cs.introcs.Picture;
+import edu.princeton.cs.introcs.StdDraw;
+
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.IOException;
+
+import Toolkit.Button;
+import Toolkit.*;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
 
 public class PauseMenu extends GameMode {
 
+    private String previousGameModeID;
+
+    private int fileSaveCounter = 0;
+
+    private final Button backButton = new Button(new Vector(-.85, .85), .1, .1,
+            Game.BUTTON_COLOR, StdDraw.BLACK, new Text("BACK", 10));
     /*
-    private final Toolkit.Button unpauseButton = new Toolkit.Button();
 
-    private final Toolkit.Button skillTreeButton = new Toolkit.Button();
+    private final Button skillTreeButton = new Button();
 
-    private final Toolkit.Button viewFighterButton = new Toolkit.Button();
+    private final Button viewFighterButton = new Button();
 
-    private final Toolkit.Button settingsButton = new Toolkit.Button();
+    private final Button settingsButton = new Button();
 
      */
 
+    private final Button[] buttons = {backButton};
+
     public PauseMenu(Color background) {
         super(background);
+    }
+
+    //==================================================================================================================
+
+    public void setPreviousGameModeID(String previousGameModeID) {
+        this.previousGameModeID = previousGameModeID;
     }
 
     public static String getName() {
@@ -26,17 +52,29 @@ public class PauseMenu extends GameMode {
     //==================================================================================================================
 
     @Override
-    public void draw() {
-
-    }
-
-    @Override
-    public void init() {
-
+    public void init() throws IOException {
+        StdDraw.save("Images/Saves/pause_menu_background_save" + ++fileSaveCounter + ".png");
+        StdDraw.setScale(-1, 1);
     }
 
     @Override
     public void run() {
+        if (backButton.isClicked()) {
+            Game.gameModeID = PlayableGame.getName();
+            File backgroundImage = new File("Images/Saves/pause_menu_background_save" + fileSaveCounter + ".png");
+            backgroundImage.delete();
+        }
+    }
 
+    @Override
+    public void draw() {
+        StdDraw.picture(0, 0, "Images/Saves/pause_menu_background_save" + fileSaveCounter + ".png", 2, 2);
+        StdDraw.clear(new Color(0, 0, 0, 128));
+
+        for (Button button : buttons) {
+            button.draw();
+        }
+
+        StdDraw.show();
     }
 }

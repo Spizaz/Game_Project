@@ -7,7 +7,7 @@ import edu.princeton.cs.introcs.StdDraw;
 public class Button {
 
     /**
-     * the physical location of the Toolkit.Button
+     * the physical location of the Button
      */
     private Vector position;
 
@@ -17,17 +17,17 @@ public class Button {
     private double width;
 
     /**
-     * the height of the Toolkit.Button
+     * the height of the Button
      */
     private double height;
 
     /**
-     * what the Toolkit.Button says on it
+     * what the Button says on it
      */
     private Text text;
 
     /**
-     * the background Color of the Toolkit.Button
+     * the background Color of the Button
      */
     private Color backgroundColor;
 
@@ -50,11 +50,21 @@ public class Button {
 
     //==================================================================================================================
 
+    private boolean isMouseAbove() {
+        double mouseX = StdDraw.mouseX();
+        double mouseY = StdDraw.mouseY();
+
+        return ( mouseX >= position.getX() - width / 2 ) && ( mouseX <= position.getX() + width / 2 ) && ( mouseY >= position.getY() - height / 2 ) && ( mouseY <= position.getY() + height / 2 );
+    }
+
+    public boolean isClicked() {
+        return isMouseAbove() && StdDraw.isMousePressed();
+    }
 
     //==================================================================================================================
 
     /**
-     * draws the Toolkit.Button onto the screen
+     * draws the Button onto the screen
      */
     public void draw() {
         StdDraw.setPenColor(backgroundColor);
