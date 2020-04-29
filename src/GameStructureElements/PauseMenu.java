@@ -1,23 +1,13 @@
 package GameStructureElements;
 
-import edu.princeton.cs.introcs.Picture;
 import edu.princeton.cs.introcs.StdDraw;
-
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
-
 import Toolkit.Button;
 import Toolkit.*;
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-
 public class PauseMenu extends GameMode {
-
-    private String previousGameModeID;
 
     private int fileSaveCounter = 0;
 
@@ -41,10 +31,6 @@ public class PauseMenu extends GameMode {
 
     //==================================================================================================================
 
-    public void setPreviousGameModeID(String previousGameModeID) {
-        this.previousGameModeID = previousGameModeID;
-    }
-
     public static String getName() {
         return "Pause_Menu";
     }
@@ -59,7 +45,10 @@ public class PauseMenu extends GameMode {
 
     @Override
     public void run() {
-        if (backButton.isClicked()) {
+        if (Game.isMouseAvailable() && ( backButton.isClicked() || StdDraw.isKeyPressed(27) )) {
+            Game.mouseClick();
+            Button.playDeselected();
+
             Game.gameModeID = PlayableGame.getName();
             File backgroundImage = new File("Images/Saves/pause_menu_background_save" + fileSaveCounter + ".png");
             backgroundImage.delete();
@@ -74,7 +63,5 @@ public class PauseMenu extends GameMode {
         for (Button button : buttons) {
             button.draw();
         }
-
-        StdDraw.show();
     }
 }

@@ -4,10 +4,13 @@ import GameObjects.GameObject;
 import GameObjects.MovingGameObjects.*;
 import GameObjects.StationaryGameObjects.*;
 import Toolkit.Vector;
+import Toolkit.Button;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import edu.princeton.cs.introcs.StdDraw;
 
@@ -54,6 +57,11 @@ public class PlayableGame extends GameMode {
     private List<Fire> fireList;
 
     /**
+     * you get the drill by now
+     */
+    private List<Blood> bloodList;
+
+    /**
      * the coordinates of the center of the screen (duh)
      */
     private Vector screenCenter;
@@ -69,9 +77,20 @@ public class PlayableGame extends GameMode {
     private final double SCREEN_WIDTH_BUFFER = .5;
 
     /**
-     * how many frames the Game will ignore the mouse for
+     * the number of frames that the screen will shake for
      */
-    private int ignoreMouse = 0;
+    private final int SCREEN_SHAKE_PERIOD = 1000 / Game.FRAME_DELAY / 5;
+
+    /**
+     * the frame that the screen will stop shaking on
+     */
+    private long screenShakeStopFrame;
+
+    /**
+     * the maximum amount the screen will move while shaking
+     */
+    private final double SCREEN_SHAKE_MAX_DISTANCE = .025;
+
 
     //==================================================================================================================
 
@@ -185,13 +204,13 @@ public class PlayableGame extends GameMode {
         StdDraw.setYscale(screenCenter.getY() - SCREEN_WIDTH / 2, screenCenter.getY() + SCREEN_WIDTH / 2);
     }
 
-    public void setIgnoreMouse(int ignoreMouse) {
-        this.ignoreMouse = ignoreMouse;
-    }
-
-    //returns if the mouse is ready to be used
-    public boolean isMouseActive() {
-        return ignoreMouse == 0 && StdDraw.isMousePressed();
+    private void shakeCamera(boolean newShakeInstance) {
+        if (newShakeInstance) {
+            screenShakeStopFrame = Game.currentFrame + SCREEN_SHAKE_PERIOD;
+        } else {
+            screenCenter.addX(( Math.random() * 2 - 1 ) * SCREEN_SHAKE_MAX_DISTANCE * ( screenShakeStopFrame - Game.currentFrame ) / SCREEN_SHAKE_PERIOD);
+            screenCenter.addY(( Math.random() * 2 - 1 ) * SCREEN_SHAKE_MAX_DISTANCE * ( screenShakeStopFrame - Game.currentFrame ) / SCREEN_SHAKE_PERIOD);
+        }
     }
 
 
@@ -206,8 +225,10 @@ public class PlayableGame extends GameMode {
         this.shrapnelList = new ArrayList<>();
         this.wallList = new ArrayList<>();
         this.fireList = new ArrayList<>();
+        this.bloodList = new ArrayList<>();
         this.experienceList = new ArrayList<>();
         this.screenCenter = new Vector();
+        this.screenShakeStopFrame = 0;
 
         centerTheScreen();
         addNewEnemy();
@@ -231,7 +252,7 @@ public class PlayableGame extends GameMode {
 
             //fire the weapon if the weapon is ready to fire
             //but if the weapon is the primary weapon - fire only if the mouse is pressed
-            if (( weaponIndex == 0 ) ? weapon.isReadyToFire() && isMouseActive() : weapon.isReadyToFire()) {
+            if (( weaponIndex == 0 ) ? weapon.isReadyToFire() && Game.isMouseActive() : weapon.isReadyToFire()) {
                 Ammo ammo = weapon.fire();
 
                 ammoList.add(ammo);
@@ -256,6 +277,7 @@ public class PlayableGame extends GameMode {
 
                 if (ammo instanceof Missile) {
                     fireList.addAll(( (Missile) ammo ).explode());
+                    shakeCamera(true);
                 }
 
                 ammoList.remove(ammo);
@@ -274,7 +296,7 @@ public class PlayableGame extends GameMode {
                             ammo.getPositionY() - Math.sin(ammo.getTotalVelocity().getRadian()) * ammo.getSize() / 2 * GameObject.PIXEL_SIZE
                     );
 
-                    fireList.add(new Fire(position, ammo.getTotalVelocity().getInverse().getRadian(), 100));
+                    fireList.add(new Fire(position, ammo.getMaxSpeed() / 10, ammo.getMaxSpeed() / 10 / 2.5, ammo.getTotalVelocity().getInverse().getRadian()));
                 }
             } else {
                 ammo.move();
@@ -298,7 +320,7 @@ public class PlayableGame extends GameMode {
         }
 
         //==================================================================================================================
-        //SHRAPNEL & FIRE MOVEMENT
+        //SHRAPNEL / FIRE / BLOOD MOVEMENT
         //==================================================================================================================
 
         for (Shrapnel shrapnel : shrapnelList) {
@@ -314,9 +336,19 @@ public class PlayableGame extends GameMode {
                 continue;
             }
 
-            fire.timeAlive -= Game.FRAME_DELAY;
-
             fire.move(null, true);
+        }
+
+        for (int i = 0 ; i < bloodList.size() ; i++) {
+            Blood blood = bloodList.get(i);
+
+            if (!blood.isActive()) {
+                bloodList.remove(blood);
+                i--;
+                continue;
+            }
+
+            blood.move(null, true);
         }
 
         //==================================================================================================================
@@ -350,15 +382,27 @@ public class PlayableGame extends GameMode {
                     //adding in the explosion of fire
                     if (ammo instanceof Missile) {
                         fireList.addAll(( (Missile) ammo ).explode());
+                        shakeCamera(true);
+                    }
+
+                    //add the force of the ammo on the Enemy to the net enemy force Vector
+                    //the direction of the force is the ammo's velocity
+                    Vector ammoForce = ammo.getTotalVelocity().unitVector().scale(ammo.getKnockBackForce());
+                    enemyNetForce.update(ammoForce);
+
+                    //add Blood
+                    for (int i = 0 ; i < ammo.getDamage() / 5 ; i++) {
+                        double ammoRadian = ammo.getTotalVelocity().getRadian();
+
+                        Vector position = enemy.getPosition().clone();
+                        position.addX(Math.cos(ammoRadian) * enemy.getSize() * GameObject.PIXEL_SIZE / 2);
+                        position.addY(Math.sin(ammoRadian) * enemy.getSize() * GameObject.PIXEL_SIZE / 2);
+
+                        bloodList.add(new EnemyBlood(position, ammo.getMaxSpeed() / 10, ammo.getMaxSpeed() / 10 / 20, ammoRadian));
                     }
 
                     ammoList.remove(ammo);
                     ammoIndex--;
-
-                    //add the force of the ammo on the Enemy to the net enemy force Toolkit.Vector
-                    //the direction of the force is the ammo's velocity
-                    Vector ammoForce = ammo.getTotalVelocity().unitVector().scale(ammo.getKnockBackForce());
-                    enemyNetForce.update(ammoForce);
                 }
 
             }//ammoIndex
@@ -440,11 +484,12 @@ public class PlayableGame extends GameMode {
         //==================================================================================================================
 
         //pause button - esc
-        if (StdDraw.isKeyPressed(27)) {
+        if (Game.isMouseAvailable() && StdDraw.isKeyPressed(27)) {
+            Game.mouseClick();
+
+            Button.playSelected();
             Game.gameModeID = PauseMenu.getName() + "_init";
         }
-
-        if (ignoreMouse != 0) ignoreMouse--;
     }
 
     @Override
@@ -478,6 +523,10 @@ public class PlayableGame extends GameMode {
             fire.draw();
         }
 
+        for (Blood blood : bloodList) {
+            blood.draw();
+        }
+
         for (Wall wall : wallList) {
             wall.draw();
         }
@@ -505,6 +554,10 @@ public class PlayableGame extends GameMode {
 
         //setting the screen position
         centerTheScreen();
+
+        //cameraShake - just read ya dummie
+        if (screenShakeStopFrame > Game.currentFrame)
+            shakeCamera(false);
 
         //inside of experience bar
         StdDraw.setPenColor(StdDraw.WHITE);
@@ -541,8 +594,6 @@ public class PlayableGame extends GameMode {
         StdDraw.setFont(Game.UI_FONT);
         StdDraw.text(screenCenter.getX(), screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15 - .005, fighter.getLevelExperience() + " / " + fighter.getExperienceToLevelUp());
         StdDraw.text(screenCenter.getX(), screenCenter.getY() - SCREEN_WIDTH / 2 + SCREEN_WIDTH / 15 + .05, "Level " + fighter.getLevel());
-
-        StdDraw.show();
     }
 
 }

@@ -149,8 +149,9 @@ public class Fighter extends MovingGameObject {
         this.unusedSkillPoints = 0;
         setSpriteFilepath("Images/fighter.png");
 
-        //weapons[0] = new GameObjects.StationaryGameObjects.MachineGun(.5, 0, .05, .01, 0, 0, 25, 500);
-        weapons[0] = new MissileLauncher(.5, .05, .05, 0, 0, 100, 1000);
+        weapons[0] = new MachineGun(.5, 0, .05, .01, 0, 0, 25, 500);
+        //weapons[0] = new MissileLauncher(.5, .05, .05, 0, 0, 100, 1000);
+        ( (ProjectileLauncher) weapons[0] ).addAmmoSpeedUpgradePoints(10);
         //GameStructureElements.SkillTree.shrapnelActive.setActive(true);
     }
 

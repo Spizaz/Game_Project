@@ -2,6 +2,8 @@ package Toolkit;
 
 import java.awt.*;
 
+import GameStructureElements.Game;
+import edu.princeton.cs.introcs.StdAudio;
 import edu.princeton.cs.introcs.StdDraw;
 
 public class Button {
@@ -75,5 +77,29 @@ public class Button {
 
         if (text != null)
             text.draw(position.getX(), position.getY());
+    }
+
+    public static synchronized void playSelected() {
+        StdAudio.play("Sounds/selected.wav");
+    }
+
+    public static synchronized void playDeselected() {
+        StdAudio.play("Sounds/deselected.wav");
+    }
+
+    public static void updateSounds() {
+        double[] selectedAudio = StdAudio.read("Sounds/original_selected.wav");
+        double[] deselectedAudio = StdAudio.read("Sounds/original_deselected.wav");
+
+        for (int i = 0 ; i < selectedAudio.length ; i++) {
+            selectedAudio[i] *= Game.volumeLevel / 10.;
+        }
+
+        for (int i = 0 ; i < deselectedAudio.length ; i++) {
+            deselectedAudio[i] *= Game.volumeLevel / 10.;
+        }
+
+        StdAudio.save("Sounds/selected.wav", selectedAudio);
+        StdAudio.save("Sounds/deselected.wav", deselectedAudio);
     }
 }

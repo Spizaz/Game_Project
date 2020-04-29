@@ -1,19 +1,17 @@
 package GameStructureElements;
 
-import GameStructureElements.GameMode;
-
 import java.awt.*;
 
 public class Settings extends GameMode {
 
     /*
-    private final Button increaseVolume = new Toolkit.Button();
+    private final Button increaseVolume = new Button();
 
-    private final Button decreaseVolume = new Toolkit.Button();
+    private final Button decreaseVolume = newButton();
 
     private int volumeLevel;
 
-    private final Button goBackAPage = new Toolkit.Button();
+    private final Button goBackAPage = new Button();
 
      */
 
@@ -24,15 +22,10 @@ public class Settings extends GameMode {
     }
 
     public static String getName() {
-        return "Settings";
+        return "Settings_Menu";
     }
 
     //==================================================================================================================
-
-    @Override
-    public void draw() {
-
-    }
 
     @Override
     public void init() {
@@ -41,6 +34,11 @@ public class Settings extends GameMode {
 
     @Override
     public void run() {
+
+    }
+
+    @Override
+    public void draw() {
 
     }
 }

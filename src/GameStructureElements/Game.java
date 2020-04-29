@@ -6,6 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import edu.princeton.cs.introcs.StdDraw;
+import Toolkit.Button;
 
 public class Game {
 
@@ -33,17 +34,17 @@ public class Game {
     /**
      * the gamemode that the game is currently in
      */
-    public static String gameModeID;
+    public static String gameModeID = "";
 
     /**
      * the previous gamemode that the game is currently in
      */
-    private String previousGameModeID;
+    private String previousGameModeID = "";
 
     /**
      * the gamemode that the game is currently in
      */
-    private GameMode gameMode;
+    private GameMode gameMode = null;
 
     /**
      * the starting screen of the GameStructureElements.Game
@@ -56,9 +57,16 @@ public class Game {
     private PlayableGame playableGame = new PlayableGame(StdDraw.WHITE);
 
     /**
-     * the playable game mode
+     * the pause menu (duh)
      */
     private PauseMenu pauseMenu = new PauseMenu(StdDraw.WHITE);
+
+    /**
+     * the playable game mode
+     */
+    private Settings settingsMenu = new Settings(StdDraw.WHITE);
+
+    private final BackgroundGame backgroundGame = new BackgroundGame();
 
     /**
      * the thread of the gameMode
@@ -66,17 +74,30 @@ public class Game {
     private Thread gameModeThread;
 
     /**
-     * the default font for all things in the Game
+     * how many frames the Game will ignore the mouse for
      */
+    private static int ignoreMouse = 0;
+
+    /**
+     * the level of the volume
+     */
+    public static int volumeLevel = 3;
+
+    private boolean backgroundGameActive = false;
 
     //==================================================================================================================
     public Game() throws InterruptedException {
         gameModeID = GameMenu.getName() + "_init";
         //gameModeID = PlayableGame.getName() + "_init";
         //gameModeID = PauseMenu.getName() + "_init";
-        gameMode = null;
-        previousGameModeID = "";
-        Timer timer = new Timer("Game_Timer");
+
+        updateSounds();
+
+        //==============================================================================================================
+        //MAIN GAME LOOP
+        //==============================================================================================================
+
+        Timer timer = new Timer("Main_Game_Loop_Timer");
         TimerTask timerTask = new TimerTask() {
 
             @Override
@@ -85,26 +106,30 @@ public class Game {
                 //if there was a change in gameModeID
                 if (!gameModeID.equals(previousGameModeID)) {
 
-                    boolean init = gameModeID.contains("_init");
+                    boolean gameModeInit = gameModeID.contains("_init");
+                    boolean backgroundGameActiveSave = backgroundGameActive;
 
-                    if (init)
+                    if (gameModeInit)
                         gameModeID = gameModeID.substring(0, gameModeID.length() - 5);
 
                     switch (gameModeID) {
                         case "Game_Menu":
                             gameMode = gameMenu;
+                            backgroundGameActive = true;
                             break;
                         case "Playable_Game":
                             gameMode = playableGame;
-                            playableGame.setIgnoreMouse(15);
+                            backgroundGameActive = false;
                             break;
                         case "Pause_Menu":
                             gameMode = pauseMenu;
-                            pauseMenu.setPreviousGameModeID(previousGameModeID);
+                            break;
+                        case "Settings_Menu":
+                            gameMode = settingsMenu;
                             break;
                     }
 
-                    if (init) {
+                    if (gameModeInit) {
                         try {
                             gameMode.init();
                         } catch (IOException e) {
@@ -112,14 +137,29 @@ public class Game {
                         }
                     }
 
+                    if (!backgroundGameActiveSave && backgroundGameActive) {
+                        backgroundGame.init();
+                    }
+
+                    mouseClick();
 
                     previousGameModeID = gameModeID;
+                }//change in game modes
+
+                StdDraw.clear(gameMode.getBackground());
+
+                if (backgroundGameActive) {
+                    backgroundGame.run();
+                    backgroundGame.draw();
                 }
 
                 gameMode.run();
                 gameMode.draw();
+                StdDraw.show();
 
                 Game.currentFrame++;
+
+                if (getIgnoreMouse() != 0) Game.ignoreMouse -= Game.FRAME_DELAY;
             }
 
         };
@@ -130,8 +170,28 @@ public class Game {
 
     //==================================================================================================================
 
-
     public void setGameModeID(String gameModeID) {
         this.gameModeID = gameModeID;
+    }
+
+    public static int getIgnoreMouse() {
+        if (ignoreMouse < 0) ignoreMouse = 0;
+        return ignoreMouse;
+    }
+
+    public static void mouseClick() {
+        ignoreMouse = 200;
+    }
+
+    public static boolean isMouseAvailable() {
+        return getIgnoreMouse() == 0;
+    }
+
+    public static boolean isMouseActive() {
+        return isMouseAvailable() && StdDraw.isMousePressed();
+    }
+
+    public void updateSounds() {
+        Button.updateSounds();
     }
 }
